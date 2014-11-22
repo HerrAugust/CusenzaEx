@@ -45,7 +45,7 @@ void run0() {
 	puts("Fine sleep parent");
 	wait(NULL);
 	puts("fine wait parent");
-	//for(;;);
+	for(;;);
 }
 
 int main(void) {
