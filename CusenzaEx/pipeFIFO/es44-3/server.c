@@ -9,12 +9,21 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include "fifo_seqnum.h"
+#include <stdlib.h>
+#include <fcntl.h>
+#include <stdio.h>
 
-static void removeFIFO(int sig) //called on exit
+static void removeFIFO() //called on exit
 {
-	unlink();
-	if(sig == SIGNINT || sig == SIGTERM)
-		exit(EXIT_SUCCESS);
+	unlink(FIFO_2SERVER);
+	printf("server: removeFIFO\n");
+}
+
+static void handler(int s) {
+	removeFIFO();
+	printf("server: received signal %s\n", strsignal(s));
+	fflush(NULL);
+	_exit(EXIT_SUCCESS);
 }
 
 int main(void) {
@@ -22,9 +31,9 @@ int main(void) {
 	struct msgS2C response;
 	struct msgC2S request;
 
-	atexit(unlink);
-	signal(SIGINT, removeFIFO);
-	signal(SIGTERM, removeFIFO);
+	atexit(removeFIFO);
+	signal(SIGINT, handler);
+	signal(SIGTERM, handler);
 
 	//create fifo
 	mkfifo(FIFO_2SERVER, 0666); // see header, since clients->server fifo's name must be shared
@@ -32,13 +41,15 @@ int main(void) {
 
 	while(1) {
 		//read message from client
-		read(fdC2S, &request, sizeof(request));
+		if(read(fdC2S, &request, sizeof(request)) != sizeof(request) ) continue; //note: write end open => returns 0 => have to continue (wait for another client)
+		printf("server (pid=%ld): read from %ld\n", (long) getpid(), (long)request.pid);
 
 		//write total read message number
 		char server2client_fn[20];
 		sprintf(server2client_fn, SERVER2CLIENT_TEMPLATE, request.pid); //build path for fifo server -> client
 		fdS2C = open(server2client_fn, O_WRONLY); //child make this fifo
 		response.total = total;
+		printf("server: going to write %d to pid %ld\n", total, (long)request.pid);
 
 		write(fdS2C, &response, sizeof(response));
 		close(fdS2C);

@@ -1,6 +1,6 @@
 #include <unistd.h>
 
-#define BIDIR_FILENAME "/tmp/seqnumfifo"
+#define FIFO_2SERVER "/tmp/seqnumfifo"
 #define SERVER2CLIENT_TEMPLATE "/tmp/seqnum_%ld"
 #define SERVER2CLIENT_TEMPLATE_LEN sizeof(SERVER2CLIENT_TEMPLATE) + 20
 
