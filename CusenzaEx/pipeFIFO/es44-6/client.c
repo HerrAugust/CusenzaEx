@@ -24,6 +24,7 @@ int main(void) {
 
 	int fdWrite = open(FIFO_2SERVER, O_WRONLY);
 	write(fdWrite, &request_var, sizeof(struct request));
+	close(fdWrite);
 
 	int fdRead = open(FIFO_2client, O_RDONLY);
 	read(fdRead, &response_var, sizeof(struct response));

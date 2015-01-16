@@ -19,8 +19,8 @@ int main(void) {
 	while(1) {
 		int fdRead = open(FIFO_2SERVER, O_RDONLY | O_NONBLOCK);
 		int flag = fcntl(fdRead, F_GETFL); flag &= ~O_NONBLOCK; fdRead = fcntl(fdRead, F_SETFL, flag);
-		read(fdRead, &request_var, sizeof(struct request));
-		if(request_var.myNum != 1) return 0;
+		int byteread = read(fdRead, &request_var, sizeof(struct request));
+		if(request_var.myNum != 1) { printf("Letti %d. Error\n", byteread); return 0; }
 		printf("server (pid = %ld): Read %d\n", (long) getpid(), request_var.myNum);
 
 		sprintf(FIFO_2client, FIFO_2CLIENT, request_var.pid);
@@ -30,6 +30,7 @@ int main(void) {
 		close(fdWrite);
 
 		total += request_var.myNum;
+		printf("total = %d\n", total);
 	}
 
 	return 0;
