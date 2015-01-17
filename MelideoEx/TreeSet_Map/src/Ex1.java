@@ -2,12 +2,14 @@ import java.util.TreeSet;
 
 /*
  * Suppose we are given the name and division number for each employee in a company.
- * There are no duplicate names. We would like to store this information alphabetically, by name. 
- * How should this be done: TreeMap or TreeSet? Comparable or Comparator?
- * RISP: Devo memorizzare i nomi in modo alfabetico, quindi devo usare Comparable.
- * Devo inoltre memorizzare impiegati (classe), che ha una stringa e un numero. Inoltre
- * non ci devono essere duplicati, quindi va scelta TreeSet (gli insiemi matematici per definizione
- * non possono avere duplicati).  
+ * There are no duplicate names. We would like to store this information alphabetically, by name.
+ * How should this be done: TreeMap or TreeSet? Comparable or Comparator? 
+ * RISP: Non vengono dati in ingresso doppioni, quindi non c'è problema di cancellare elementi già esistenti.
+ * Poichè la differenza tra TreeSet e TreeMap è proprio questa, non c'è differenza tra i due.
+ * Se ci fossero stati in ingresso doppioni avremmo dovuto decidere se cancellare (TreeMap) o meno (TreeSet).
+ * Inoltre l'output desiderato è ottenibile facilmente sia con TreeMap (tramite codice) sia con TreeSet (tramite toString()).
+ * Poichè, inoltre, si vuole l'ordinamento alfabetico dei nomi basta un compareTo() => Comparable.
+ * Implementazione con TreeSet.
  */
 
 public class Ex1 {
