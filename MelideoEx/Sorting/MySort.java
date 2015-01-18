@@ -224,67 +224,71 @@ public class MySorts {
     * Attention: this function requires does not order the position 0 because it is discarted (this choice make the algorithm easier)!
     */
    public static void heapsort(int[] a) {
-   		int heapsize = a.length - 1;
-   		int swap;
-
-   		//make max-heap
-   		heapfy(a);
-
-   		//put root as the last element of the heap, decrease heap dimension, fixheap() and then repeat
-   		while(heapsize > 0) {
-   			swap = a[1];
-   			a[1] = a[heapsize];
-   			a[heapsize] = swap;
-   			heapsize--;
-
-   			//only root has changed
-   			fixheap(a, 1);
-   		}
-   }
-
-   /*
-    * Build a max-heap from an array in loco.
-    * Starting from the bottom of the heap, create a left and a right heap. The go on the superior level of the heap and do the same, until root is reached.
-    */
-   public static void heapfy(int[] a) {
-   		int swap, leftchild;
-   		for(int curroot = (a.length-1) / 2; curroot > -1; curroot = curroot / 2) {
-   			leftchild = curroot*2;
-   			if(  leftchild < a.length && a[curroot] < a[leftchild] ) { //control left child
-   				swap = a[curroot];
-   				a[curroot] = leftchild;
-   				a[leftchild] = swap;
-   			}
-   			if(leftchild+1 < a.length && a[curroot] < a[leftchild+1]) { //control right child
-   				swap = a[curroot];
-   				a[curroot] = a[leftchild+1];
-   				a[leftchild+1] = swap;
-   			}
-   		}
-   }
-
-   /*
-    * Fix the structure of a max-heap. In particular it sets at the correct place the element at position pos of the array. It works in loco.
-    */
-   public static void fixheap(int[] a, int pos) {
-   		//if leftchild > a[pos] => swap and continue in the left subheap; if rightchild > a[pos] => swap and continue in the right subheap.
-   		//This is because a[] comes from a heapfy()
-   		int leftchild = pos * 2, swap;
-   		if( leftchild < a.length && a[leftchild] > a[pos] ) { //left child
-   			swap = a[leftchild];
-   			a[leftchild] = a[pos];
-   			a[pos] = swap;
-   			fixheap(a, leftchild);
-   		}
-   		if( leftchild + 1 < a.length && a[leftchild+1] > a[pos] ) { //right child
-   			swap = a[leftchild+1];
-   			a[leftchild+1] = a[pos];
-   			a[pos] = swap;
-   			fixheap(a, leftchild+1);
-   		}
-   }
-
-
+		int heapsize = a.length - 1;
+		int swap;
+		//make max-heap
+		heapfy(a);
+		//put root as the last element of the heap, decrease heap dimension, fixheap() and then repeat
+		while(heapsize > 0) {
+			swap = a[0];
+			a[0] = a[heapsize];
+			a[heapsize] = swap;
+			heapsize--;
+			//only root has changed
+			fixheap(a, 0, heapsize);
+		}
+	}
+	
+	/*
+	 * Build a max-heap from an array in loco.
+	 * Starting from the bottom of the heap, create a left and a right heap. Then go on the superior level of the heap and do the same, until root is reached.
+	 */
+	public static void heapfy(int[] a) {
+		int swap, leftchild, curnode, rightchild;
+		
+		for( curnode = (a.length-2) / 2; curnode >= 0; curnode-- ) { //1 4 5 -1 2 0
+			leftchild = curnode * 2 + 1;
+			rightchild = leftchild + 1;
+			if(a[curnode] < a[leftchild])
+			{
+				swap = a[curnode];
+				a[curnode] = a[leftchild];
+				a[leftchild] = swap;
+			}
+			
+			if(a[curnode] < a[leftchild+1]) { //rightchild
+				swap = a[curnode];
+				a[curnode] = a[rightchild];
+				a[rightchild] = swap;
+			}
+		}
+	}
+	
+	/*
+	 * Fix the structure of a max-heap. In particular it sets at the correct place the element at position pos of the array. It works in loco.
+	 */
+	public static void fixheap(int[] a, int pos, int heapsize) {
+		//if leftchild > a[pos] => swap and continue in the left subheap; if rightchild > a[pos] => swap and continue in the right subheap.
+		//This is because a[] comes from a heapfy()
+		int leftchild = pos * 2+1, swap;
+		
+		if(leftchild >= heapsize) return; //exit condition
+		
+		if( leftchild < a.length && a[leftchild] > a[pos] ) { //left child
+			swap = a[leftchild];
+			a[leftchild] = a[pos];
+			a[pos] = swap;
+		
+			fixheap(a, leftchild, heapsize);
+		}
+		if( leftchild + 1 < a.length && a[leftchild+1] > a[pos] ) { //right child
+			swap = a[leftchild+1];
+			a[leftchild+1] = a[pos];
+			a[pos] = swap;
+			fixheap(a, leftchild+1, heapsize);
+		}
+	}
+	
 	public void printarray(int [] sequence) {
 		for (int k : sequence)
 			System.out.print(k + " ");
