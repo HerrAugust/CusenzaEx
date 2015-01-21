@@ -3,9 +3,7 @@ import java.util.TreeSet;
 
 /*
  * Re-do Programming Exercise 2, but now the ordering should be by increasing division numbers,
- * and within each division number, by alphabetical order of names.
- * MY NOTE: this exercise can only be solved using TreeSet and not TreeMap because there are
- * duplicated division numbers (so keys would be duplicated in TreeMao).
+ * and within each division number, by alphabetical order of names. 
  */
 
 public class Ex2 {

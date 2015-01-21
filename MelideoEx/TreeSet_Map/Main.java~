@@ -9,7 +9,7 @@ public class Main {
 		System.out.println("\nImplementazione con TreeSet:");
 		new Ex1TreeSet().run();
 		System.out.println("\n\nImplementazione con TreeMap:");
-		new Ex1TreeMap().run();
+		new Ex1TreeSet().run();
 		System.out.println("\n\nOrdinamento per divisione:");
 		new Ex2().run();
 	}
