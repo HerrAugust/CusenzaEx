@@ -1,0 +1,6 @@
+/*
+ * Declare two TreeSet objects, set1 and set2, whose elements come from the same Student class.
+ * Each student has a name and grade point average.  In set1, the students are in alphabetical order.
+ * In set2, the elements are in decreasing order of GPAs.  Insert a few students into each set and
+ * then print out the set.
+ */
