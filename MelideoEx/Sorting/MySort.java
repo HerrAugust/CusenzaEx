@@ -143,32 +143,32 @@ public class MySorts {
 	}
 
 	private void quicksort(int a[], int i, int f) {
-		//cannot do partitions on array which size is less than 1
-		if(f-i <= 1) return;
+  //cannot do partitions on array which size is less than 1
+  if (f <= 1) return; // old: (f - i <= 1)
+  //partitioning:
+  int m=0;
+  int pivot = a[m];
+  int inf = i, sup = i + f - 1; //inf = 0, sup = f - 1;
 
-		//partitioning:
-		int m = (i+f) / 2;
-		int pivot = a[m];
-		int inf = 0, sup = f - 1;
+  while(true) {
+    //select elements which are not in the correct set
+    while(a[inf] < pivot) inf++;
+    while(a[sup] > pivot) sup--;
+    if(inf >= sup) break;
+    //swap these elements
+    int swap = a[inf];
+    a[inf] = a[sup];
+    a[sup] = swap;
+  }
 
-		while(true) {
-			//select elements which are not in the correct set
-			while(a[inf] < pivot) inf++;
-			while(a[sup] > pivot) sup--;
-			if(inf >= sup) break;
+  /** eliminato **
+  a[m] = a[sup];
+  a[sup] = pivot;
+  **/
 
-			//swap these elements
-			int swap = a[inf];
-			a[inf] = a[sup];
-			a[sup] = swap;
-		}
-
-		a[m] = a[sup];
-		a[sup] = pivot;
-
-		quicksort(a, i, sup - 1);
-		quicksort(a, sup + 1, f);
-	}
+  quicksort(a, i, sup-i); // quicksort(a, i, sup - 1);
+  quicksort(a, sup + 1, i + f - 1 - sup );  // quicksort(a, sup + 1, f);
+}
 
 //MERGE SORT (ITERATIVE)
 	/*
