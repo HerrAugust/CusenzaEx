@@ -443,7 +443,7 @@ public class Network<Vertex> implements Iterable<Vertex>
     * Modificare il metodo UndirectedWeightedTree<Vertex>.getMinimumSpanningTree()
     * in modo da restituire solo un valore double che rappresenta il peso totale di un minimo spanning tree
     */
-    public double getMinimumSpanningTreeWeigth() {
+    public double getMinimumSpanningTreeWeigth  () {
         //ALG: Quando dovrei aggiungere un vertice al MAR aggiorno totalweight
         UndirectedWeightedTree<Vertex> tree = new UndirectedWeightedTree<Vertex>();
 
@@ -475,14 +475,17 @@ public class Network<Vertex> implements Iterable<Vertex>
             x = edgeTriple.from;
             y = edgeTriple.to;
             weight = edgeTriple.weight;          
+            System.out.println("Y: " + y);
             if (!tree.containsVertex (y))
             {                
+                System.out.println("Network.getMinimumSpanningTreeWeigth() - La coda di priorità contiene: " + pq);
                 tree.addEdge (x, y, weight);
-                totalweight += weight; //changed              
+                totalweight += weight;
                 for (Map.Entry<Vertex, Double> entry : adjacencyMap.get(y).entrySet())
                 {
                     z = entry.getKey();
-                    if (!tree.containsVertex (z))
+                    System.out.println("Vertex: "+z);
+                    if (!tree.containsVertex (z)) //decreaseKey()
                     {
                         weight = entry.getValue();
                         edgeTriple = new EdgeTriple (y, z, weight);
@@ -491,6 +494,7 @@ public class Network<Vertex> implements Iterable<Vertex>
                 } // iterating over y's neighbors
             } // y not already in tree
         } // tree has fewer vertices than this Network
+
         return totalweight;
     }
 
@@ -923,6 +927,7 @@ public class Network<Vertex> implements Iterable<Vertex>
          */
         public int compareTo (EdgeTriple edge)
         {
+            if(from == to) return 0;
             return (int)(weight - edge.weight);
         } // method compareTo
 
@@ -933,7 +938,7 @@ public class Network<Vertex> implements Iterable<Vertex>
          */
         public String toString()
         {
-            return from.toString() + "  " + to.toString() + String.valueOf (weight);
+            return from.toString() + "  " + to.toString() + " " + String.valueOf (weight);
         } // method toString
 
     } // class EdgeTriple

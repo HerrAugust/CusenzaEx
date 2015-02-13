@@ -83,6 +83,9 @@ public class NetworkExample
             pathList = network.getShortestPath (start, finish);
             System.out.println (SHORTEST_PATH_MESSAGE1 + start + " to " +
                                 finish + SHORTEST_PATH_MESSAGE2 + pathList);
+
+            double tot = network.getMinimumSpanningTreeWeigth();
+            System.out.println("tot="+tot);
         } // try
         catch (FileNotFoundException e)
         {

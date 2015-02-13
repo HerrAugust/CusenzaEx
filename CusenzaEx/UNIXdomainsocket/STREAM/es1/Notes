@@ -1,0 +1,3 @@
+Notes:
+1) Client cannot behave like a server and consequently client cannot look for answers from server.
+2) Client does close no file descriptor
