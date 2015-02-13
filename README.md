@@ -15,4 +15,4 @@ Folders trace topics.
 MelideoEx
 ==========
 A brief collection of exercises about a basic course of Algorithms with Java. It are about List, Iterable, Comparable and Comparator interfaces and TreeMap, TreeSet, ArrayList, LinkedList and PriorityQueue JCF classes. It also contains class Network, which describes a directed network, and BinaryTree, which describes a binary tree made up of tree nodes with at the most two sub-trees.
-I also included a class, Visualizzatore, which allows to graphically show a binary tree, which must be an instance of BinaryTree<E>.
+I also included a class, <b>Visualizzatore</b>, which allows to graphically show a binary tree, which must be an instance of BinaryTree<E>.
