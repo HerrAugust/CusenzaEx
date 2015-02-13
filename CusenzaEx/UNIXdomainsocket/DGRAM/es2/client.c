@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 	//preparo il mio indirizzo
 	int fd = socket(AF_UNIX, SOCK_DGRAM, 0);
 	memset(&myadd, 0, sizeof(struct sockaddr_un));//non dimenticare perchè bloccherebbe il programma
-	strncpy(myadd.sun_path, CPATH, sizeof(struct sockaddr_un)-1);
+	strncpy(myadd.sun_path, CPATH, sizeof(myadd.sun_path)-1);
 	myadd.sun_family = AF_UNIX;
 	
 	//mi connetto al mio indirizzo
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
 	//preparo l'indirizzo del server
 	memset(&serveradd, 0, sizeof(struct sockaddr_un)); //non dimenticare perchè bloccherebbe il programma
-	strncat(serveradd.sun_path, SPATH, sizeof(struct sockaddr_un)-1);
+	strncat(serveradd.sun_path, SPATH, sizeof(serveradd.sun_path)-1);
 	serveradd.sun_family = AF_UNIX;
 
 	//invio gli argomenti e li ricevo e li stampo

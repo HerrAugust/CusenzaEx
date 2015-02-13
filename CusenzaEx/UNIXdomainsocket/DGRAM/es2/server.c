@@ -28,13 +28,13 @@ int main(void) {
 
 	//Creo il mio address e mi ci collego
 	memset(&myadd, 0, sizeof(struct sockaddr_un));//non dimenticare perchè bloccherebbe il programma
-	strncat(myadd.sun_path, SPATH, sizeof(struct sockaddr_un)-1);
+	strncat(myadd.sun_path, SPATH, sizeof(myadd.sun_path)-1);
 	myadd.sun_family = AF_UNIX;
 	bind(fd, (struct sockaddr*)&myadd, sizeof(struct sockaddr_un));
 	
 	//Preparo l'indirizzo del client (poichè statico)
 	memset(&clientadd, 0, sizeof(struct sockaddr_un));//non dimenticare perchè bloccherebbe il programma
-	strncat(clientadd.sun_path, CPATH, sizeof(struct sockaddr_un)-1);
+	strncat(clientadd.sun_path, CPATH, sizeof(clientadd.sun_path)-1);
 	clientadd.sun_family = AF_UNIX;
 
 	while(1) {

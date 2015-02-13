@@ -1,12 +1,12 @@
 #Makefile
 client: client.o es1.h
-	gcc -o client client.c
+	gcc -o client.run client.c
 
 server: server.o es1.h
-	gcc -o server server.c
+	gcc -o server.run server.c
 
 clean:
-	rm -f *.o server client
+	rm -f *.o server.run client.run
 
 all:
 	make client

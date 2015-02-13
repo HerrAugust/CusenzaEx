@@ -14,7 +14,7 @@ int main(void) {
 	struct sockaddr_un myadd;
 	memset(&myadd, 0, sizeof(struct sockaddr_un));
 	myadd.sun_family= AF_UNIX;
-	strncpy(myadd.sun_path, SPATH, sizeof(struct sockaddr_un)-1);
+	strncpy(myadd.sun_path, SPATH, sizeof(myadd.sun_path)-1);
 
 
 	bind(fd, (struct sockaddr*)& myadd, sizeof(struct  sockaddr_un));

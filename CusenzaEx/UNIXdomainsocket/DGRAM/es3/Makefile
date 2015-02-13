@@ -1,19 +1,19 @@
 #Makefile for es3. Launch these programs in Terminal (Bash) with "make all", press enter and then "make run" 
 
 server: server.o es3.h
-	gcc -o server server.c
+	gcc -o server.run server.c
 
 client1: client1.o es3.h
-	gcc -o client1 client1.c
+	gcc -o client1.run client1.c
 
 client2: client2.o es3.h
-	gcc -o client2 client2.c
+	gcc -o client2.run client2.c
 
 client3: client3.o es3.h
-	gcc -o client3 client3.c
+	gcc -o client3.run client3.c
 
 launchme: launchme.o
-	gcc -o launchme launchme.c
+	gcc -o launchme.run launchme.c
 
 run:
 	./launchme
@@ -26,4 +26,4 @@ all:
 	make launchme
 
 clean:
-	rm -f *.o client1 client2 client3 server launchme *~
+	rm -f *.o client1.run client2.run client3.run server.run launchme.run *~

@@ -1,5 +1,5 @@
 /*
- * UNIX domain datagram socket:convertire in maiuscolo i datagram del client e rispedirglieli. Il client riceve i propri datagram dagli argomenti.
+ * UNIX domain datagram socket: convertire in maiuscolo i datagram del client e rispedirglieli. Il client riceve i propri datagram dagli argomenti.
  */
 
 #include "es2.h"
