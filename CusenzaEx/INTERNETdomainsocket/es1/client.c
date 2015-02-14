@@ -2,6 +2,8 @@
 
 int main(void)  {
 	int fd = socket(AF_INET6, SOCK_DGRAM, 0);
+	if(fd == -1)
+		perror("client socket\n");
 	
 	//Prepare server address
 	struct sockaddr_in6 serveraddr;
@@ -11,7 +13,8 @@ int main(void)  {
 
 	//Send message to server
 	char buf[BUF_SIZE] = "Hello server! I am client";
-	sendto(fd, buf, strlen(buf)+1, 0, (struct sockaddr*)&serveraddr, sizeof(struct sockaddr_in6));
+	if( sendto(fd, buf, strlen(buf)+1, 0, (struct sockaddr*)&serveraddr, sizeof(struct sockaddr_in6)) != strlen(buf)+1 )
+		perror("sendto client\n");
 
 	//Wait for reply
 	recvfrom(fd, buf, BUF_SIZE, 0, NULL, NULL); //Don't have to give msg back => NULL

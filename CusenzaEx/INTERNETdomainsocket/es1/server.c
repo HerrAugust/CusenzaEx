@@ -6,10 +6,6 @@ int main(void)  {
 	//Prepare client address to reply
 	struct sockaddr_in6 clientaddr;
 
-	int optval = 1;
-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1)
-		perror("setsockopt");
-
 	//Prepare server address
 	struct sockaddr_in6  serveraddr;
 	memset(&serveraddr, 0, sizeof(struct sockaddr_in6));
@@ -24,7 +20,8 @@ int main(void)  {
 	//Wait for message
 	char buf[BUF_SIZE];
 	socklen_t len = sizeof(struct sockaddr_in6);
-	recvfrom(fd, buf, BUF_SIZE, 0, (struct sockaddr*) &clientaddr, &len);
+	if( recvfrom(fd, buf, BUF_SIZE, 0, (struct sockaddr*) &clientaddr, &len) == -1 )
+		perror("client recvfrom\n");
 	printf("Server-Received: %s\n", buf);
 
 	//Print who sent the message
