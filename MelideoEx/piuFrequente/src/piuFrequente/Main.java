@@ -16,15 +16,11 @@ public class Main {
 	}
 	
 	public static void run() {
-		LinkedList<String> lista = new LinkedList<String>();
-		lista.add("Cane");
-		lista.add("Maiale");
-		lista.add("Gatto");
-		lista.add("Gatto");
-		lista.add("Gatto");
-		lista.add("Cane");
+		TreeMap<Integer, String> lista = new TreeMap<Integer, String>();
+		lista.put(1,"Cane");
+		lista.put(2,"Gatto");
 		
-		System.out.println("più frequente: " + piuFrequente(lista) );
+		System.out.println("first: " + lista.firstKey());
 	}
 	
 	/*
