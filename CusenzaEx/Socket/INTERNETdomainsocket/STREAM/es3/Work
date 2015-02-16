@@ -1,0 +1,2 @@
+Write a program in which, using Stream Sockets, server accepts two connections and, for each of them, it takes a message from client and writes it onto the STDOUT_FILENO. Clients (3) take their messages from "input" file (one message per line).
+Make it for IPv?, i.e. IPversion independent.

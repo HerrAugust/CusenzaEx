@@ -1,0 +1,2 @@
+Work:
+Send message "Hello server! I am client" to server, which in turn replies "Ciao to you, client!" using Stream Socket.

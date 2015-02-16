@@ -1,0 +1,2 @@
+Internet domain Stream socket: convert to upper case inputs from client and give them back. Client receives its outputs from arguments.
+Everithing ends when "Done" is passed.

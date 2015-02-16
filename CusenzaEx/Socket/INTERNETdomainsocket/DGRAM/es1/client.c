@@ -10,6 +10,7 @@ int main(void)  {
 	memset(&serveraddr, 0, sizeof(struct sockaddr_in6));
 	serveraddr.sin6_family = AF_INET6;
 	serveraddr.sin6_port = htons(PORT); //port could be stored in little endian
+	strcpy(serveraddr.sin6_addr, "::");
 
 	//Send message to server
 	char buf[BUF_SIZE] = "Hello server! I am client";
