@@ -1,0 +1,11 @@
+Scrivere una applicazione costituita da 2 programmi (client/server) che comunicano tramite FIFOs.
+Client:
+Per ogni stringa digitata da linea di comando
+crea un processo
+crea una fifo su pathname
+/tmp/fifocli[pid]
+scrive sulla fifo il suo pid e la una stringa (es. il proprio nome)
+Server:
+Il server ha il compito di restituire al client
+un codice numerico univoco dato dalla somma del pid con una chiave (es. 0xa5)
+un messaggio di testo che contiene in testo ricevuto es. “salve [testo ricevuto]”

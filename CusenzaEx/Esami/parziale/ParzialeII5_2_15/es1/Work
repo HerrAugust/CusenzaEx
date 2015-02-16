@@ -1,0 +1,13 @@
+Esercizio 1:
+Scrivere 2 programmi (client_tcp.c e server_tcp.c) che attraverso una comunicazione Internet Domain TCP Socket realizzino la funzionalità di copia remota in modo tale che per copiare “file.txt” dall'host “client” all'host “server” la sintassi sia la seguente.
+
+Server:
+$ server_tcp 192.168.1.20 > filecopy.txt
+
+Client:
+$ client_tcp 192.168.1.20 < file.txt
+
+Assunzioni
+- indirizzo del server “192.168.1.20,50000”
+- Le applicazioni possono essere progettate solo per IPv4
+- Non è richiesto l'uso della getaddrinfo()
