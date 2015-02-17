@@ -1,2 +1,0 @@
-Scrivere un programma che implementi il seguente comando. Prima del codice indicare quali sono le funzioni di libreria/System Calls fondamentali che si andranno ad utilizzare.
-$ ls /usr/include | cat > file.txt

@@ -1,0 +1,11 @@
+Client connects to my IP address (no matter what version it is) and to port 50002. It sends to, say, the modem a message (read text), which in turn understands whose IP address the one to which client is connected is and sends the message to that IP address (me).
+There must be only one process per port (50002), and the message has been sent to that port (50002). So the server can receive the message.
+
+If my IP address is 10.192.1.1:
+client connected to (10.192.1.1, ephemeral port) SEND
+	|
+	|
+modem or so sends message to 10.192.1.1, at port 50002
+	|
+	|
+server connected to (some address, 50002) RECEIVE

@@ -7,6 +7,7 @@ server: server_tcp.o es1.h
 all:
 	make client
 	make server
+	touch filecopy.txt #Assumption: there is alread "file.txt"
 
 clean:
-	rm -f *~ *.o *.run
+	rm -f *~ *.o *.run filecopy.txt

@@ -23,7 +23,7 @@ int main(void) {
 	for(cur = res; cur != NULL; cur = cur->ai_next) {
 		fd = socket(cur->ai_family, cur->ai_socktype, cur->ai_protocol);
 		if(fd == -1) continue;
-		if( connect(fd, cur->ai_addr, sizeof(struct sockaddr_in)) != -1)
+		if( connect(fd, cur->ai_addr, cur->ai_addrlen) != -1)
 			break;
 		if( setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1 )
 			perror("client setsockopt");
