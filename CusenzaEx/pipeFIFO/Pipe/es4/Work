@@ -1,0 +1,2 @@
+Scrivere un programma che esegue:
+$ ls | sort -r > file.txt

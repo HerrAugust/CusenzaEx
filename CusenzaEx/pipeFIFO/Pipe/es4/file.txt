@@ -1,0 +1,8 @@
+Work~
+Work
+Makefile~
+Makefile
+file.txt
+es4.run
+es4.o
+es4.c
