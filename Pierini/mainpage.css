@@ -1,3 +1,7 @@
+div {
+	vertical-align: top;
+}
+
 #entita {
 	display: inline-block;
 }
