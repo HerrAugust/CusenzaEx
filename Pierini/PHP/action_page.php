@@ -5,10 +5,15 @@ include 'utility.php'; #creaDB()
 if($_POST['creaDB']) {
 	$link = mysql_connect('localhost', 'root', 'MySQL', '8080');
 	if (!$link) {
-		if(creaDB())
+		echo 'Connected unsuccessfully';
+	}
+	else { #connessione ok
+		if(databasenotexists() && creaDB($link))
+			echo "Database creato correttamente";
+		else
 			die('Ci sono dei problemi con la creazione del Database' . mysql_errno());
 	}
-	echo 'Connected successfully';
+		
 }
 else #esegui query
 {
