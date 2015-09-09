@@ -14,10 +14,10 @@
 	<div id="inserimentoER">
 	<p>Voglio inserire un'entità:</p>
 	<form action="./PHP/action_page.php" method="post">
-		<input type="text" placeholder="Istruzione MySQL"></br>
-		<input type="submit" value="0K"/>
-		<input type="submit" value="Cancella"/>
-	</form>
+		<input type="text" name="query" placeholder="Istruzione MySQL"></br>
+		<input type="submit" name="creaDB" value="Crea Database/Connetti"/>
+		<input type="submit" name="eseguiQuery" value="0K"/>
+		</form>
 	</div>
 
 	<br/>
