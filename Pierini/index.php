@@ -9,7 +9,7 @@
 </head>
 
 <body>
-
+<?php echo "text"; ?>
 	<h2>Entità e Relazioni</h2>
 
 	<div id="inserimentoER">
