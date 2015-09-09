@@ -9,42 +9,18 @@
 </head>
 
 <body>
-
 	<h2>Entità e Relazioni</h2>
 
 	<div id="inserimentoER">
-	<div id="entita">
 	<p>Voglio inserire un'entità:</p>
-	<form action="action_page.php">
-		<input type="text" placeholder="Apparato"></br>
-		<input type="text" placeholder="Cavo"/></br>
-		<input type="text" placeholder="Rack"/></br>
-		<input type="text" placeholder="Backup di configurazione"/></br>
-		<input type="text" placeholder="Servizio"/> </br>
-		<input type="text" placeholder="Operatore"/> </br>
-		<input type="text" placeholder="Attività"/> </br>
-		<input type="text" placeholder="Centro di elaborazione"/> </br>
+	<form action="./PHP/action_page.php">
+		<input type="text" placeholder="Istruzione MySQL"></br>
 		<input type="submit" value="0K"/>
 		<input type="submit" value="Cancella"/>
 	</form>
 	</div>
 
-	<div id="associazioni">
-	<p>Voglio inserire un'associazione tra entità:</p>
-	<form>
-		<input type="text" placeholder="Apparato"/> è allocato in <input type="text" placeholder="Rack"/> </br>
-		<input type="text" placeholder="Apparato"/> è connesso a <input type="text" placeholder="Apparato"/> tramite <input type="text" placeholder ="Cavo"/> </br>
-		<input type="text" placeholder="Servizio"/> è configurato in <input type="text" placeholder="Apparato"/> </br>
-		<input type="text" placeholder="Backup di configurazione"/> riguarda <input type="text" placeholder="Apparato"/> e <input type="text" placeholder="Servizio"/> </br>
-		<input type="text" placeholder="Rack"/> si trova in <input type="text" placeholder="Centro di elaborazione"/> </br>
-		<input type="text" placeholder="Operatore"/> lavora in <input type="text" placeholder="Centro di elaborazione"/> </br>
-		<input type="text" placeholder="Operatore"/> compie <input type="text" placeholder="Attività"/> </br>
-		<input type="submit" value="0K"/>
-		<input type="submit" value="Cancella"/>
-	</form>
-	</div>
-	</div>
-
+	<br/>
 
 	<h2>Operazioni</h2>
 	<div id="operazioni">
