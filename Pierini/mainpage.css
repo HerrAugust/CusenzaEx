@@ -2,17 +2,10 @@ div {
 	vertical-align: top;
 }
 
-#entita {
-	display: inline-block;
-}
-
-#associazioni {
-	margin-left: 100px;
-	display: inline-block;
-}
-
 #inserimentoER {
 	display: block;
+	width: 40%;
+	margin: auto;
 }
 
 #operazioni {
