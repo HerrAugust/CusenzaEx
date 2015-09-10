@@ -164,6 +164,8 @@ END');
   	     return false;
   	  }
     }
+    if(!mysql_free_result($result))
+      echo "Problemi nella cancellazione del buffer della query. Errore: " . mysql_error();
     return true;
   }
 
