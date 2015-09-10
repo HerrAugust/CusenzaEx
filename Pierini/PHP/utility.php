@@ -115,6 +115,46 @@ BEGIN
    update crescita set trafficocompleto = trafficocompleto + New.traffico where apparato = New.apparato and datum = New.dataora; 
         end if; 
     end if; 
+END',
+'CREATE DEFINER = CURRENT_USER TRIGGER `centroelaborazione`.`apparato_BEFORE_INSERT` BEFORE INSERT ON `apparato` FOR EACH ROW
+BEGIN
+IF strcmp(New.tipo, "rack") = 0 then 
+  If New.rackCorridoio is null or New.rackFila is null or New.rackLato is null then 
+    Signal sqlstate "45000" set message_text = "Parametri non corretti per rack. Settare solo inventory, soglia, rackCorridoio, rackFila, rackLato, tipo"; 
+  ElseIf New.rackCorridoio is not null or New.rackFila is not null or New.rackLato is not null then 
+      signal sqlstate "45000" set message_text = "Parametri non corretti per apparato non rack. Non settare rackCorridoio, rackFila, rackLato"; 
+  END IF; 
+END IF;
+END',
+'CREATE DEFINER = CURRENT_USER TRIGGER `centroelaborazione`.`vincolo` BEFORE INSERT ON `cavo` FOR EACH ROW
+BEGIN  
+DECLARE tipoA char(20); DECLARE tipoB char(20);   
+DECLARE ftecnConn1 varchar(20); DECLARE ftecnConn2 varchar(20); DECLARE ftipConn1 varchar(20); DECLARE ftipConn2 varchar(20); DECLARE done INT DEFAULT FALSE;  
+DECLARE conn1 CURSOR FOR SELECT Connettore.tipologia, Connettore.tecnologia from cavo join connettore on New.IDconnettore1 = connettore.ID; DECLARE conn2 CURSOR FOR SELECT Connettore.tipologia, Connettore.tecnologia from cavo join connettore on New.IDconnettore2 = connettore.ID ;  
+DECLARE appA CURSOR FOR SELECT Apparato.tipo from Apparato join Cavo on apparato.inventory = cavo.latoA;  DECLARE appB CURSOR FOR SELECT Apparato.tipo from Apparato join Cavo on apparato.inventory = cavo.latoB;  
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;  
+IF strcmp(New.tipologia, "trasmissione") = 0 THEN     IF strcmp(New.standard, "fibra ottica multimodale") <> 0 AND strcmp(New.standard, "rame") <> 0 THEN         SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Lo standard può essere o rame o fibra ottica multimodale";     END IF; END IF;   
+OPEN conn1; OPEN conn2;  
+myloop: LOOP FETCH conn1 INTO ftipConn1, ftecnConn1; FETCH conn2 INTO ftipConn2, ftecnConn2;  
+IF done THEN   LEAVE myloop; END IF;    IF strcmp(ftipConn1, New.tipologia) != 0 or strcmp(ftipConn2, New.tipologia) != 0  THEN     SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Cavo.tipologia = alim/tx => Conn.tipologia = alim/tx"; END IF;  
+IF strcmp(New.standard, "rame") = 0 THEN     IF strcmp(ftecnConn1, "RJ45") <> 0 OR strcmp(ftecnConn2, "RJ45") <> 0 THEN         SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "La tecnologia del cavo deve essere RJ45";     END IF; END IF;  
+IF strcmp(New.tipologia, "alimentazione") = 0 THEN     IF strcmp(New.tecnologia, "H05VV-F") <> 0 THEN         SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "La tecnologia deve essere H05VV-F";     ELSE         IF strcmp(ftecnConn2, "C13") <> 0 OR strcmp(ftecnConn1, "C13") <> 0 THEN             SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "La tecnologia dei connettori deve essere C13";         END IF;     END IF; END IF;  
+END LOOP;  
+CLOSE conn1; CLOSE conn2;      
+SET done = FALSE; OPEN appA; OPEN appB;   
+apploop: LOOP     FETCH appA INTO tipoA;      FETCH appB INTO tipoB;   
+    IF done THEN          LEAVE apploop;      END IF;  
+    IF (strcmp(tipoA, "switch") = 0 and strcmp(tipoB, "router") = 0) or (strcmp(tipoA, "router") = 0 and strcmp(tipoB, "switch") = 0) THEN         SET done = done;     ELSE            SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Vincoli di connessione: Server, UPS, IR, DS <-> Switch <-> Router";      END IF;      END LOOP;   
+CLOSE appA; CLOSE appB;   
+END',
+'CREATE DEFINER=CURRENT_USER TRIGGER `centroelaborazione`.`diagnostica_BEFORE_INSERT` BEFORE INSERT ON `diagnostica` FOR EACH ROW
+BEGIN  
+DECLARE done SMALLINT DEFAULT FALSE; DECLARE errore SMALLINT DEFAULT 0; DECLARE ftipo varchar(20); DECLARE fsoglia INT; DECLARE apparati CURSOR FOR select tipo, soglia from apparato where apparato.inventory = New.apparato; DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;  
+OPEN apparati; myloop: LOOP FETCH apparati into ftipo, fsoglia; IF done THEN LEAVE myloop; END IF; IF fsoglia != New.soglia or strcmp(ftipo, New.tipo) != 0 then     SIGNAL SQLSTATE "45000" SET message_text = "Tipo o soglia inseriti non combaciano con quanto indicato nella tabella Apparato"; END IF;  
+END LOOP;  
+CLOSE apparati;  
+if strcmp(tipo, "router") = 0 or strcmp(tipo, "switch") = 0 or strcmp(tipo, "server") = 0 then     if New.traffico is null or New.occupazione is not null or New.temperatura is not null or New.chilowatt is not null then  set errore = 1;     end if; elseif strcmp(tipo, "UPS") = 0 then     if New.chilowatt is null or New.traffico is not null or New.occupazione is not null or New.temperatura is not null then     set errore = 1;     end if; elseif strcmp(tipo, "data storage") = 0 then     if New.occupazione is null or New.chilowatt is not null or New.traffico is not null or New.temperatura is not null then     set errore = 1;     end if; else if New.temperatura is null or New.occupazione is not null or New.chilowatt is not null or New.traffico is not null then     set errore = 1;     end if; end if;  
+if errore = 1 then     signal sqlstate "45000" set message_text = "Errore nel settaggio dei campi occupazione, traffico, chilowatt oppure temperatura"; end if;  
 END');
   	
   	for($i=0;$i<count($query);$i++){
