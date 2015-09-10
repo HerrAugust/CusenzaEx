@@ -166,4 +166,17 @@ END",
   	else
   		return false;
   }
+
+  function stampatabelle($columns,$rows){
+    echo "<table></br>";
+    for($i=0;$i<mysql_num_rows($rows);$i++){ 
+      for($j=0;$j<count($columns);$j++){
+        echo "<tr><td>".$columns[$j]."</td></tr></br>";
+        $row=mysql_fetch_assoc($rows);
+        echo "<tr><td>".$row[$j]."</td></tr></br>";
+      }
+    } 
+    echo "</table></br>";
+}
+
 ?>
