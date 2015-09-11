@@ -12,11 +12,11 @@
 	<h2>Entità e Relazioni</h2>
 
 	<div id="inserimentoER">
-	<p>Voglio inserire un'entità:</p>
+	<p>Voglio inserire una tupla in un'entità o in una relazione:</p>
 	<form action="./PHP/action_page.php" method="post">
 		<input id="txtinput" type="text" name="query" placeholder="Istruzione MySQL"></br>
-		<input type="submit" name="creaDB" value="Crea Database"/>
 		<input type="submit" name="eseguiQuery" value="0K"/>
+		<input type="submit" name="creaDB" value="Crea Database"/>
 		</form>
 	</div>
 
@@ -75,7 +75,8 @@
 			<p>Operazione 7</p>
 			<p>Dato un servizio su uno specifico apparato, si vuole recuperare la configurazione di backup.</p>
 			<form action="./PHP/action_page.php" method="post">
-				<input type="number" placeholder="Servizio" name="op7Param"/>
+				<input type="number" placeholder="Servizio" name="op7Param1"/>
+				<input type="number" placeholder="Apparato" name="op7Param2"/>
 				<input type="submit" value="0K" name="op7"/>
 			</form>
 		</div>
@@ -119,7 +120,7 @@
 			<p>Operazione 13</p>
 			<p>Dato un apparato ricostruire la cronologia di tutti gli interventi, indicando il tipo di attività e l'operatore che l'ha eseguita</p>
 			<form action="./PHP/action_page.php" method="post">
-				<input type="text" placeholder="Apparato" name="op13Param"/>
+				<input type="number" placeholder="Apparato" name="op13Param"/>
 				<input type="submit" value="0K" name="op13"/>
 			</form>
 		</div>
