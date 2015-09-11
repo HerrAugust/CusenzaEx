@@ -2,6 +2,10 @@ div {
 	vertical-align: top;
 }
 
+#txtinput {
+	width: 110%;
+}
+
 #entita {
 	display: inline-block;
 }
@@ -13,11 +17,14 @@ div {
 
 #inserimentoER {
 	display: block;
+	width: 40%;
+	margin: auto;
 }
 
 #operazioni {
 	display: block;
-	margin: 20px;
+	width: 90%;
+	margin: auto;
 }
 
 #operazioni > div {
