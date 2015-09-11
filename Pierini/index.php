@@ -15,7 +15,7 @@
 	<p>Voglio inserire un'entità:</p>
 	<form action="./PHP/action_page.php" method="post">
 		<input id="txtinput" type="text" name="query" placeholder="Istruzione MySQL"></br>
-		<input type="submit" name="creaDB" value="Crea Database/Connetti"/>
+		<input type="submit" name="creaDB" value="Crea Database"/>
 		<input type="submit" name="eseguiQuery" value="0K"/>
 		</form>
 	</div>
@@ -119,7 +119,7 @@
 			<p>Operazione 13</p>
 			<p>Dato un apparato ricostruire la cronologia di tutti gli interventi, indicando il tipo di attività e l'operatore che l'ha eseguita</p>
 			<form action="./PHP/action_page.php" method="post">
-				<input type="text" placeholder="Apparato" name="op13"/>
+				<input type="text" placeholder="Apparato" name="op13Param"/>
 				<input type="submit" value="0K" name="op13"/>
 			</form>
 		</div>
