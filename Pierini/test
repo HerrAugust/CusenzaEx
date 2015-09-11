@@ -1,0 +1,16 @@
+test per apparato:
+1. insert into apparato value(1,1,'sx',2,'p1','m1','a1','h1',0,21,0,'rack'); non riconosce rackfila nella fieldlist
+
+op1
+op2
+op3
+op4
+op5
+op6
+op7 in test
+op8
+op9
+op10
+op11 ok
+op12 ok
+op13 ok
