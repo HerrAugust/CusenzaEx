@@ -11,7 +11,7 @@
 indirizzo varchar(25))',
 'create table if not exists apparato (inventory integer primary key,
 rackCorridoio smallint,
-rackLato char(2) check (value in ("dx", "sx") ),
+rackLato char(3),
 rackFila smallint,
 produttore varchar(10),
 modello varchar(10),
@@ -20,9 +20,7 @@ hw varchar(20),
 posizione smallint not null,
 soglia smallint default 20 not null,
 occupazioneRack smallint not null,
-tipo varchar(25) not null check(value in("server",
-"data storage", "switch", "router", "ups", "impianto raffreddamento",
-"rack")),
+tipo varchar(25) not null,
 unique(rackCorridoio, rackLato, rackFila) )',
 'create table if not exists configurazione (backup varchar(20) primary key,
 datastorage_archiviare integer references
@@ -116,14 +114,35 @@ BEGIN
         end if; 
     end if; 
 END',
-'CREATE DEFINER = CURRENT_USER TRIGGER `centroelaborazione`.`apparato_BEFORE_INSERT` BEFORE INSERT ON `apparato` FOR EACH ROW
+'CREATE DEFINER=`root`@`localhost` TRIGGER `centroelaborazione`.`apparato_BEFORE_INSERT` BEFORE INSERT ON `apparato` FOR EACH ROW
 BEGIN
+
+if new.tipo != "rack" and new.tipo != "router" and new.tipo != "switch" and new.tipo != "server" and new.tipo != "data storage" and new.tipo != "UPS" and new.tipo != "impianto raffreddamento" then
+  signal sqlstate "45000" set message_text = "tipo può essere solo uno tra: rack, router, switch, server, data storage, impianto raffreddamento, UPS";
+end if;
+
+if new.soglia is null or new.soglia < 0 then
+  signal sqlstate "45000" set message_text = "soglia non può essere null o minore di 0";
+end if;
+
 IF strcmp(New.tipo, "rack") = 0 then 
+  if new.racklato != "dx" and new.racklato != "sx" then
+    signal sqlstate "45000" set message_text = "rackLato può essere solo uno tra: dx, sx";
+    end if;
+    
+    if new.rackCorridoio < 0 or rackFila < 0 then
+    signal sqlstate "45000" set message_text = "Valori non positivi per rackCorridoio o rackFila";
+  end if;
+
   If New.rackCorridoio is null or New.rackFila is null or New.rackLato is null then 
-    Signal sqlstate "45000" set message_text = "Parametri non corretti per rack. Settare solo inventory, soglia, rackCorridoio, rackFila, rackLato, tipo"; 
-  ElseIf New.rackCorridoio is not null or New.rackFila is not null or New.rackLato is not null then 
-      signal sqlstate "45000" set message_text = "Parametri non corretti per apparato non rack. Non settare rackCorridoio, rackFila, rackLato"; 
+    signal sqlstate "45000" set message_text = "Parametri non corretti per rack. Settare solo inventory, soglia, rackCorridoio, rackFila, rackLato, tipo. Non settare occupazioneRack e posizione";
   END IF; 
+    set new.occupazioneRack = -1;
+    set new.posizione = -1;
+else
+  If New.rackCorridoio is not null or New.rackFila is not null or New.rackLato is not null or new.occupazioneRack is null or new.occupazioneRack = 0 or new.posizione is null or new.posizione = 0 then 
+    signal sqlstate "45000" set message_text = "Parametri non corretti per apparato non rack. Non settare rackCorridoio, rackFila, rackLato. Settare occupazioneRack e posizione"; 
+  end if;
 END IF;
 END',
 'CREATE DEFINER = CURRENT_USER TRIGGER `centroelaborazione`.`vincolo` BEFORE INSERT ON `cavo` FOR EACH ROW
@@ -164,8 +183,6 @@ END');
   	     return false;
   	  }
     }
-    if(!mysql_free_result($result))
-      echo "Problemi nella cancellazione del buffer della query. Errore: " . mysql_error();
     return true;
   }
 
@@ -176,16 +193,33 @@ END');
   		return false;
   }
 
-  function stampatabelle($columns,$rows){
-    echo '<table></br>';
-    for($i=0;$i<mysql_num_rows($rows);$i++){ 
-      for($j=0;$j<count($columns);$j++){
-        echo '<tr><td>'.$columns[$j].'</td></tr></br>';
-        $row=mysql_fetch_assoc($rows);
-        echo '<tr><td>'.$row[$j].'</td></tr></br>';
-      }
-    } 
+  /*
+  * Stampa a video la tabella relativa al risultato della query
+  */
+  function stampatabella($columns,$rows){
+    echo '<!DOCTIPE html><link rel="stylesheet" type="text/css" href="general.css"/><table><tr>';
+    for($i=0; $i < count($columns); $i++)
+      echo '<th><b>' . $columns[$i] . '</b></th>';
+    echo'</tr>';
+
+    for($j=0; $j < mysql_num_rows($rows); $j++) {
+        $row = mysql_fetch_row($rows);
+        echo '<tr>';
+        for($i=0; $i < count($columns); $i++)
+          echo '<td>' . $row[$i] . '</td>';
+        echo '</tr>';
+    }
+
     echo '</table></br>';
 }
+
+  /*
+  * Data una query di selezione restituisce le colonne che dovrebbe mostrare in un array
+  */
+  function trovacolonne($query) {
+    $query = str_replace("select", "", $query);
+    $query = preg_replace('/from(.*)/', '', $query);
+    return explode(",", $query);
+  }
 
 ?>
