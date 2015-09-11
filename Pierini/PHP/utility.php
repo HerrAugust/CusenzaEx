@@ -13,14 +13,15 @@ indirizzo varchar(25))',
 rackCorridoio smallint,
 rackLato char(3),
 rackFila smallint,
-produttore varchar(10),
+produttore varchar(11),
 modello varchar(10),
-alimentazione varchar(10),
+alimentazione varchar(16),
 hw varchar(20),
-posizione smallint not null,
+posizione smallint,
 soglia smallint default 20 not null,
-occupazioneRack smallint not null,
+occupazioneRack smallint,
 tipo varchar(25) not null,
+allocare int references apparato(inventory),
 unique(rackCorridoio, rackLato, rackFila) )',
 'create table if not exists configurazione (backup varchar(20) primary key,
 datastorage_archiviare integer references
@@ -88,8 +89,13 @@ servizio, apparato));',
 
 'CREATE DEFINER=`root`@`localhost` TRIGGER `centroelaborazione`.`apparato_BEFORE_INSERT` BEFORE INSERT ON `apparato` FOR EACH ROW
 BEGIN
+declare done int default false;
+declare ftipo varchar(20);
+declare racks cursor for select a2.tipo from apparato a1 join apparato a2 on a2.inventory = new.allocare;
+declare continue handler for not found set done = true;
+
 if new.tipo != "rack" and new.tipo != "router" and new.tipo != "switch" and new.tipo != "server" and new.tipo != "data storage" and new.tipo != "UPS" and new.tipo != "impianto raffreddamento" then
-  signal sqlstate "45000" set message_text = "tipo può essere solo uno tra: rack, router, switch, server, data storage, impianto raffreddamento, UPS";
+  signal sqlstate "45000" set message_text = "tipo deve essere solo uno tra: rack, router, switch, server, data storage, impianto raffreddamento, UPS";
 end if;
 
 if new.soglia is null or new.soglia < 0 then
@@ -99,38 +105,56 @@ end if;
 IF strcmp(New.tipo, "rack") = 0 then 
   if new.racklato != "dx" and new.racklato != "sx" then
     signal sqlstate "45000" set message_text = "rackLato può essere solo uno tra: dx, sx";
-    end if;
+  end if;
     
-    if new.rackCorridoio < 0 or rackFila < 0 then
+    if new.rackCorridoio < 0 or new.rackFila < 0 then
     signal sqlstate "45000" set message_text = "Valori non positivi per rackCorridoio o rackFila";
   end if;
 
-  If New.rackCorridoio is null or New.rackFila is null or New.rackLato is null then 
+  If New.rackCorridoio is null or New.rackFila is null or New.rackLato is null or new.posizione is not null or new.occupazioneRack is not null or new.allocare is not null or new.produttore is not null or new.modello is not null or new.alimentazione is not null or new.hw is not null then
     signal sqlstate "45000" set message_text = "Parametri non corretti per rack. Settare solo inventory, soglia, rackCorridoio, rackFila, rackLato, tipo. Non settare occupazioneRack e posizione";
-  END IF; 
-    set new.occupazioneRack = -1;
-    set new.posizione = -1;
+  END IF;
 else
-  If New.rackCorridoio is not null or New.rackFila is not null or New.rackLato is not null or new.occupazioneRack is null or new.occupazioneRack = 0 or new.posizione is null or new.posizione = 0 then 
+  If New.rackCorridoio is not null or New.rackFila is not null or New.rackLato is not null or new.occupazioneRack is null or new.occupazioneRack = 0 or new.posizione is null or new.posizione = 0 or new.allocare is null then 
     signal sqlstate "45000" set message_text = "Parametri non corretti per apparato non rack. Non settare rackCorridoio, rackFila, rackLato. Settare occupazioneRack e posizione"; 
   end if;
+  
+  open racks;
+  myloop: loop
+  fetch racks into ftipo;
+  if done then leave myloop; end if;
+  if ftipo != "rack" then
+  signal sqlstate "45000" set message_text = "Allocazione apparato non rack possibile solo in un rack";
+  end if;
+  end loop;
+  close racks;
+  
 END IF;
 END',
 
-'CREATE DEFINER = CURRENT_USER  TRIGGER `centroelaborazione`.`archiviare` BEFORE INSERT ON `configurazione` FOR EACH ROW
+'CREATE DEFINER=`root`@`localhost` TRIGGER `centroelaborazione`.`configurazione_BEFORE_INSERT` BEFORE INSERT ON `configurazione` FOR EACH ROW
 begin
-DECLARE type varchar(20); DECLARE done smallint DEFAULT 1; 
-DECLARE cur1 CURSOR FOR select apparato.tipo from apparato join configurazione on apparato.inventory = NEW.datastorage_archiviare; 
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 0; OPEN cur1;
-myloop: LOOP  
-IF !done THEN LEAVE myloop; END IF;
-FETCH cur1 INTO type;
-  IF strcmp(type,"router") != 0 THEN 
-  SIGNAL SQLSTATE "45000"
-  SET MESSAGE_TEXT = "Archiviazione permessa solo nei data storage";
-LEAVE myloop; 
-END IF;
-END LOOP; CLOSE cur1; end',
+DECLARE ftype varchar(20);
+DECLARE niter smallint default 0;
+DECLARE done int DEFAULT false; 
+DECLARE cur1 CURSOR FOR select apparato.tipo from apparato join configurazione on apparato.inventory = new.datastorage_archiviare;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = true;
+OPEN cur1;
+myloop: LOOP
+  FETCH cur1 INTO ftype;
+  IF done THEN
+    LEAVE myloop;
+  END IF;
+    set niter = niter + 1;
+    IF ftype != "data storage" THEN 
+    SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "Archiviazione permessa solo nei data storage";
+  END IF;
+END LOOP; 
+CLOSE cur1; 
+if niter = 0 then
+  SIGNAL SQLSTATE "45000" SET MESSAGE_TEXT = "L\'Apparato inserito non esiste";
+end if;
+end',
 
 'CREATE DEFINER = CURRENT_USER TRIGGER `centroelaborazione`.`cavo_BEFORE_INSERT` BEFORE INSERT ON `cavo` FOR EACH ROW
 BEGIN  
@@ -212,7 +236,7 @@ END',
   	for($i=0;$i<count($query);$i++){
   	  $result=mysql_query($query[$i], $link);
   	  if(!$result){
-  	     echo 'Invalid query:'.mysql_error().'-'.$query[$i] . '</br>';
+  	     echo 'Invalid query:'. $query[$i] . '</br>Errore: ' . mysql_error() . '</br></br>';
   	     return false;
   	  }
     }
@@ -250,6 +274,35 @@ END',
   * Data una query di selezione restituisce le colonne che dovrebbe mostrare in un array
   */
   function trovacolonne($query) {
+    if(strpos($query, "*") !== false) {
+      $a = array();
+      if(strpos($query, "apparato") !== false)
+        $a = array("Inventory", "RackCorridoio", "RackLato", "RackFila", "Produttore","Modello","Alimentazione", "Hardware", "Posizione", "Soglia", "OccupazioneRack", "Tipo", "Allocazione");
+      elseif(strpos($query, "operatore") !== false)
+        $a = array("Matricola", "Nome", "Indirizzo");
+      elseif(strpos($query, "servizio") !== false)
+        $a = array("ID");
+      elseif(strpos($query, "configurazione") !== false)
+        $a = array("Backup", "Datastorage_archiviare", "Servizio_archiviare", "Apparato_erogare", "Servizio_erogare");
+      elseif(strpos($query, "connettore") !== false)
+        $a = array("ID", "Tipologia", "Tecnologia", "Apparato", "Cavo");
+      elseif(strpos($query, "cavo") !== false)
+        $a = array("Targhetta", "Tecnologia", "Tipologia", "Standard", "Lato A", "Lato B", "IDconnettore1", "IDconnettore2");
+      elseif(strpos($query, "diagnostica") !== false)
+        $a = array("Timestamp", "Servizio", "Apparato", "Temperatura", "Chilowatt", "Occupazione", "Traffico", "Soglia", "Tipo");
+      elseif(strpos($query, "crescita") !== false)
+        $a = array("Apparato", "Data", "TrafficoCompleto");
+      elseif(strpos($query, "istallare") !== false)
+        $a = array("Operatore", "Apparato", "Timestamp", "Codice");
+      elseif(strpos($query, "riconfigurare") !== false)
+        $a = array("Operatore", "Apparato", "Timestamp", "Codice");
+      elseif(strpos($query, "configurare") !== false)
+        $a = array("Operatore", "Servizio", "Timestamp", "Codice");
+      else #accesso
+        $a = array("Operatore", "Dataora_diagnostica", "Servizio_diagnostica", "Apparato_diagnostica", "Codice", "Timestamp");
+      return $a;
+    }
+
     $query = str_replace("select", "", $query);
     $query = preg_replace('/from(.*)/', '', $query);
     return explode(",", $query);
