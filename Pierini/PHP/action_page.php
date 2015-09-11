@@ -25,8 +25,8 @@ else #esegui query
 	{
 		echo "La tua query:<b> ".$_POST['query']."</b></br></br>";
 
-		if(strpos($_POST['query'], "create") !== FALSE or strpos($_POST['query'], "*") !== false)
-			die("Vengono accettate solo query di inserimento e selezione!</br>Inoltre non viene accettato il carattere * per problemi che si potrebbero verificare col disegnamento della tabella risultante dalla query.");
+		if(strpos($_POST['query'], "create") !== FALSE or (strpos($_POST['query'], "*") !== false and strpos($_POST['query'], "join") !== false) )
+			die("Vengono accettate solo query di inserimento e selezione!</br>Inoltre non viene accettato il carattere * col join per problemi che si potrebbero verificare col disegnamento della tabella risultante dalla query.");
 
 		#impossibile inserire valori in crescita
 		if(strpos($_POST['query'], "crescita") !== false)
@@ -49,6 +49,7 @@ else #esegui query
 				echo "Ho eseguito la query di duplicazione del cavo</br>";
 		}
 
+
 		if(strpos($_POST['query'], "select") !== FALSE)
 			stampatabella(trovacolonne($_POST['query']), $resg);
 
@@ -65,7 +66,7 @@ else #esegui query
 		{
 			$numop = "1";
 			$cols = array("Produttore", "Modello", "Alimentazione", "Hardware", "Posizione", "Occupazione Rack");
-			$query = 'select produttore, modello, alimentazione, hw, posizione, occupazioneRack from apparato where strcmp(tipo, "rack") != 0;';
+			$query = 'select produttore, modello, alimentazione, hw, posizione, occupazioneRack, allocare from apparato where strcmp(tipo, "rack") != 0;';
 		}
 		elseif(isset($_POST['op2']))
 		{
@@ -111,9 +112,9 @@ else #esegui query
 		{
 			$numop = "7";
 			$cols = array("Backup, Data Storage");
-			if(strlen($_POST['op7Param']) == 0)
-				die("Parametro non settato per operazione 7");
-			$query = 'select backup, datastorage_archiviare from configurazione where servizio_erogare = ' . $_POST['op7Param'] . ' and apparato_erogare = ' . $_POST['op7Param'];
+			if(strlen($_POST['op7Param1']) == 0 or strlen($_POST['op7Param2']) == 0)
+				die("Parametro 1 o 2 non settato per operazione 7");
+			$query = 'select backup, datastorage_archiviare from configurazione where servizio_erogare = ' . $_POST['op7Param1'] . ' and apparato_erogare = ' . $_POST['op7Param2'];
 		}
 		elseif(isset($_POST['op8']))
 		{
