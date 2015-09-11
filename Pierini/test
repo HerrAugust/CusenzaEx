@@ -1,16 +1,17 @@
-test per apparato:
-1. insert into apparato value(1,1,'sx',2,'p1','m1','a1','h1',0,21,0,'rack'); non riconosce rackfila nella fieldlist
-
-op1
-op2
+op1 ok
+INSERT INTO `centroelaborazione`.`apparato` (`inventory`, `rackCorridoio`, `rackLato`, `rackFila`, `soglia`, `tipo`) VALUES ('1', '1', 'sx', '2', '32', 'rack'),('2', '1', 'dx', '2', '43', 'rack');
+INSERT INTO `centroelaborazione`.`apparato` (`inventory`, `posizione`, `soglia`, `occupazioneRack`, `tipo`, `allocare`, `produttore`,`modello`,`alimentazione`,`hw`) VALUES ('3', '2', '54', '2', 'router', '1', 'produttore1', 'modello1','alimentazione1','hardware1'), (4,3,4,1,"switch",1,'produttore1', 'modello2', 'alimentazione1', 'hardware1'), (5,3,66,1,"server",2,'produttore2', 'modello3', 'alimentazione1','hardware5');
+op2 in test
 op3
 op4
 op5
-op6
-op7 ok
+op6 ok
+op7 errore configurare trigger
 op8
 op9
 op10
 op11 ok
 op12 ok
 op13 ok
+
+op1: ho dovuto aggiungere l'attributo allocare a Apparato. Va settato solo se l'apparato non è un rack.
