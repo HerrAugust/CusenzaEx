@@ -1,0 +1,6 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname es2) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+scrivere una funzione che data una lista di numeri natuali positivi restituisce una lista
+composta dai numeri della lista in input dove i pari e i dispari sono disposti in modo alternato.
+per esempio, (alterna '(6 3 5 1 8 7 2 4)) restituisce '(6 3 8 5 2 1 4 7)
