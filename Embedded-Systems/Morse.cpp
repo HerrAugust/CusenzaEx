@@ -11,39 +11,57 @@
  */
 
 #include "mraa.hpp"
+#include "client.h"
+
 #include <iostream>
-#include <grove.h>
 #include <time.h>
+#include <grove.h>
+#include <buzzer.h>
 
 using namespace std;
 
 #define DEBUG 1 /*Enables or disables debug mode. This could make the program slower because cout are performed.*/
-#define TOUCHPIN 2 /*Defines where the Grove Touch sensor is plugged in - default is D2*/
+#define TOUCHPIN 2 /*Defines where the Grove Touch (Button) sensor is plugged in - default is D2*/
 #define DOTSINCHAR 10 /*Defines the quantity of dots and dahs there are in a single character*/
-//#define TIMEUNIT 1 /*Defines the time unit in seconds per one semantically meaningful entity - for example a long click is equivalent to 2 seconds if TIMEUNIT is 1*/
+//#define TIMEUNIT 1.0 /*Defines the time unit in seconds per one semantically meaningful entity - for example a long click is equivalent to 2 seconds if TIMEUNIT is 1*/
 
-upm::GroveButton *touch = new upm::GroveButton(TOUCHPIN); //Va bene anche per il touch; D2
+//Grove Touch or Button sensor object (Digital pin 2)
+upm::GroveButton *touch = new upm::GroveButton(TOUCHPIN);
 
+/*
+ * This function "understands" if the click on Grove Touch is a long or a short one.
+ * This is done by mesuring the time Touch is clicked.
+ * If more than (default) 2.0 seconds, it is a long click (so true); otherwise it is a short one (so false).
+ */
 bool isLongClick() {
 	clock_t beg,end;
+
 	beg = clock();
-	while(touch->value()); //while value of touch is not 0, ie clicked
+	//while value of touch is not 0, ie clicked
+	while(touch->value());
 	end = clock();
+
 	double duration = (end-beg) / (double) CLOCKS_PER_SEC;
 #ifdef DEBUG
 	cout << "click duration: " << duration << " sec. => " << (duration >= 2.0 ? "LONG." : "SHORT.") << endl;
 #endif
+
 	if(duration >= 2.0)
 		return true;
 	else
 		return false;
 }
 
+/*
+ * Returns how much time Touch is not clicked, in seconds.
+ */
 double getSilenceDuration() {
 	clock_t beg,end;
+
 	beg = clock();
 	while(!touch->value()); //while value of touch is 0, ie not clicked
 	end = clock();
+
 	double durationSeconds = (end-beg) / (double) CLOCKS_PER_SEC;
 #ifdef DEBUG
 	cout << "silence duration: " << durationSeconds << endl;
@@ -142,18 +160,25 @@ int main()
 	string message = "";
 	bool clicksHistory[DOTSINCHAR] = {false};
 	int currentClick = 0;
-	//TODO controllare il comportamento del programma quando le periferiche non sono inserite
 	if(touch == NULL) {
 		cerr << "touch is NULL" << endl;
 		return mraa::ERROR_NO_RESOURCES;
 	}
 
-	//TODO control target platform is one of the right ones.
+	//check that we are running on Galileo or Edison
+	mraa_platform_t platform = mraa_get_platform_type();
+	if ((platform != MRAA_INTEL_GALILEO_GEN1) &&
+			(platform != MRAA_INTEL_GALILEO_GEN2) &&
+			(platform != MRAA_INTEL_EDISON_FAB_C)) {
+		std::cerr << "Unsupported platform, exiting" << std::endl;
+		return MRAA_ERROR_INVALID_PLATFORM;
+	}
 
 
 	//wait for the first click
 	while(touch->value() == 0);
 
+	//snippet to manage long and short clicks on Grove Touch or Button sensor
 	for(;;) {
 		if(touch->value()) { //click event
 			clicksHistory[currentClick++] = isLongClick();
@@ -167,6 +192,8 @@ int main()
 			cout << "Silence zone entered" << endl;
 #endif
 			duration = getSilenceDuration();
+
+			//If duration is minor than 1.0, ignore it (user is inserting a letter)
 			if(duration < 1.0)
 			{
 				continue;
@@ -174,24 +201,37 @@ int main()
 			else
 			{
 				switch( (int) duration) { //TODO: replace 2.0, 1.0, etc with TIMEUNIT
+					//case 2 seconds of silence
 					case 2: //SPACE: end current char and add space
 #ifdef DEBUG
 						cout << "SPACE" << endl;
 #endif
+					//case 1 second of silence
 					case 1: //ECHAR: end of current char
 #ifdef DEBUG
 						cout << "ECHAR" << endl;
 #endif
 						message += decode(clicksHistory, currentClick);
+#ifdef DEBUG
 						for(int i = 0; i < DOTSINCHAR; i++)
 							clicksHistory[i] = false;
+#endif
 						currentClick = 0;
 						if( (int) duration == 1) //if ECHAR
 							break;
+						//otherwise add a space, duration == 2
 						message += ' ';
 						break;
+
+					//more than 2 seconds of silence
 					default: //EMSG: end current message
-						cout << "Message finished: " << message + decode(clicksHistory, currentClick) << "." << endl;
+						message += decode(clicksHistory, currentClick);
+						cout << "Message finished: " << message << "." << endl;
+
+						//Send the message that you inserted to your computer. See client.cpp
+						if(!sendToComputer(message.c_str()))
+							cerr << "Errore: impossibile contattare il computer." << endl;
+
 #ifdef DEBUG
 						for(int i = 0; i < 10;i++)
 							cout << i << ": " << clicksHistory[i] << endl;
