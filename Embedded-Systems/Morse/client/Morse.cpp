@@ -1,13 +1,42 @@
 /*
- * This code provides an example of a revisited Morse Code. Here only
- * alphabet and numbers are comprehented (no error nand other). Moreover
- * you can specify a time unit, which is in seconds, and the default
- * one is 1 second, i.e. you must slowly enter your string. This is
- * for semplicity.
- * You can find a UML state diagram description of this code.
- * @author Agostino Mascitti
- * Special thanks to Professor Pomante, who lent to me Intel Edison, and to Intel
- * in general, which gave Intel Edison to universities.
+ * Author: Agostino Mascitti <agostino690@gmail.com>
+ * Copyright (c) 2015 Intel Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/**
+ * @file
+ * @ingroup grove
+ * @brief Morse interpreter using Internet example
+ *
+ * This project shows how to use Grove Touch or Button sensor to read a string
+ * and than pass it to your computer through Internet.
+ *
+ * @hardware Sensors used:
+ * Grove Touch (GroveTouch)
+ * Grove Button (GroveButton)
+ *
+ * @ld -lupm-grove
+ *
+ * @date 24/ott/2015
  */
 
 #include "mraa.hpp"
@@ -16,14 +45,23 @@
 #include <iostream>
 #include <time.h>
 #include <grove.h>
-#include <buzzer.h>
 
 using namespace std;
 
+
+/*
+ * Grove Starter Kit example
+ *
+ * Demonstrate the usage of Grove Touch or Button using the UPM library.
+ *
+ * - digital in: Grove Touch or Button sensor connected to the Grove Base Shield Port D2
+ *
+ * Additional linker flags: -lupm-grove
+ */
+
 #define DEBUG 1 /*Enables or disables debug mode. This could make the program slower because cout are performed.*/
 #define TOUCHPIN 2 /*Defines where the Grove Touch (Button) sensor is plugged in - default is D2*/
-#define DOTSINCHAR 10 /*Defines the quantity of dots and dahs there are in a single character*/
-//#define TIMEUNIT 1.0 /*Defines the time unit in seconds per one semantically meaningful entity - for example a long click is equivalent to 2 seconds if TIMEUNIT is 1*/
+#define DOTSINCHAR 10 /*Defines the quantity of dots and dashes there are in a single character*/
 
 //Grove Touch or Button sensor object (Digital pin 2)
 upm::GroveButton *touch = new upm::GroveButton(TOUCHPIN);
@@ -69,6 +107,9 @@ double getSilenceDuration() {
 	return durationSeconds;
 }
 
+/*
+ * Decodes the sequence of clicks on Grove Touch, returning the corrisponding character (alphabet or digit).
+ */
 char decode(bool* ch, int len) {
 	char c = '?';
 
@@ -154,6 +195,13 @@ char decode(bool* ch, int len) {
 	return c;
 }
 
+/*
+ * Waits for clicks on Grove Touch and manages other functions.
+ * If pause between a click and the following is minor than 1 sec => do nothing;
+ * If pause between a click and the following is 1 <= pause time < 2 sec => decode this sequence of clicks and add it to the string;
+ * If pause between a click and the following is 2 <= pause time < 3 sec => add a space to the string;
+ * Otherwise end the string and send it to the computer.
+ */
 int main()
 {
 	double duration;
@@ -200,7 +248,7 @@ int main()
 			}
 			else
 			{
-				switch( (int) duration) { //TODO: replace 2.0, 1.0, etc with TIMEUNIT
+				switch( (int) duration) {
 					//case 2 seconds of silence
 					case 2: //SPACE: end current char and add space
 #ifdef DEBUG
