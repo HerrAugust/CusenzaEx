@@ -1,0 +1,23 @@
+WHAT IS SERVERINTELEDISON.JAVA?
+This is the server for Morse.cpp, which is a program for Intel Edison (or equivalent boards) written in C++ and C.
+
+
+-------------------------------
+WHAT ARE SERVERINTELEDISON.CLASS AND LAUNCH.BAT?
+The first one is the same file that you can obtain by opening Prompt (Windows) or a terminal (Linux) and compiling ServerIntelEdison.java.
+The second one (you can open it with Gedit on Linux or Notepad on Windows) is a shortcut to launch ServerIntelEdison. It simply does for
+you what you would do manually (see "how to compile the server"). It works perfectly on Windows; on Linux you should change its file extension.
+In order to use launch.bat you must have Java JDK installed on your computer.
+
+-------------------------------
+HOW CAN I COMPILE AND RUN SERVERINTELEDISON.JAVA?
+Be sure you have installed Java JDK (otherwise simply download and install it). Open Prompt (Windows) or a Terminal (Linux), move to the path
+of ServerIntelEdison.java using "cd" and than "javac ServerIntelEdison.java" and than "java ServerIntelEdison".
+For example, suppose ServerIntelEdison.java is in "C:\Users\Agostino\Workspace\iot\Morse\server". Install Java JDK, open Prompt or Terminal, write:
+
+cd C:\Users\Agostino\Workspace\iot\Morse\server (press enter)
+javac ServerIntelEdison.java (press enter)
+java ServerIntelEdison (press enter)
+
+Now enter a Morse string using your board (it must be connected to the Internet) and voilà: ServerIntelEdison will receive the string and will open
+a window in your browser. Enter the security code and listen to your string.
