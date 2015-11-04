@@ -45,6 +45,7 @@
 #include <iostream>
 #include <time.h>
 #include <grove.h>
+#include <cstdlib>
 
 using namespace std;
 
@@ -274,11 +275,14 @@ int main()
 					//more than 2 seconds of silence
 					default: //EMSG: end current message
 						message += decode(clicksHistory, currentClick);
+#ifdef DEBUG
 						cout << "Message finished: " << message << "." << endl;
+#endif
 
 						//Send the message that you inserted to your computer. See client.cpp
-						if(!sendToComputer(message.c_str()))
-							cerr << "Errore: impossibile contattare il computer." << endl;
+						if(!sendToComputer(message.c_str())) {
+							cout << "No internet connection. Your string: " << message << endl;
+						}
 
 #ifdef DEBUG
 						for(int i = 0; i < 10;i++)
