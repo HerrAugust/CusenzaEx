@@ -51,10 +51,18 @@
 #include <netdb.h>
 
 #define DEBUG 1
-#define COMPUTER_IP "192.168.001.003" /*This is the IP address of the machine that will pronounce the inserted Morse string*/
+#define COMPUTER_IP "192.168.001.005" /*This is the IP address of the machine that will pronounce the inserted Morse string*/
 #define PORT "50006" /*This is the port of the process that will pronounce the inserted Morse string*/
 
 using namespace std;
+
+/*
+ * Test if Intel Edison or similar board is connected to the Internet (yes/no).
+ * 3 packets are sent to www.yahoo.com; if no feedback after 5 seconds, there is no internet connection.
+ */
+bool testConnection() {
+	return !system("ping -s 1 -W 5 -c 3 www.yahoo.com");
+}
 
 /*
  * This function sends your Morse string (inserted by using the Grove Touch or Button sensor) to
@@ -63,9 +71,11 @@ using namespace std;
  * You must start ServerIntelEdison.java on your computer to make it work.
  */
 bool sendToComputer(const char* message) {
+	if(!testConnection())
+		return false;
+
 #ifdef DEBUG
-	cout << "sendToComputer: ";
-	cout << message << endl;
+	cout << "sendToComputer: " << message << endl;
 #endif
 
 	struct addrinfo *res, hints, *cur;
