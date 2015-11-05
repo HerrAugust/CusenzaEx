@@ -33,8 +33,9 @@
  * @hardware Sensors used:
  * Grove Touch (GroveTouch)
  * Grove Button (GroveButton)
+ * Grove LCD (Jhd1313m1)
  *
- * @ld -lupm-grove
+ * @ld -lupm-i2clcd -lupm-grove
  *
  * @date 24/ott/2015
  */
@@ -57,23 +58,12 @@
 using namespace std;
 
 /*
- * Test if Intel Edison or similar board is connected to the Internet (yes/no).
- * 3 packets are sent to www.yahoo.com; if no feedback after 5 seconds, there is no internet connection.
- */
-bool testConnection() {
-	return !system("ping -s 1 -W 5 -c 3 www.yahoo.com");
-}
-
-/*
  * This function sends your Morse string (inserted by using the Grove Touch or Button sensor) to
  * your computer. This, in turn, will open a browser to pronounce your Morse string.
  * This function is IP version independent, ie you can use either IPv4 or IPv6.
  * You must start ServerIntelEdison.java on your computer to make it work.
  */
 bool sendToComputer(const char* message) {
-	if(!testConnection())
-		return false;
-
 #ifdef DEBUG
 	cout << "sendToComputer: " << message << endl;
 #endif
@@ -90,6 +80,10 @@ bool sendToComputer(const char* message) {
 		cerr << "client getaddrinfo " << endl;
 		return false;
 	}
+
+#ifdef DEBUG
+	cout << "getaddrinfo done" << endl;
+#endif
 
 	int opt = 1, fd;
 	for(cur = res; cur != NULL; cur = cur->ai_next) {
