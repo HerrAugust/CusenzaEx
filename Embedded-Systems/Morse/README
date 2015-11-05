@@ -2,6 +2,7 @@ What does the code do?
 Morse.cpp retrieves a message that you enter using Grove Touch sensor in Morse.
 After this it sends the message to your PC (you must insert the correct IP address to make it work).
 Your PC will finally make Text to Speech.
+Moreover, your string will be shown on Grove LCD.
 
 This is an example of how to use sensor and Intel Edison or similar board. It is also a good example
 to show you how to make your board interact with Internet and other devices to perform quite complex work.
@@ -15,7 +16,7 @@ than "javac ServerIntelEdison.java" and finally "java ServerIntelEdison").
 
 ----------------------------------
 Which sensors should I use?
-Grove Touch sensor or Grove Botton sensor.
+Grove Touch sensor or Grove Botton sensor and Grove LCD.
 
 -----------------------------------
 What Morse code must I use?
@@ -27,4 +28,4 @@ See https://www.dropbox.com/home/Public?preview=Morse+interpreter+for+Intel+Edis
 
 -----------------------------------
 Special thanks
-Special thanks to Professor Pomante, who lent to me Intel Edison, and to Intel in general, which gave Intel Edison to universities.
+Special thanks to Professor Pomante, who lent to me Intel Edison, to Vittoriano Muttillo, who assisted me, and to Intel in general, which gave Intel Edison to universities.
