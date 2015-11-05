@@ -33,8 +33,9 @@
  * @hardware Sensors used:
  * Grove Touch (GroveTouch)
  * Grove Button (GroveButton)
+ * Grove LCD (Jhd1313m1)
  *
- * @ld -lupm-grove
+ * @ld -lupm-i2clcd -lupm-grove
  *
  * @date 24/ott/2015
  */
