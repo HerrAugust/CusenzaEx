@@ -33,19 +33,26 @@
  * @hardware Sensors used:
  * Grove Touch (GroveTouch)
  * Grove Button (GroveButton)
+ * Grove LCD (Jhd1313m1)
  *
- * @ld -lupm-grove
+ * @ld -lupm-i2clcd -lupm-grove
  *
  * @date 24/ott/2015
  */
 
 #include "mraa.hpp"
-#include "client.h"
+#include "./Client/client.h"
 
 #include <iostream>
 #include <time.h>
 #include <grove.h>
 #include <cstdlib>
+#include <ssd1327.h>
+#include <ssd1308.h>
+#include <ssd1306.h>
+#include <sainsmartks.h>
+#include <lcm1602.h>
+#include <jhd1313m1.h>
 
 using namespace std;
 
@@ -197,6 +204,19 @@ char decode(bool* ch, int len) {
 }
 
 /*
+ * Writes a message to Grove LCD.
+ * Note: you must switch on the switch (to 5V) near A0 on the Base Shield.
+ */
+void writeToLCD(string msg) {
+	upm::Jhd1313m1 *lcd = new upm::Jhd1313m1(0); //I2C bus
+	lcd->clear();
+	lcd->autoscrollOn();
+	lcd->setColor(255,255,255);
+	lcd->setCursor(0,0);
+	lcd->write(msg);
+}
+
+/*
  * Waits for clicks on Grove Touch and manages other functions.
  * If pause between a click and the following is minor than 1 sec => do nothing;
  * If pause between a click and the following is 1 <= pause time < 2 sec => decode this sequence of clicks and add it to the string;
@@ -278,6 +298,8 @@ int main()
 #ifdef DEBUG
 						cout << "Message finished: " << message << "." << endl;
 #endif
+
+						writeToLCD(message);
 
 						//Send the message that you inserted to your computer. See client.cpp
 						if(!sendToComputer(message.c_str())) {
