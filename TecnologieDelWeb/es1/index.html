@@ -1,3 +1,8 @@
+<!--
+	Make inputs not modal, ie locked, while message box is open;
+	Make #message only show "*****" (before it showed many groups of "*****" because JQuery prepend() was used
+-->
+
 <!DOCTYPE html>
 
 <html>
@@ -63,65 +68,67 @@
 		<script src="http://code.jquery.com/jquery.js"></script>
 		
 		<script type="text/javascript">
-		
-			$(document).ready(function(){
-				
-				
-				$('<div id="message"><button>Ok</button></div>')
-					.appendTo('body')
-					.css({
-						'border':'1px solid gray',
-						'border-radius':'5px',
-						'width':'200px',
-						'height':'80px',
-						'padding-top': '20px',
-						'vertical-align':'middle',
-						'text-align':'center',
-						'display':'none'
-					})
-					.children('button')
-					.css({
-						'position':'relative',
-						'top': '35px'
-					})
-					.click(function(){
-						$(this)
-							.parent()
-							.fadeOut();
-					});
-	
-				
-				// add '(*)' to each mandatory field label'
-				$('form div input.mandatory').each(function(){
+
+			function createMessageBox() {
+				$('<div id="message"><span></span><button>Ok</button></div>')
+				.appendTo('body')
+				.css({
+					'border':'1px solid gray',
+					'border-radius':'5px',
+					'width':'200px',
+					'height':'80px',
+					'padding-top': '10px',
+					'vertical-align':'middle',
+					'text-align':'center',
+					'display':'none'
+				})
+				.children('button')
+				.css({
+					'position':'relative',
+					'top': '35px'
+				})
+				.click(function(){
 					$(this)
-						.parent()
-						.prev()
-						.children('label')
-						.append(' (*)');
+					.parent()
+					.fadeOut();
+					//AGOSTINO: make inputs enabled
+					$('input').removeProp('disabled');
 				});
-				
+
 				$("form div input#submit").click(function(e){
-					e.preventDefault();
 					var found = false;
+					e.preventDefault();
 					$('form div input.mandatory').each(function(){
-						
-						
 						if ($(this).val() == '') {
 							found = true;
 						}
 					});
-					
+
+					//AGOSTINO: show ***** in messagebox
 					if (found == true) {
-						$('div#message')
-							.prepend('*****<br>')
-							.fadeIn();
+						$('#message span')
+						.html('*****')
+						.parent()
+						.fadeIn();
+						//AGOSTINO: make inputs disabled
+						$('input').prop('disabled', true);
 					}
 				});
-				
-			
-				
+			}
+
+			$(document).ready(function() {
+				createMessageBox();
+
+				// add '(*)' to each mandatory field label'
+				$('form div input.mandatory').each(function(){
+					$(this)
+					.parent()
+					.prev()
+					.children('label')
+					.append(' (*)');
+				});
 			});
-		
+
 		</script>
 		
 	</head>
