@@ -9,7 +9,7 @@
 ;(define conta-pari-e-dispari(lambda (list) (
 ;                                        cond( #t (cons (conta-pari list 0) (conta-dispari list 0)) )
 ;                                        )))
-;ESEMPIO PIÙ SEMPLICE:
+;ESEMPIO PIÙ SEMPLICE (vedi "per capire"):
 ;(cons 2 7) non funziona: 2 non è lista
 ;VS
 ;(cons (cons 2 '()) (cons 7 '()))
