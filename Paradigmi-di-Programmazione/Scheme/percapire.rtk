@@ -1,0 +1,8 @@
+;per capire
+
+;(cons 2 7) non funziona: "second argument must be a list but received 2 and 7" poichè cons: list*list->list
+;VS
+(cons (cons 2 '()) (cons 7 '()))
+
+;IMPORTANTE: come creare le liste
+(cons 2 '())
