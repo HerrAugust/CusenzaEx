@@ -1,0 +1,15 @@
+Before to go further, please download Bison and GCC.
+
+HOW TO START THESE PROGRAMS
+Let's take es1.y as example for the following HowTo. Open the shell and write
+1. bison es1.y
+2. gcc es1.tab.c -ly
+3. ./a.out
+4. (abaa) (or some other input)
+
+IN GENERAL
+1. Write the YACC program with extension .y
+2. Note: do not write your code with errors, because they will not be taken over (for example, either bison and gcc toke over that I wrote a variable (contatore) instead of the decleared variable (counter) and output was everytime "Sintax error" and I got mad to understand why)
+3. In the shell: bison es1.y; gcc es1.tab.c -ly; ./a.out (separate commands)
+4. Write an input: (abaa)
+5. Observe output and enjoy
