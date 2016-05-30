@@ -19,9 +19,9 @@ int counter;
 %token <tipo> PIPPO
 %start s
 %%
-s : '(' X ')' {printf("%d", contatore); return(0);};
-X : X PIPPO {if($2 =='a') counter+=1;};
-X : PIPPO {if($1 == 'a') counter+=1;};
+s : '(' X ')' {printf("%d", counter); return 0;};
+X : X PIPPO {if($2 =='a') counter++;};
+X : PIPPO {if($1 == 'a') counter++;};
 %%
 yylex() {
 	char c=getchar();
