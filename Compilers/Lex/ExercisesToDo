@@ -1,0 +1,8 @@
+1. Write Lex code to recognize a sequence of octal digits surrounded by a couple of brakets at the beginning and at the end
+2. Match the not-void sequence of vowels that can begin or not by digit. Write the first vowel.
+3. Recognize sequences (also void) of digits fllowed by a sequence (not void) of letters with the condition that these sequences are separated by '?'.
+Write the first letter found.
+4. Match the following set {0, 1, +1, 2, +2, 3, +3, …} (numbers are surrounded by parenthesis). Output the first digit.
+5. Match all negative numbers (not zero). Output the sum of the first and of the last digit. For example, for -488898 output is 12 and for -7 output is 14.
+6. Match CONV([+-binary number]) (replace [+-binary number]) and output the first digit. For example, for CONV(0101) output is 0; for CONV(-101) output is 1.
+7. Match [[number]] and output the amount of digits of number. For example, for input [[2311]] output is 4; for input [[13123111112]] output is 11.
