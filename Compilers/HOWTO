@@ -1,0 +1,14 @@
+Come compilare in lex:
+1. Scaricare Lex (o Flex in Windows)
+2. Scrivere il programma in Lex (termina per .l o .lex)
+3. nel prompt dei comandi, passare tale file a lex (o flex): lex nomeprogramma.lex
+4. nel prompt dei comandi, scrivere: gcc lex.yy.c -lfl
+	dove -lfl è necessario perchè la funzione yywrap() non è stata ridefinita e va bene quella di default.
+5. lanciare ./a.out
+6. Inserire l'input direttamente nel terminale
+
+Nota: In Lex è necessario il %% finale. Comunque il più piccolo programma rimane %%...
+Nota: In Lex è necessario scrivere la parte di dichiarazione senza spazi
+Nota: Ricorda le due variabili "yyleng" e "yytext", che è un array
+Nota: The long match is preferred, vedi il materiale trovato online (abc fa match con "abc" e non con "ab")!
+Nota: Se un input fa match con due patter viene scelto quello scritto per primo!
