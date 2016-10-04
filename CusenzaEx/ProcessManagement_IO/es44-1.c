@@ -1,4 +1,4 @@
-
+/*
  * Write a program that uses 2 pipes to enable bidirectional communication between a parent and child process. The parent should
  * loop reading a block of text from standard input and use one of the pipes to send the text to the child, which converts it
  * to uppercase and send it back to the parent via the other pipe. The parent reads the data coming back from the child and echoes
