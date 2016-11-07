@@ -1,5 +1,5 @@
 Come compilare in lex:
-1. Scaricare Lex (o Flex in Windows)
+1. Scaricare Lex (o Flex in Windows). Su Ubuntu "sudo apt-get install byacc flex"
 2. Scrivere il programma in Lex (termina per .l o .lex)
 3. nel prompt dei comandi, passare tale file a lex (o flex): lex nomeprogramma.lex
 4. nel prompt dei comandi, scrivere: gcc lex.yy.c -lfl
