@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/NewWSDLFile/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ExampleWSDLFile" targetNamespace="http://www.example.org/NewWSDLFile/">
+
+  	<wsdl:types>
+    	<xsd:schema targetNamespace="http://www.example.org/NewWSDLFile/">
+        	<xsd:complexType name="location"> <!-- note, element outside is irrilevant -->
+          		<xsd:sequence>
+            		<xsd:element name="longitude" type="xsd:decimal"/>
+            		<xsd:element name="latitude" type="xsd:decimal"/>
+        		</xsd:sequence>
+       		</xsd:complexType>
+       		<xsd:element name="date" type="xsd:date"></xsd:element>
+       		<xsd:element name="temperature" type="xsd:decimal"></xsd:element>
+      		<xsd:element name="wind" type="xsd:decimal"></xsd:element>
+			<xsd:element name="humidity" type="xsd:decimal"></xsd:element>
+			<xsd:element name="sky">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"> <!-- Note, base is required -->
+						<xsd:enumeration value="sunny"></xsd:enumeration>
+						<xsd:enumeration value="coudy"></xsd:enumeration>
+						<xsd:enumeration value="foggy"></xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+    	</xsd:schema>
+	</wsdl:types>
+
+  <wsdl:message name="getWeatherRequest">
+  		<wsdl:part name="arg_location" type="tns:location" /> <!-- note, tns is required; type if type is a complex one, element if type is a basic one (like string) -->
+  </wsdl:message>
+  <wsdl:message name="getWeatherResponse">
+   		<wsdl:part name="date" element="tns:date"/>
+        <wsdl:part name="temperature" element="tns:temperature"/>
+        <wsdl:part name="wind" element="tns:wind"/>
+        <wsdl:part name="humidity" element="tns:humidity"/>
+        <wsdl:part name="sky" element="tns:sky"></wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:portType name="getWeather_porttype">
+    <wsdl:operation name="getWeather">
+      <wsdl:input message="tns:getWeatherRequest"/>
+      <wsdl:output message="tns:getWeatherResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:binding name="ExampleWSDLFileSOAP" type="tns:getWeather_porttype">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getWeather">
+      <soap:operation soapAction="http://www.example.org/ExampleWSDLFile/getWeather"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:service name="ExampleWSDLFile">
+    <wsdl:port binding="tns:ExampleWSDLFileSOAP" name="ExampleWSDLFileSOAP">
+      <soap:address location="http://www.example.org/"/>
+    </wsdl:port>
+  </wsdl:service>
+  
+</wsdl:definitions>
