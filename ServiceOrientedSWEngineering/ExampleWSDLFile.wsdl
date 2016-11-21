@@ -28,6 +28,12 @@
   <wsdl:message name="getWeatherRequest">
   		<wsdl:part name="arg_location" type="tns:location" /> <!-- note, tns is required; type if type is a complex one, element if type is a basic one (like string) -->
   </wsdl:message>
+  <wsdl:message name="subscribeRequest">
+  		<wsdl:part name="arg_location" type="tns:location"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateWeatherResponse">
+  		<wsdl:part name="arg_location" type="tns:location"></wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getWeatherResponse">
    		<wsdl:part name="date" element="tns:date"/>
         <wsdl:part name="temperature" element="tns:temperature"/>
@@ -35,11 +41,32 @@
         <wsdl:part name="humidity" element="tns:humidity"/>
         <wsdl:part name="sky" element="tns:sky"></wsdl:part>
   </wsdl:message>
+  <wsdl:message name="weatherMessage"> <!-- not following conventions because will be reused -->
+  		<wsdl:part name="date" element="tns:date"/>
+        <wsdl:part name="temperature" element="tns:temperature"/>
+        <wsdl:part name="wind" element="tns:wind"/>
+        <wsdl:part name="humidity" element="tns:humidity"/>
+        <wsdl:part name="sky" element="tns:sky"></wsdl:part>
+  </wsdl:message>
   
   <wsdl:portType name="getWeather_porttype">
+  	<!-- Request-response message -->
     <wsdl:operation name="getWeather">
       <wsdl:input message="tns:getWeatherRequest"/>
       <wsdl:output message="tns:getWeatherResponse"/>
+    </wsdl:operation>
+    <!-- One-way operation -->
+    <wsdl:operation name="subscribe"> <!-- public void subscribe(Location location) -->
+    	<wsdl:input message="tns:subscribeRequest"/>
+    </wsdl:operation>
+    <!-- Solicit response operation -->
+    <wsdl:operation name="updateWeather"> <!-- Server sends a position and client returns weather info -->
+    	<wsdl:output message="tns:updateWeatherResponse"/>
+    	<wsdl:input message="tns:weatherMessage"/> <!-- Notice message reuse -->
+    </wsdl:operation>
+    <!-- Notification operation -->
+    <wsdl:operation name="alertWeather">
+		<wsdl:output message="tns:weatherMessage"/>
     </wsdl:operation>
   </wsdl:portType>
   
@@ -50,6 +77,27 @@
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+     <wsdl:operation name="subscribe">
+      <soap:operation soapAction="http://www.example.org/ExampleWSDLFile/subscribe"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+     <wsdl:operation name="updateWeather">
+      <soap:operation soapAction="http://www.example.org/ExampleWSDLFile/updateWeather"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+     <wsdl:operation name="alertWeather">
+      <soap:operation soapAction="http://www.example.org/ExampleWSDLFile/alertWeather"/>
       <wsdl:output>
         <soap:body use="literal"/>
       </wsdl:output>
