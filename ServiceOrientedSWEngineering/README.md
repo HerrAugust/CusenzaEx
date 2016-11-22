@@ -2,6 +2,7 @@
 
 ##Authors
 EzpzCraft - https://github.com/EzpzCraft/
+ and 
 HerrAugust - https://github.com/HerrAugust/
 
 ## Tutorial files
