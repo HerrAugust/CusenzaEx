@@ -4,13 +4,13 @@ import GameModels as G
 
 class PegSolitaireState:
 
-    def __init__(self, parent, heuristic, grid):
-        self.parent = parent
+    def __init__(self, heuristic, grid):
         self.H = heuristic
+
         self.representation = G.PegSolitaireRepresentation(grid)
 
     def getRepresentation(self):
         return self.representation
 
     def getHeuristic(self):
-        return self.heuristic
+        return self.H

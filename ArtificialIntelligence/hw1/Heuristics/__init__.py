@@ -1,5 +1,3 @@
-from GameModels import PegSolitaireGame as G
-
 class Heuristic:
 
     def __init__(self):
@@ -12,8 +10,15 @@ class ExponentialDistanceHeuristic(Heuristic):
 
     # Exponential Distance:
     # If H,V are the horizontal and vertical distances from the center respectively, then the heuristic's value is 2^max(H,V)
-    def H(self, peg):
-        h = peg.getCol() - G.centerX
-        v = peg.getRow() - G.centerY
+    def H(self, peg, grid):
+        h = abs(peg.getCol() - grid.centerX)
+        v = abs(peg.getRow() - grid.centerY)
         e = 2**max(h, v)
+        return e
+
+class ManhattanDistanceHeuristic(Heuristic):
+    def H(self, peg, grid):
+        h = abs(peg.getCol() - grid.centerX)
+        v = abs(peg.getRow() - grid.centerY)
+        e = h + v
         return e
