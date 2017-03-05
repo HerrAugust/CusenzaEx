@@ -37,11 +37,12 @@ class PegSolitaireClassicRepresentation(PegSolitaireRepresentation):
         return self.remainingBalls
 
     def pegExists(self, peg):
-        if self.grid[peg.getRow()][peg.getCol()] == 0:
-            return False
-        return True
+        val = self.grid[peg.getRow()][peg.getCol()]
+        if val == 1:
+            return True
+        return False
 
-    def moveIsLegal(self, peg, direction):
+    def moveIsLegal(self, peg, direction): #(3,4) n
         r = peg.getRow()
         c = peg.getCol()
         if direction == 'n':
@@ -146,9 +147,10 @@ class PegSolitaireRevisitedRepresentation(PegSolitaireRepresentation):
         return self.remainingBalls
 
     def pegExists(self, peg):
-        if self.grid[peg.getRow()][peg.getCol()] == 0:
-            return False
-        return True
+        val = self.grid[peg.getRow()][peg.getCol()]
+        if val == 1:
+            return True
+        return False
 
     def moveIsLegal(self, peg, direction):
         pass

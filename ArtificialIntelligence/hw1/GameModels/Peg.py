@@ -32,9 +32,10 @@ class Peg:
     def __hash__(self):
         return 2 * self.row + self.column
 
-    def move(self, grid, direction):
-        r = 0
-        c = 0
+    #given a peg in an old position, move it in some direction
+    def move(self, grid, direction): #(3,4) to n
+        r = self.row
+        c = self.column
         if direction == 'n':
             if grid[r - 1][c] == 0:
                 r = self.row-1
