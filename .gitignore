@@ -1,0 +1,6 @@
+*.jar
+*.exe
+*.project
+*.pydevproject
+
+**/.settings

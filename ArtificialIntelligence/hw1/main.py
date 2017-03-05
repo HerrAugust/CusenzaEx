@@ -4,15 +4,16 @@ import time
 
 import Heuristics as H
 import GameModels as G
+from GameModels.PegSolitaireRepresentation import PegSolitaireClassicRepresentation
 
 untouchablePegs = set() #set of pegs that I have already tried to move but there was to way. so I will simply skip them for the current grid configuration
 
 def argMin(setOfStates):
-    min = list(setOfStates)[0]
+    amin = list(setOfStates)[0]
     for e in setOfStates:
-        if e. f < min.f:
-            min = e
-    return min
+        if e. f < amin.f:
+            amin = e
+    return amin
 
 def pick(setOfStates):
     return argMin(setOfStates)
@@ -51,7 +52,7 @@ def AStar(grid, path, game):
     for j in range(0,4): #0=north,1=east,2=south,3=west. per scegliere la migliore, potrei fare la distanza manattiana anche per questi, usando sempre la priorityqueue
         if grid.moveIsLegal(bestPeg,mapDirection(j)):
             print "Move: (" + str(bestPeg.getRow()) + "," + str(bestPeg.getCol()) + ") to " + mapDirection(j)
-            newGrid = G.PegSolitaireRepresentation(grid.makeMove(bestPeg,mapDirection(j)))
+            newGrid = grid.makeMove(bestPeg,mapDirection(j))
             newGrid.centerX = grid.centerX
             newGrid.centerY = grid.centerY
             printMatrix(newGrid.grid)
@@ -73,28 +74,37 @@ def AStar(grid, path, game):
     AStar(grid, path, game)
 
 def printMatrix(matrix):
-   rows = len(matrix)
-   cols = len(matrix[0])
-   for i in range(0,rows):
-       toprint = ""
-       for j in range(0,cols):
-           toprint = toprint + " " + str(matrix[i][j])
-       print toprint
+    rows = len(matrix)
+    cols = len(matrix[0])
+    for i in range(0,rows):
+        toprint = ""
+        for j in range(0,cols):
+            toprint = toprint + " " + str(matrix[i][j])
+        print toprint
 
 # Main
-classic = [
-    [0,0,1,1,1,0,0],
-    [0,0,1,1,1,0,0],
+other = [
+    [2,2,1,1,1,2,2],
+    [2,1,1,1,1,1,2],
     [1,1,1,1,1,1,1],
     [1,1,1,0,1,1,1],
     [1,1,1,1,1,1,1],
-    [0,0,1,1,1,0,0],
-    [0,0,1,1,1,0,0]]
+    [2,1,1,1,1,1,2],
+    [2,2,1,1,1,2,2]]
+
+classic = [
+    [2,2,1,1,1,2,2],
+    [2,2,1,1,1,2,2],
+    [1,1,1,1,1,1,1],
+    [1,1,1,0,1,1,1],
+    [1,1,1,1,1,1,1],
+    [2,2,1,1,1,2,2],
+    [2,2,1,1,1,2,2]]
 printMatrix(classic)
 start = time.time()
 
 heuristic   = H.ManhattanDistanceHeuristic()
-game        = G.PegSolitaireGame(heuristic, classic)
+game        = G.PegSolitaireGame(heuristic, PegSolitaireClassicRepresentation(classic))
 state0      = game.getState()
 state0.getRepresentation().centerX = 3
 state0.getRepresentation().centerY = 3

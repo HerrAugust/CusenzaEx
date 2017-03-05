@@ -1,10 +1,10 @@
-import PegSolitaireGame
+
 class Peg:
-    #int row
-    #int column
+    row = 0
+    column = 0
     #bool exists if this peg has not been eaten during the game
 
-    f = 0
+    f = 0 #needed for A*
 
     def __init__(self, row, column):
         self.row = row
@@ -20,14 +20,6 @@ class Peg:
 
     def getCol(self):
         return self.column
-
-    #it checks the peg potition does not exceed the play grid
-    def isLegal(self):
-        if self.row < 0 or self.column < 0:
-            return False
-        if self.row > PegSolitaireGame.gridRows or self.column > PegSolitaireGame.gridCols:
-            return False
-        return True
 
     def __repr__(self):
         return "(%d,%d); f=%d" % (self.row, self.column, self.f)

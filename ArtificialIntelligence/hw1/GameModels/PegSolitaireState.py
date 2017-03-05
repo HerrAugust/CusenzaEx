@@ -6,8 +6,7 @@ class PegSolitaireState:
 
     def __init__(self, heuristic, grid):
         self.H = heuristic
-
-        self.representation = G.PegSolitaireRepresentation(grid)
+        self.representation = grid
 
     def getRepresentation(self):
         return self.representation
