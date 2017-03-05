@@ -23,6 +23,9 @@ class Peg:
 
     def __repr__(self):
         return "(%d,%d); f=%d" % (self.row, self.column, self.f)
+    
+    def __str__(self):
+        return "(%d,%d)" % (self.row, self.column)
 
     def __eq__(self, other):
         if self.row == other.row and self.column == other.column:

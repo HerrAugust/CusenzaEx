@@ -18,3 +18,15 @@ class Path:
 
     def getChildren(self):
         return self.children
+    
+    def __str__(self):
+        res = ""
+        for i in range(0, len(self.children)):
+            res += str(self.children[i]) + ", "
+        return res
+    
+    def __repr__(self):
+        res = ""
+        for i in range(0, len(self.children)):
+            res += str(self.children[i]) + ", "
+        return res

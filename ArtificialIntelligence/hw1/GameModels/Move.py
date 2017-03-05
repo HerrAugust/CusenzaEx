@@ -8,3 +8,9 @@ class Move:
 
     def getPeg(self):
         return self.peg
+
+    def __str__(self):
+        return str(self.peg) + " moved to " + self.direction 
+    
+    def __repr__(self):
+        return str(self.peg) + " to " + self.direction
