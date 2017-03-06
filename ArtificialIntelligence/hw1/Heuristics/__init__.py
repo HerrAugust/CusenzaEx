@@ -1,3 +1,5 @@
+import GameModels as G
+
 class Heuristic:
 
     def __init__(self):
@@ -6,19 +8,13 @@ class Heuristic:
     def H(self, state):
         raise NotImplementedError("Please implement this function")
 
-class ExponentialDistanceHeuristic(Heuristic):
-
-    # Exponential Distance:
-    # If H,V are the horizontal and vertical distances from the center respectively, then the heuristic's value is 2^max(H,V)
-    def H(self, peg, grid):
-        h = abs(peg.getCol() - grid.centerX)
-        v = abs(peg.getRow() - grid.centerY)
-        e = 2**max(h, v)
-        return e
-
 class ManhattanDistanceHeuristic(Heuristic):
-    def H(self, peg, grid):
-        h = abs(peg.getCol() - grid.centerX)
-        v = abs(peg.getRow() - grid.centerY)
-        e = h + v
+    #grid is a PegSolitaireRepresentation
+    def H(self, representation):
+        e = 0
+        grid = representation.grid
+        for i in range(0, len(grid)):
+            for j in range(0, len(grid[0])):
+                if representation.pegExists(G.Peg(i,j)):
+                    e += G.Peg(i,j).manhattandistance()
         return e

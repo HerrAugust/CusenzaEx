@@ -34,6 +34,9 @@ class Peg:
 
     def __hash__(self):
         return 2 * self.row + self.column
+    
+    def manhattandistance(self):
+        return abs(self.column - 3) + abs(self.row - 3)
 
     #given a peg in an old position, move it in some direction
     def move(self, grid, direction): #(3,4) to n
