@@ -5,91 +5,83 @@ from copy import deepcopy
 
 import Heuristics as H
 import GameModels as G
-from GameModels.PegSolitaireRepresentation import PegSolitaireClassicRepresentation
 
-gridExplored = 0
 movesNumber = 0
-AStarCalls = 0
-movesPath = G.Path()
-excluded = [] #already visited grids
 
-def argMin(listOfStates, game):
-    if len(listOfStates) == 0:
-        return { 'elem': None, 'index': -1 }
-    
-    index = 0
-    i = index - 1
-    cur = listOfStates[index]
-        
-    for e in listOfStates:
-        i += 1
-        if e.f(game) < cur.f(game): #with the minimum, pegs tend to concentrate to center
-            cur = e
-            index = i
-            
-    return { 'elem':cur, 'index': index }
+dicOfStates = {}
 
-def pick(setOfStates, game):
-    a = argMin(setOfStates, game)
-    return a
+def backpath(state):
+    father = state.parent()
+    lStates = [state]
+    while father!=None:
+        lStates.append(father)
+        father = father.parent()
+    return reversed(lStates)
 
-def mapDirection(direction):
-    directions = ("n", "e", "s", "w")
-    return directions[direction]
+def updateState(setOfStates):
+    for s in setOfStates:
+        dicOfStates[s] = heuristic.H(s)
+    return dicOfStates
 
-#application of (revisited) algorithm http://courses.csail.mit.edu/6.884/spring10/labs/lab5.pdf plus heuristic (A*), found at TODO
-def AStar(grid, game):
+def argMin(setOfStates):
+    v = []
+    k = []
+    dicOfStates = updateState(setOfStates)
+    for sk in setOfStates:
+        if dicOfStates.has_key(sk):
+            v += [dicOfStates[sk]]
+            k += [sk]
+    if len(v)>0:
+        return k[v.index(min(v))]
+    else:
+        return None
+
+def pick(setOfStates):
+    return argMin(setOfStates)
+
+#original code of AStar by Giovanni de Gasperis, Università degli Studi dell'Aquila, then revisited by HerrAugust (GitHub)
+def AStar(state0, game):
     global movesNumber
-    global gridExplored
-    global excluded
+    prev = state0
     
-    gridExplored += 1
-    print "Grid explored " ,gridExplored
-    if gridExplored == 45000: #too many moves: stop
-        return True
-    
-    if G.PegSolitaireGame.issolution(grid): #base case: go back to root of tree
-        return True
-    
-    #create horizon (i.e., new level of search tree) as a list
-    horizon = grid.getPossibleMoves() #see PegSolitaireRepresentation.py
-    
-    #try all grids in horizon. One is the solution!
-    while True:
-        #get best grid ( min f(grid) = g(grid) + h(grid) for each possible future grid )
-        res = pick(horizon, game)
-        newGrid = res['elem']
-        newGrid_index = res['index']
-        if newGrid is None: #leaf is not a solution
-            return False
-        bitmap = newGrid.getBitMap()
-        if bitmap in excluded:#do not touch this grid in future
-            del horizon[newGrid_index]
-            continue
-        excluded.append(bitmap)
-        if G.PegSolitaireGame.issolution(newGrid): #if grid is solution
-            return True
-        #movesPath.push(newGrid)
-        print "New matrix is:"
-        printMatrix(newGrid.grid)
-        
+    sHorizon = set([])
+    sExplored = set([])
+    sHorizon.add(state0)
+    while (len(sHorizon) > 0):
+        view = pick(sHorizon)
         movesNumber += 1
-        sol = AStar(newGrid, game) #try that branch
-        
-        #is this child grid a solution?
-        if sol:
-            print "Solution found!"
-            print "Moves needed: ",movesNumber
-            print "Moves: ",str(movesPath)
-            return True
-        else: #if not, deepened that node
-            movesNumber -= 1
-            #movesPath.pop()
-            print "Rolling back"
-            print "len: ",str(len(horizon)), " newgrid_index:", newGrid_index
-            if 0 <= newGrid_index < len(horizon):
-                del horizon[newGrid_index]
-                print "len horizon with less elem: ",str(len(horizon))
+        if not (view is None):
+            print "___________________________"
+            print "Move number: " , str(movesNumber)
+            print "Explored grids ",str(len(sExplored))
+            r = view.getRepresentation().remainingBalls
+            print "Balls: ", str(r)
+            print "Exploring matrix:"
+            print printMatrix(view.getRepresentation().grid)
+            print "dH=", str(  hash(prev.getRepresentation()) - hash(view.getRepresentation()) ) 
+            prev = view
+            if game.isSolution(view):
+                print "============================="
+                print "============================="
+                print "============================="
+                print "Solution found!"
+                print "Moves:"
+                moves = backpath(view)
+                i = 1
+                for e in moves:
+                    print "Move ",str(i)
+                    i += 1
+                    printMatrix(e.getRepresentation().grid) 
+                return True
+            sExplored.add(view)
+            sHorizon.remove(view)
+            # seek for all possible moves and make them neighboring states
+            children = game.neighbors(view)
+            # if the neighbor wasn't yet explored add it to the horizon and repeat the loop
+            for child in children:
+                if child not in sExplored:
+                    sHorizon.add(child)
+    return None
         
 
 def printMatrix(matrix):
@@ -103,7 +95,7 @@ def printMatrix(matrix):
             toprint = toprint + " " + str(matrix[i][j])
         print toprint
 
-# Main
+# Main--------------------------------------------------------------------
 revisited = [
     [2,2,1,1,1,2,2],
     [2,1,1,1,1,1,2],
@@ -129,41 +121,39 @@ if 1 in toBePlayed:
     print "Manhattan distance heuristic for classic"
     printMatrix(classic)
     lastGrid_remainingBalls = 32
-    start = time.time()
+    start               = time.time()
     
-    heuristic   = H.ManhattanDistanceHeuristic()
-    game        = G.PegSolitaireGame(heuristic, PegSolitaireClassicRepresentation(deepcopy(classic)))
-    state0      = game.getState()
-    state0.getRepresentation().centerX = 3
-    state0.getRepresentation().centerY = 3
-    solution    = AStar(state0.getRepresentation(), game)
+    heuristic           = H.ManhattanDistanceHeuristic()
+    s                   = G.PegSolitaireState(heuristic, deepcopy(classic))
+    game                = G.PegSolitaireGame(s, heuristic)
+    state0              = game.getState()
+    dicOfStates[state0] = heuristic.H(state0)
+    solution            = AStar(state0, game)
     
-    end = time.time()
+    end                 = time.time()
     print "Time needed: ", end-start
 
 
 if 2 in toBePlayed:
-    #Manhattan distance heuristic for revisited solitaire
-    print
-    print
-    print
-    print "Manhattan distance heuristic for revisited solitaire"
-    printMatrix(revisited)
-    lastGrid_remainingBalls = 36
-    start = time.time()
+    time.sleep(5)
+    #Manhattan distance heuristic for revisited
+    print "Manhattan distance heuristic for revisited"
+    printMatrix(classic)
+    lastGrid_remainingBalls = 32
+    start               = time.time()
     
-    heuristic   = H.ManhattanDistanceHeuristic()
-    game        = G.PegSolitaireGame(heuristic, G.PegSolitaireRevisitedRepresentation(deepcopy(revisited)))
-    state0      = game.getState()
-    state0.getRepresentation().centerX = 3
-    state0.getRepresentation().centerY = 3
-    solution    = AStar(state0.getRepresentation(), G.Path(), game)
+    heuristic           = H.ManhattanDistanceHeuristic()
+    s                   = G.PegSolitaireState(heuristic, deepcopy(revisited))
+    game                = G.PegSolitaireGame(s, heuristic)
+    state0              = game.getState()
+    dicOfStates[state0] = heuristic.H(state0)
+    solution            = AStar(state0, game)
     
-    end = time.time()
+    end                 = time.time()
     print "Time needed: ", end-start
 
 
-if 3 in toBePlayed:
+"""if 3 in toBePlayed:
     #Exponential Distance heuristic for classic
     print
     print
@@ -174,7 +164,7 @@ if 3 in toBePlayed:
     start = time.time()
     
     heuristic   = H.ExponentialDistanceHeuristic()
-    game        = G.PegSolitaireGame(heuristic, PegSolitaireClassicRepresentation(deepcopy(classic)))
+    game        = G.PegSolitaireGame(heuristic, G.PegSolitaireRepresentation(deepcopy(classic)))
     state0      = game.getState()
     state0.getRepresentation().centerX = 3
     state0.getRepresentation().centerY = 3
@@ -195,11 +185,11 @@ if 4 in toBePlayed:
     start = time.time()
     
     heuristic   = H.ExponentialDistanceHeuristic()
-    game        = G.PegSolitaireGame(heuristic, G.PegSolitaireRevisitedRepresentation(deepcopy(revisited)))
+    game        = G.PegSolitaireGame(heuristic, G.PegSolitaireRepresentation(deepcopy(revisited)))
     state0      = game.getState()
     state0.getRepresentation().centerX = 3
     state0.getRepresentation().centerY = 3
     solution    = AStar(state0.getRepresentation(), G.Path(), game)
     
     end = time.time()
-    print "Time needed: ", end-start
+    print "Time needed: ", end-start"""

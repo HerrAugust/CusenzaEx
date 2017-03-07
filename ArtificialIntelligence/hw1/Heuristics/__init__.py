@@ -10,11 +10,12 @@ class Heuristic:
 
 class ManhattanDistanceHeuristic(Heuristic):
     #grid is a PegSolitaireRepresentation
-    def H(self, representation):
+    def H(self, state):
         e = 0
+        representation = state.getRepresentation()
         grid = representation.grid
         for i in range(0, len(grid)):
             for j in range(0, len(grid[0])):
-                if representation.pegExists(G.Peg(i,j)):
+                if grid[i][j] == 1:
                     e += G.Peg(i,j).manhattandistance()
         return e
