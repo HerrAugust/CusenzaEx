@@ -5,6 +5,7 @@ from copy import deepcopy
 
 import Heuristics as H
 import GameModels as G
+import Debugging as D
 
 movesNumber = 0
 
@@ -24,7 +25,15 @@ def updateState(setOfStates):
     return dicOfStates
 
 def argMin(setOfStates):
-    v = []
+    if len(setOfStates) == 0:
+        return None
+    
+    m = list(setOfStates)[0]
+    for e in setOfStates:
+        if e.getRepresentation().f(e) < m.getRepresentation().f(e):
+            m = e
+    return m
+    """v = []
     k = []
     dicOfStates = updateState(setOfStates)
     for sk in setOfStates:
@@ -34,15 +43,16 @@ def argMin(setOfStates):
     if len(v)>0:
         return k[v.index(min(v))]
     else:
-        return None
+        return None"""
 
 def pick(setOfStates):
     return argMin(setOfStates)
 
-#original code of AStar by Giovanni de Gasperis, Università degli Studi dell'Aquila, then revisited by HerrAugust (GitHub)
+"""#original code of AStar by Giovanni de Gasperis, Università degli Studi dell'Aquila, then revisited by HerrAugust (GitHub)
 def AStar(state0, game):
     global movesNumber
-    prev = state0
+    global g
+    g = game
     
     sHorizon = set([])
     sExplored = set([])
@@ -52,27 +62,32 @@ def AStar(state0, game):
         movesNumber += 1
         if not (view is None):
             print "___________________________"
+            print "view name: level ", view.getStateName()
+            if view.parent() is not None:
+                print "view father: ", view.parent().getStateName()
             print "Move number: " , str(movesNumber)
             print "Explored grids ",str(len(sExplored))
             r = view.getRepresentation().remainingBalls
             print "Balls: ", str(r)
             print "Exploring matrix:"
             print printMatrix(view.getRepresentation().grid)
-            print "dH=", str(  hash(prev.getRepresentation()) - hash(view.getRepresentation()) ) 
-            prev = view
             if game.isSolution(view):
                 print "============================="
                 print "============================="
                 print "============================="
                 print "Solution found!"
                 print "Moves:"
-                moves = backpath(view)
+                moves = backpath(view) #list of states
                 i = 1
                 for e in moves:
                     print "Move ",str(i)
                     i += 1
+                    if e.parent() is not None: # not father
+                        print "father stateName = ",e.parent().getStateName()
+                    print "stateName = ",e.getStateName()
                     printMatrix(e.getRepresentation().grid) 
                 return True
+            #sHorizon = sHorizon | (game.neighbors(view) - sExplored)
             sExplored.add(view)
             sHorizon.remove(view)
             # seek for all possible moves and make them neighboring states
@@ -81,7 +96,46 @@ def AStar(state0, game):
             for child in children:
                 if child not in sExplored:
                     sHorizon.add(child)
-    return None
+    return None"""
+    
+excluded = set()
+def AStar(state, game):
+    global excluded
+    
+    if game.isSolution(state):
+        print "Solution found"
+        return True
+    
+    children = game.neighbors(state)
+    while True:
+        best = pick(children)
+        if best is not None:
+            children.remove(best)
+        while best in excluded:
+            best = pick(children)
+        if best is None: #best is leaf
+            return False #go back and choose another path
+        
+        print "___________________________"
+        print "view name: level ", state.getStateName()
+        if state.parent() is not None:
+            print "view father: ", state.parent().getStateName()
+        print "Move number: " , str(movesNumber)
+        print "Explored grids ",str(len(excluded))
+        r = state.getRepresentation().remainingBalls
+        print "Balls: ", str(r)
+        print "Exploring matrix:"
+        print printMatrix(state.getRepresentation().grid)
+        print "hash: ", str(hash(state))
+        
+        if r == 10:
+            pass
+        
+        excluded.add(best)
+        r = AStar(best, game)
+        if r is True:
+            return True
+        #false: choose another path to explore
         
 
 def printMatrix(matrix):
@@ -114,6 +168,9 @@ classic = [
     [2,2,1,1,1,2,2],
     [2,2,1,1,1,2,2]]
 
+#classic = D.File().textToMatrix()
+
+
 toBePlayed = [1]
 
 if 1 in toBePlayed:
@@ -125,9 +182,10 @@ if 1 in toBePlayed:
     
     heuristic           = H.ManhattanDistanceHeuristic()
     s                   = G.PegSolitaireState(heuristic, deepcopy(classic))
+    s.setLevel(0) #needed for debug
     game                = G.PegSolitaireGame(s, heuristic)
     state0              = game.getState()
-    dicOfStates[state0] = heuristic.H(state0)
+    #dicOfStates[state0] = heuristic.H(state0=
     solution            = AStar(state0, game)
     
     end                 = time.time()

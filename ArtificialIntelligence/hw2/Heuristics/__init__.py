@@ -22,12 +22,12 @@ class CheckerHeuristic(Heuristic):
                     out -= len(piece)
         return out
 
-    def Hl(self, game, state, l, turn):
+    def Hl(self, state, l, turn):
         if l == 0:
             return self.H0(state)
         if turn == 'w':
             nexTurn = 'k'
-            return max([self.Hl(game, x, l-1, nexTurn) for x in game.neighbors(turn)])
+            return max([self.Hl(state, x, l-1, nexTurn) for x in state.neighbors(turn)])
         else:
             nexTurn = 'w'
-            return min([self.Hl(game, x, l-1, nexTurn) for x in game.neighbors(turn)])
+            return min([self.Hl(state, x, l-1, nexTurn) for x in state.neighbors(turn)])

@@ -1,132 +1,283 @@
+
 __author__ = 'giodegas'
 
 # da debuggare e completare
 
 import copy
 
-def isEven(x):
-    return (x % 2) == 0
-
 class CheckerRepresentation:
 
-    def __init__(self):
-        self.board = {}
-        # whites configuration
-        for r in range(0,3):
-            for c in range(0,8):
-                if isEven(r+c):
-                    self.board[r,c] = 'w'
-        # blacks
-        for r in range(5,8):
-            for c in range(0,8):
-                if isEven(r+c):
-                    self.board[r,c] = 'k'
+    def __init__(self, board):
+        self.board = board
 
     def getPiece(self, r, c):
         # what if out of the board?
-        try:
-            return self.board[r,c]
-        except KeyError:
-            if (r in range(0,8)) and (c in range(0,8)):
-                return ''
-            return None
+        piece = self.board[r][c]
+        return piece
+
+    def getBoard(self):
+        return self.board
 
     def setPiece(self, r,c,piece):
         self.board[r,c] = piece
 
-    def isFree(self, r, c):
-        return self.getPiece(r,c)==''
+    def setCurrentPlayer(self, player):
+        self.player = player
 
-    def isOpposite(self, turn, r, c):
-        piece = self.getPiece(r,c)
-        if piece:
-            return len(piece)>0 and not turn in piece
+    def isFree(self, r, c):
+        return self.getPiece(r,c) == ' '
+
+    def getEnemy(self):
+        if self.player == 'k':
+            return 'w'
         else:
+            return 'k'
+
+    # TODO aggiungere casi qua
+    def isAdmissible(self, r,c,er,ec):
+        # you may move peg for 1, 2, 4, 6 diagonal distances (euclidean distance)
+        if r == er or c == ec:
             return False
 
-    def isAmmissible(self, configuration):
-        # faremo mosse solo ammissibili
-        return True
+        #if we stay in the board
+        if r >= len(self.board) or c >= len(self.board[0]) or er >= len(self.board) or ec >= len(self.board[0]):
+            return False
+
+        if self.board[r][c] != self.player:
+            return False
+
+        if self.isFree(er, ec) == False:
+            return False
+
+        #human moves
+        if self.player == 'k':
+            if er == r-1:
+                if self.isFree(er,ec):
+                    return True
+                return False
+            if er == r-2: # in r-1 there must be an enemy
+                return self.board[r-1][ec] == self.getEnemy()
+            if er == r-4:
+                return self.board[r - 3][ec] == self.getEnemy()
+            if er == r-6:
+                return self.board[r-5][ec] == self.getEnemy()
+        else: # machine moves
+            if er == r+1:
+                if self.isFree(er, ec):
+                    return True
+                return False
+            if er == r+2: # in r+1 there must be an enemy
+                return self.board[r+1][ec] == self.getEnemy()
+            if er == r+4:
+                return self.board[r + 3][ec] == self.getEnemy()
+            if er == r+6:
+                return self.board[r+5][ec] == self.getEnemy()
+        return False
+
+    def printMatrix(self):
+        for r in range(len(self.board)):
+            row = ""
+            for c in range(len(self.board[0])):
+                row += self.board[r][c] + " "
+            print row
+
+    """
+    Note: assumes that move is admissible (see self.isAdmissible())
+    Does NOT affect self.board
+    @return board representation with the move
+    """
+    def makeMove(self,r,c,er,ec):
+        #copy board
+        newboard = copy.copy(self.board)
+
+        # return the one with the move
+        newboard[r][c] = ' '
+        newboard[er][ec] = self.player
+
+        if self.player == 'k': # human, towards north
+            if er == r - 1:
+                pass
+            if er == r - 2:  # in r-1 there must be an enemy
+                newboard[er-1] = ' '
+            if er == r - 4:
+                newboard[er-1] = ' '
+                newboard[er-3] = ' '
+            if er == r - 6:
+                newboard[er - 1] = ' '
+                newboard[er - 3] = ' '
+                newboard[er - 5] = ' '
+        else: # machine, towards south
+            if er == r + 1:
+                pass
+            if er == r + 2:  # in r-1 there must be an enemy
+                newboard[er+1] = ' '
+            if er == r + 4:
+                newboard[er+1] = ' '
+                newboard[er+3] = ' '
+            if er == r - 6:
+                newboard[er + 1] = ' '
+                newboard[er + 3] = ' '
+                newboard[er + 5] = ' '
+
+        return CheckerRepresentation(newboard)
 
 class CheckerState:
 
-    def __init__(self, heuristic):
+    def __init__(self, heuristic, repesentation):
         self.H = heuristic
-        self.representation = CheckerRepresentation()
+        self.repesentation = repesentation
 
-    def getPiece(self, r,c):
-        return self.representation.getPiece(r,c)
-
-    def setPiece(self, r,c,what):
-        self.representation.setPiece(r,c,what)
-
-    def isFree(self,r,c):
-        return self.representation.isFree(r,c)
-
-    def isOpposite(self, turn, r,c):
-        return self.representation.isOpposite(turn, r,c)
-
-class Game:
-
-    def __init__(self, initialState=None, heuristic=None):
-        self.state = initialState
-        self.heuristic = heuristic
-
-    def neighbors(self, state):
-        out = set([])
-        return out
-
-    def getState(self):
-        return self.state
-
-    def solution(self, state):
-        return True
-
-class CheckerGame(Game):
-
-    def __init__(self, heuristic):
-        self.state = CheckerState(heuristic)
-
-    def makeMove(self, state, r,c, rn, cn):
-        out = copy.copy(state)
-        piece = state.getPiece(r,c)
-        out.setPiece(r,c,'')
-        out.setPiece(rn,cn,piece)
-        return out
-
-    def makeEat(self, state, r, c, re, ce):
-        out = self.makeMove(state, r,c, re,ce)
-        out.setPiece((r+re)/2,(c+ce)/2,'')
-        return out
+    def getRepresentation(self):
+        return self.repesentation
 
     def neighbors(self, turn):
         # turn in ('w','k')
         # w : white
         # k : black
-        state = self.state
-        out = set([state])
-        for r in range(0,8):
-            for c in range(0,8):
-                if isEven(r+c):
-                    piece = state.getPiece(r,c)
-                    if piece and turn in piece:
-                        moves = [(1,-1),(1,1)] # ipotesi mossa del bianco
-                        if len(piece)==2:
-                            moves.add([(-1,-1),(-1,1)])
-                        for m in moves:
-                            rm,cm = r+m[0],c+m[1]
-                            if r==2 and m==(1,1):
-                                pass
-                            if state.isFree(rm,cm):
-                                newR = self.makeMove(state, r,c, rm, cm)
-                                out.add(newR)
-                            else:
-                                # try to eat
-                                mEats = [(rm+1,cm-1),(rm+1,cm+1)]
-                                if len(piece)==2:
-                                    mEats.add([(rm-1,cm-1),(rm-1,cm+1)])
-                                for mE in mEats:
-                                    if state.isOpposite(turn, rm,cm) and state.isFree(mE[0],mE[1]):
-                                        newR = self.makeEat(state, r,c,mE[0],mE[1])
-                                        out.add(newR)
+        rep = self.getRepresentation()
+        rows = len( rep.getBoard() )
+        cols = len( rep.getBoard()[0] )
+        out = set()
+        for r in range(0, 8):
+            for c in range(0, 8):
+
+                if self.getRepresentation().getPiece(r,c) == ' ':
+                    continue
+
+                if turn == 'w': # machine tries to maximize
+                    # moving towards south-east
+                    p1 = p2 = False  # true if previous if is successful
+                    if self.isAdmissible(r, c, r + 1, c + 1):
+                        newstate = self.makeMove(r, c, r + 1, c + 1)
+                        out.add(newstate)
+                    else:
+                        if r + 1 < rows and c + 1 < cols and rep.getPiece(r + 1, c + 1) == 'k' and self.isAdmissible(r,
+                                                                                                                    c,
+                                                                                                                    r + 2,
+                                                                                                                    c + 2):
+                            newstate = self.makeMove(r, c, r + 2, c + 2)
+                            out.add(newstate)
+                            p1 = True
+                        if p1 and r + 3 < rows and c + 3 < cols and rep.getPiece(r + 3,
+                                                                                c + 3) == 'k' and self.isAdmissible(r,
+                                                                                                                    c,
+                                                                                                                    r + 4,
+                                                                                                                    c + 4):
+                            newstate = self.makeMove(r, c, r + 4, c + 2)
+                            out.add(newstate)
+                            p2 = True
+                        if p2 and r - 5 < rows and c + 5 < cols and rep.getPiece(r + 5,
+                                                                                c + 5) == 'k' and self.isAdmissible(r,
+                                                                                                                    c,
+                                                                                                                    r + 6,
+                                                                                                                    c + 6):
+                            newstate = self.makeMove(r, c, r + 6, c + 2)
+                            out.add(newstate)
+                    # moving toward south-west
+                    p1 = p2 = False  # true if previous if is successful
+                    if self.isAdmissible(r, c, r + 1, c - 1):
+                        newstate = self.makeMove(r, c, r + 1, c - 1)
+                        out.add(newstate)
+                    else:
+                        if r + 1 < rows and c - 1 > 0 and rep.getPiece(r + 1, c - 1) == 'k' and self.isAdmissible(r,
+                                                                                                                 c,
+                                                                                                                 r + 2,
+                                                                                                                 c - 2):
+                            newstate = self.makeMove(r, c, r + 2, c - 2)
+                            out.add(newstate)
+                            p1 = True
+                        if p1 and r + 3 < rows and c + 3 > 0 and rep.getPiece(r + 3, c - 3) == 'k' and self.isAdmissible(
+                                r, c, r + 4, c - 4):
+                            newstate = self.makeMove(r, c, r + 4, c - 4)
+                            out.add(newstate)
+                            p2 = True
+                        if p2 and r + 5 < rows and c + 5 > 0 and rep.getPiece(r + 5, c - 5) == 'k' and self.isAdmissible(
+                                r, c, r + 6, c - 6):
+                            newstate = self.makeMove(r, c, r + 6, c - 6)
+                            out.add(newstate)
+                else: # human tries to minimise
+                    #moving towards north-east
+                    p1 = p2 = False # true if previous if is successful
+                    if self.isAdmissible(r,c,r-1,c+1):
+                        newstate = self.makeMove(r,c,r-1,c+1)
+                        out.add(newstate)
+                    else:
+                        if r-1 >= 0 and c+1 < cols and rep.getPiece(r-1,c+1) == 'w' and self.isAdmissible(r,c,r-2,c+2):
+                            newstate = self.makeMove(r,c,r-2,c+2)
+                            out.add(newstate)
+                            p1 = True
+                        if p1 and r-3 >= 0 and c+3 < cols and rep.getPiece(r-3,c+3) == 'w' and self.isAdmissible(r,c,r-4,c+4):
+                            newstate = self.makeMove(r, c, r - 4, c + 2)
+                            out.add(newstate)
+                            p2 = True
+                        if p2 and r-5 >= 0 and c+5 < cols and rep.getPiece(r-5,c+5) == 'w' and self.isAdmissible(r,c,r-6,c+6):
+                            newstate = self.makeMove(r, c, r - 6, c + 2)
+                            out.add(newstate)
+                    #moving toward north-west
+                    p1 = p2 = False  # true if previous if is successful
+                    if self.isAdmissible(r, c, r - 1, c - 1):
+                        newstate = self.makeMove(r, c, r - 1, c - 1)
+                        out.add(newstate)
+                    else:
+                        if r - 1 >= 0 and c - 1 > 0 and rep.getPiece(r - 1, c - 1) == 'w' and self.isAdmissible(r,
+                                                                                                                    c,
+                                                                                                                    r - 2,
+                                                                                                                    c - 2):
+                            newstate = self.makeMove(r, c, r - 2, c - 2)
+                            out.add(newstate)
+                            p1 = True
+                        if p1 and r-3 >= 0 and c+3 > 0 and rep.getPiece(r - 3, c - 3) == 'w' and self.isAdmissible(r, c, r - 4, c - 4):
+                            newstate = self.makeMove(r, c, r - 4, c - 4)
+                            out.add(newstate)
+                            p2 = True
+                        if p2 and r-5 >= 0 and c+5 > 0 and rep.getPiece(r - 5, c - 5) == 'w' and self.isAdmissible(r, c, r - 6, c - 6):
+                            newstate = self.makeMove(r, c, r - 6, c - 6)
+                            out.add(newstate)
         return out
+
+    def printMatrix(self):
+        self.getRepresentation().printMatrix()
+
+    def setCurrentPlayer(self, player):
+        self.getRepresentation().setCurrentPlayer(player)
+
+    """
+    Returns 'human' if the current board is solution for human player
+    Returns 'machine' if current board is solution for machine player
+    Returns None if current board is solution for neither machine and human player
+    """
+    def solution(self):
+        rep = self.repesentation
+        solmachine = True
+        solhuman = True
+
+        # win for machine (w)
+        for r in range(0, 8):
+            for c in range(0, 8):
+                if rep.getPiece(r,c) == 'w':
+                    solmachine = False
+
+        if solmachine == True:
+            return 'machine'
+
+        # win for human (k)
+        for r in range(0, 8):
+            for c in range(0, 8):
+                if rep.getPiece(r, c) == 'k':
+                    solhuman = False
+
+        if solhuman == True:
+            return 'human'
+
+        return None
+
+    def isAdmissible(self, r, c, er, ec):
+        resp = self.repesentation.isAdmissible(r,c,er,ec)
+        return resp
+
+    #note: this does not touch current state!!!!!!
+    #assumes move is legal
+    def makeMove(self,r,c,er,ec):
+        rep = self.repesentation.makeMove(r,c,er,ec)
+        newstate = CheckerState(self.H, rep)
+        return newstate

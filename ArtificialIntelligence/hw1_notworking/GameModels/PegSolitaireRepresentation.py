@@ -9,26 +9,40 @@ class PegSolitaireRepresentation:
         self.grid = grid
         self.gridRows = len(grid)
         self.gridCols = len(grid[0])
-        self.remainingBalls = 0
-        for i in range(0,len(self.grid[0])):
-            for j in range(0,len(self.grid)):
-                if self.grid[i][j] == 1:
-                    self.remainingBalls += 1
+        self.remainingBalls = self.remainingBalls()
         self.valf = -1
         
     def __hash__(self):
-        i = 1
-        hash = 0
+        l = ""
         for j in range(0,len(self.grid)):
             for k in range(0,len(self.grid[0])):
-                if self.grid[j][k] == 1:
-                    hash += i*self.grid[j][k]
-                    i += 1
-        return hash
+                if self.grid[j][k] != 2:
+                    l += str(self.grid[j][k])
+        h = int(l)
+        return h
     
-    def f(self, game):
+    def __repr__(self):
+        rows = len(self.grid)
+        cols = len(self.grid[0])
+        t = ""
+        for i in range(0,rows):
+            toprint = ""
+            for j in range(0,cols):
+                toprint = toprint + " " + str(self.grid[i][j])
+            t += toprint + "\n"
+        return t
+    
+    def __eq__(self, other):
+        for i in range(0, len(self.grid)):
+            for j in range(0, len(self.grid[0])):
+                if self.grid[i][j] != other.grid[i][j]:
+                    return False
+        return True
+    
+    def f(self, state):
+        heuristic = state.getHeuristic()
         g = 1 #could be any number. this is the cost to move a peg
-        h = game.heuristic().H(self)
+        h = heuristic.H(state)
         self.valf = g + h
         return self.valf
     
