@@ -3,5 +3,8 @@
 *.project
 *.pydevproject
 *.pyc
+*.classpath
 
+**/bin
 **/.settings
+**/.idea

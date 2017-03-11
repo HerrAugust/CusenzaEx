@@ -6,20 +6,11 @@ __author__ = 'giodegas'
 import GameModels as G
 import Heuristics as H
 
-def printMatrix(board):
-    print "____________________________"
-    for r in range(0,len(board)):
-        row = ""
-        for c in range(0,len(board[0])):
-            row += board[r][c] + " "
-        print row
-        print "____________________________"
-
 def game():
     board = [
         [' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'],
         ['w', ' ', 'w', ' ', 'w', ' ', 'w', ' '],
-        [' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'],
+        [' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'], # machine frontier
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         ['k', ' ', 'k', ' ', 'k', ' ', 'k', ' '], # human frontier
@@ -35,14 +26,14 @@ def game():
 
     while True:
         turn = 'w' # machine
+        curState.setCurrentPlayer(turn)
         states = curState.neighbors(turn)# find possible moves from here (1 level deeper)
         for j in states:
-            b = j.getRepresentation().getBoard()
-            printMatrix(b)
+            print str(j)
         mx = -9999
         ix = None # best state
         for s in states:
-            h = heuristic.Hl(game, s, LEVEL, turn) # for each move, calculate heuristic value
+            h = heuristic.Hl(s, LEVEL, turn) # for each move, calculate heuristic value
             if h > mx: # find best heuristic value (MAX one) and remember the corresponding state
                 mx = h
                 ix = s
@@ -50,7 +41,7 @@ def game():
         print ix
         # generate a move in function of ix
         curState = ix
-        curState.printMatrix()
+        print str(curState)
 
         # check if final break WHITE wins!
         if curState.solution() == 'machine':

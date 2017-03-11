@@ -9,9 +9,14 @@ class CheckerRepresentation:
 
     def __init__(self, board):
         self.board = board
+        
+    def player(self):
+        return self.player
 
     def getPiece(self, r, c):
         # what if out of the board?
+        print "repr, getpiece() ", str(r), " ",str(c)
+        print str(self)
         piece = self.board[r][c]
         return piece
 
@@ -32,24 +37,44 @@ class CheckerRepresentation:
             return 'w'
         else:
             return 'k'
+        
+    def printMatrix(self):
+        s = "________________\n"
+        for r in range(0,len(self.board)):
+            row = ""
+            for c in range(0,len(self.board[r])):
+                row += self.board[r][c] + " "
+            s += row + "\n"
+        s += "____________________________"
+        return s
+        
+    def __repr__(self):
+        return self.printMatrix()
+    
+    def __str__(self):
+        return self.printMatrix()
 
-    # TODO aggiungere casi qua
     def isAdmissible(self, r,c,er,ec):
         # you may move peg for 1, 2, 4, 6 diagonal distances (euclidean distance)
-        if r == er or c == ec:
+        if r == er and c == ec: #cannot stay in the same cell
             return False
 
         #if we stay in the board
-        if r >= len(self.board) or c >= len(self.board[0]) or er >= len(self.board) or ec >= len(self.board[0]):
+        if r >= len(self.board) or c >= len(self.board[0]) or er >= len(self.board) or ec >= len(self.board[0]) or er < 0 or ec < 0:
             return False
 
-        if self.board[r][c] != self.player:
-            return False
+        #if self.board[r][c] != self.player:
+            #return False
 
         if self.isFree(er, ec) == False:
             return False
 
-        #human moves
+        # cannot move in the cell above, only diagonally
+        if c == ec:
+            return False
+        
+        return True
+        """#human moves
         if self.player == 'k':
             if er == r-1:
                 if self.isFree(er,ec):
@@ -72,14 +97,7 @@ class CheckerRepresentation:
                 return self.board[r + 3][ec] == self.getEnemy()
             if er == r+6:
                 return self.board[r+5][ec] == self.getEnemy()
-        return False
-
-    def printMatrix(self):
-        for r in range(len(self.board)):
-            row = ""
-            for c in range(len(self.board[0])):
-                row += self.board[r][c] + " "
-            print row
+        return False"""
 
     """
     Note: assumes that move is admissible (see self.isAdmissible())
@@ -87,12 +105,20 @@ class CheckerRepresentation:
     @return board representation with the move
     """
     def makeMove(self,r,c,er,ec):
+        print "repr, makemove()"
         #copy board
-        newboard = copy.copy(self.board)
+        if len(self.board[6]) < 8:
+            pass
+        newboard = copy.deepcopy(self.board)
+        if len(newboard[6]) < 3:
+            pass
+        print "deepcopy (%d,%d)->(%d,%d):" %(r,c,er,ec)
+        print str(self)
 
         # return the one with the move
+        peg = self.board[r][c] 
         newboard[r][c] = ' '
-        newboard[er][ec] = self.player
+        newboard[er][ec] = peg
 
         if self.player == 'k': # human, towards north
             if er == r - 1:
@@ -114,7 +140,7 @@ class CheckerRepresentation:
             if er == r + 4:
                 newboard[er+1] = ' '
                 newboard[er+3] = ' '
-            if er == r - 6:
+            if er == r + 6:
                 newboard[er + 1] = ' '
                 newboard[er + 3] = ' '
                 newboard[er + 5] = ' '
@@ -123,24 +149,27 @@ class CheckerRepresentation:
 
 class CheckerState:
 
-    def __init__(self, heuristic, repesentation):
+    def __init__(self, heuristic, representation):
         self.H = heuristic
-        self.repesentation = repesentation
+        self.representation = representation
 
     def getRepresentation(self):
-        return self.repesentation
+        return self.representation
 
     def neighbors(self, turn):
         # turn in ('w','k')
         # w : white
         # k : black
+        print "state, neighbors()"
+        
         rep = self.getRepresentation()
         rows = len( rep.getBoard() )
         cols = len( rep.getBoard()[0] )
         out = set()
         for r in range(0, 8):
             for c in range(0, 8):
-
+                print str(self)
+                print "state, neighbors(). r=",str(r), " c=", str(c)
                 if self.getRepresentation().getPiece(r,c) == ' ':
                     continue
 
@@ -235,9 +264,6 @@ class CheckerState:
                             out.add(newstate)
         return out
 
-    def printMatrix(self):
-        self.getRepresentation().printMatrix()
-
     def setCurrentPlayer(self, player):
         self.getRepresentation().setCurrentPlayer(player)
 
@@ -272,12 +298,20 @@ class CheckerState:
         return None
 
     def isAdmissible(self, r, c, er, ec):
-        resp = self.repesentation.isAdmissible(r,c,er,ec)
+        resp = self.representation.isAdmissible(r,c,er,ec)
         return resp
 
     #note: this does not touch current state!!!!!!
     #assumes move is legal
     def makeMove(self,r,c,er,ec):
-        rep = self.repesentation.makeMove(r,c,er,ec)
+        rep = self.representation.makeMove(r,c,er,ec)
         newstate = CheckerState(self.H, rep)
+        newstate.setCurrentPlayer(self.representation.player)
         return newstate
+    
+    def __str__(self):
+        return str(self.representation)
+    
+    def __repr__(self):
+        return repr(self.getRepresentation())
+    
