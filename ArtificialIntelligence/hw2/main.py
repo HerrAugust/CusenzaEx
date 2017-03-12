@@ -1,46 +1,52 @@
 #CHECKERS game Minmax implementation
 #for this implementation MACHINE -> WHITE ('w'); HUMAN -> BLACK ('k')
 
-__author__ = 'giodegas'
+__author_base__ = 'giodegas'  # author of base version
 
 import GameModels as G
 import Heuristics as H
+
+import time
+
 
 def game():
     board = [
         [' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'],
         ['w', ' ', 'w', ' ', 'w', ' ', 'w', ' '],
-        [' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'], # machine frontier
+        [' ', 'w', ' ', 'w', ' ', 'w', ' ', 'w'],  # machine frontier
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        ['k', ' ', 'k', ' ', 'k', ' ', 'k', ' '], # human frontier
+        ['k', ' ', 'k', ' ', 'k', ' ', 'k', ' '],  # human frontier
         [' ', 'k', ' ', 'k', ' ', 'k', ' ', 'k'],
         ['k', ' ', 'k', ' ', 'k', ' ', 'k', ' ']
     ]
 
-    LEVEL = 5
+    LEVEL = 3
     heuristic = H.CheckerHeuristic()
-    rep =  G.CheckerRepresentation(board)
+    rep = G.CheckerRepresentation(board)
     rep.setCurrentPlayer('w')
     curState = G.CheckerState(heuristic, rep)
 
     while True:
         turn = 'w' # machine
         curState.setCurrentPlayer(turn)
-        states = curState.neighbors(turn)# find possible moves from here (1 level deeper)
+        """states = curState.neighbors(turn)  # find possible moves from here (1 level deeper)
         for j in states:
             print str(j)
         mx = -9999
         ix = None # best state
         for s in states:
-            h = heuristic.Hl(s, LEVEL, turn) # for each move, calculate heuristic value
-            if h > mx: # find best heuristic value (MAX one) and remember the corresponding state
+            start = time.time()
+            h = heuristic.Hl(s, LEVEL, turn, mx)  # for each move, calculate heuristic value
+            end = time.time()
+            print "Time needed for heuristic: ", str( (end-start) )
+            if h > mx:  # find best heuristic value (MAX one) and remember the corresponding state
                 mx = h
-                ix = s
-        print "Chosen MAX state:"
-        print ix
+                ix = s"""
+
         # generate a move in function of ix
-        curState = ix
+        curState = heuristic.H(curState, LEVEL, turn, -1)["state"]
+        print "MATRIX AFTER MACHINE MOVE:"
         print str(curState)
 
         # check if final break WHITE wins!
@@ -48,7 +54,7 @@ def game():
             print "You lose"
             return
 
-        turn = 'k' #human
+        turn = 'k'  # human
         curState.setCurrentPlayer(turn)
         movePossible = False
         while movePossible == False:
@@ -57,14 +63,18 @@ def game():
             re = input('Position of move end. row: ')
             ce = input('Position of move end. column: ')
             # is it feasible?
-            movePossible = curState.isAdmissible(r,c,re,ce)
+            movePossible = curState.isAdmissible(r, c, re, ce)
+            if not movePossible:
+                print "Move not admissible"
 
-
-        curState = curState.makeMove(r,c, re,ce)
+        curState = curState.makeMove(r, c, re, ce)
+        print "RESULTING MATRIX:"
+        print str(curState)
+        time.sleep(3)
         # check if final break BLACK wins!
         if curState.solution() == 'human':
             print "You win"
             return
 
-#Main
+# Main
 game()

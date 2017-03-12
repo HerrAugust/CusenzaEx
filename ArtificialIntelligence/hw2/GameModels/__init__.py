@@ -1,9 +1,11 @@
 
-__author__ = 'giodegas'
+__author_base__ = 'giodegas'  # author of the base code
 
-# da debuggare e completare
 
 import copy
+
+
+free = set()  # set of pegs free to move wherever they want
 
 class CheckerRepresentation:
 
@@ -15,9 +17,11 @@ class CheckerRepresentation:
 
     def getPiece(self, r, c):
         # what if out of the board?
-        print "repr, getpiece() ", str(r), " ",str(c)
-        print str(self)
-        piece = self.board[r][c]
+        cols = len(self.board[0])
+        rows = len(self.board)
+        piece = ' '
+        if 0 <= r < rows and 0 <= c < cols:
+            piece = self.board[r][c]
         return piece
 
     def getBoard(self):
@@ -55,58 +59,67 @@ class CheckerRepresentation:
         return self.printMatrix()
 
     def isAdmissible(self, r,c,er,ec):
-        # you may move peg for 1, 2, 4, 6 diagonal distances (euclidean distance)
-        if r == er and c == ec: #cannot stay in the same cell
+        # cannot move a not-existing peg
+        if self.isFree(r,c):
+            return False
+
+        # cannot move a peg of enemy
+        if self.board[r][c] != self.player:
+            return False
+
+        # cannot stay in the same cell of before
+        if r == er and c == ec:
             return False
 
         #if we stay in the board
-        if r >= len(self.board) or c >= len(self.board[0]) or er >= len(self.board) or ec >= len(self.board[0]) or er < 0 or ec < 0:
+        if not ( 0 <= r < len(self.board) and 0 <= er < len(self.board) and 0 <= c < len(self.board[0]) and 0 <= ec < len(self.board[0]) ):
             return False
 
-        #if self.board[r][c] != self.player:
-            #return False
-
+        # final position of peg must not be occupied
         if self.isFree(er, ec) == False:
             return False
 
         # cannot move in the cell above, only diagonally
         if c == ec:
             return False
-        
+        if abs(er-r) != abs(ec-c):
+            return False
+
+        # get peg to move
+        peg_rc = self.board[r][c]
+
+        """# if you want to jump more than one row, you must eat!
+        if abs(er-r) > 1:
+            if er-r == 2:
+                # check peg in the middle is one of enemy
+                if self.isFree(er-1,ec-1) == True or self.board[er-1][ec-1] == self.player:
+                    return False
+            if er-r == 4:
+                # checks above
+                if self.isFree(er-1,ec-1) == True or self.board[er-1][ec-1] == self.player:
+                    return False
+                if self.isFree(er-3,ec-3) == True or self.board[er-3][ec-3] == self.player:
+                    return False
+            if er-r == 6:
+                # checks above
+                if self.isFree(er - 1,ec - 1) == True or self.board[er - 1][ec - 1] == self.player:
+                    return False
+                if self.isFree(er - 3,ec - 3) == True or self.board[er - 3][ec - 3] == self.player:
+                    return False
+                if self.isFree(er-6,ec-6) == True or self.board[er-6][ec-6] == self.player:
+                    return False"""
         return True
-        """#human moves
-        if self.player == 'k':
-            if er == r-1:
-                if self.isFree(er,ec):
-                    return True
-                return False
-            if er == r-2: # in r-1 there must be an enemy
-                return self.board[r-1][ec] == self.getEnemy()
-            if er == r-4:
-                return self.board[r - 3][ec] == self.getEnemy()
-            if er == r-6:
-                return self.board[r-5][ec] == self.getEnemy()
-        else: # machine moves
-            if er == r+1:
-                if self.isFree(er, ec):
-                    return True
-                return False
-            if er == r+2: # in r+1 there must be an enemy
-                return self.board[r+1][ec] == self.getEnemy()
-            if er == r+4:
-                return self.board[r + 3][ec] == self.getEnemy()
-            if er == r+6:
-                return self.board[r+5][ec] == self.getEnemy()
-        return False"""
 
     """
     Note: assumes that move is admissible (see self.isAdmissible())
     Does NOT affect self.board
     @return board representation with the move
     """
-    def makeMove(self,r,c,er,ec):
+    def makeMove(self, r, c, er, ec):
+        global free
+        
         print "repr, makemove()"
-        #copy board
+        # copy board
         if len(self.board[6]) < 8:
             pass
         newboard = copy.deepcopy(self.board)
@@ -115,35 +128,88 @@ class CheckerRepresentation:
         print "deepcopy (%d,%d)->(%d,%d):" %(r,c,er,ec)
         print str(self)
 
-        # return the one with the move
+        # if peg reaches the last row of enemy's side, add that peg into "free" (to move) pegs list.
+        # if it was already there, remove it
+        if Peg(r, c) in free:
+            free.remove(Peg(r, c))
+        # if peg reaches the last row of enemy's side, add that peg into "free" (to move) pegs list.
+        if er == 0 or er == 7:
+            free.add(Peg(er, ec))
+
+        # return the board with the move
         peg = self.board[r][c] 
         newboard[r][c] = ' '
         newboard[er][ec] = peg
 
-        if self.player == 'k': # human, towards north
-            if er == r - 1:
-                pass
-            if er == r - 2:  # in r-1 there must be an enemy
-                newboard[er-1] = ' '
-            if er == r - 4:
-                newboard[er-1] = ' '
-                newboard[er-3] = ' '
-            if er == r - 6:
-                newboard[er - 1] = ' '
-                newboard[er - 3] = ' '
-                newboard[er - 5] = ' '
-        else: # machine, towards south
-            if er == r + 1:
-                pass
-            if er == r + 2:  # in r-1 there must be an enemy
-                newboard[er+1] = ' '
-            if er == r + 4:
-                newboard[er+1] = ' '
-                newboard[er+3] = ' '
-            if er == r + 6:
-                newboard[er + 1] = ' '
-                newboard[er + 3] = ' '
-                newboard[er + 5] = ' '
+        # if moving towards north-east
+        if er < r and ec > c:
+            if r-er == 2:
+                # check peg in the middle is one of enemy
+                newboard[er+1][ec-1] = ' '
+                free.remove(Peg(er+1, ec-1))
+            if r-er == 4:
+                newboard[er+1][ec-1] = ' '
+                newboard[er+3][ec-3] = ' '
+                free.remove(Peg(er + 1, ec - 1))
+                free.remove(Peg(er + 3, ec - 3))
+            if r-er == 6:
+                newboard[er+1][ec-1] = ' '
+                newboard[er+3][ec-3] = ' '
+                newboard[er+6][er-6] = ' '
+                free.remove(Peg(er + 1, ec - 1))
+                free.remove(Peg(er + 3, ec - 3))
+                free.remove(Peg(er + 6, ec - 6))
+        elif er < r and ec < c: # if moving towards north-west
+            if r-er == 2:
+                # check peg in the middle is one of enemy
+                newboard[er+1][ec+1] = ' '
+                free.remove(Peg(er + 1, ec + 1))
+            if r-er == 4:
+                newboard[er+1][ec+1] = ' '
+                newboard[er+3][ec+3] = ' '
+                free.remove(Peg(er + 1, ec + 1))
+                free.remove(Peg(er + 3, ec + 3))
+            if r-er == 6:
+                newboard[er+1][ec+1] = ' '
+                newboard[er+3][ec+3] = ' '
+                newboard[er+6][er+6] = ' '
+                free.remove(Peg(er + 1, ec + 1))
+                free.remove(Peg(er + 3, ec + 3))
+                free.remove(Peg(er + 6, ec + 6))
+        elif er > r and ec > c: # if moving towards south-east
+            if er-r == 2:
+                # check peg in the middle is one of enemy
+                newboard[er-1][ec-1] = ' '
+                free.remove(Peg(er - 1, ec - 1))
+            if er-r == 4:
+                newboard[er-1][ec-1] = ' '
+                newboard[er-3][ec-3] = ' '
+                free.remove(Peg(er - 1, ec - 1))
+                free.remove(Peg(er - 3, ec - 3))
+            if er-r == 6:
+                newboard[er-1][ec-1] = ' '
+                newboard[er-3][ec-3] = ' '
+                newboard[er-6][er-6] = ' '
+                free.remove(Peg(er - 1, ec - 1))
+                free.remove(Peg(er - 3, ec - 3))
+                free.remove(Peg(er - 6, ec - 6))
+        else: # if moving towards south-west
+            if er-r == 2:
+                # check peg in the middle is one of enemy
+                newboard[er-1][ec+1] = ' '
+                free.remove(Peg(er - 1, ec + 1))
+            if er-r == 4:
+                newboard[er-1][ec+1] = ' '
+                newboard[er-3][ec+3] = ' '
+                free.remove(Peg(er - 1, ec + 1))
+                free.remove(Peg(er - 3, ec + 3))
+            if er-r == 6:
+                newboard[er-1][ec+1] = ' '
+                newboard[er-3][ec+3] = ' '
+                newboard[er-6][er+6] = ' '
+                free.remove(Peg(er - 1, ec + 1))
+                free.remove(Peg(er - 3, ec + 3))
+                free.remove(Peg(er - 6, ec + 6))
 
         return CheckerRepresentation(newboard)
 
@@ -153,127 +219,143 @@ class CheckerState:
         self.H = heuristic
         self.representation = representation
 
+    def enemy(self, peg):
+        r = peg.r
+        c = peg.c
+        p = self.representation.getPiece(r,c)
+        if p == 'k':
+            return 'w'
+        return 'k'
+
     def getRepresentation(self):
         return self.representation
 
+
     def neighbors(self, turn):
+        """
+        Returns the possible moves that player turn can perform.
+        :param turn: player to consider (w or k)
+        :type turn: str
+        :return: set of boards resulting from possible moves of player turn
+        :rtype: set(CheckerState)
+        """
         # turn in ('w','k')
         # w : white
         # k : black
+        global free
         print "state, neighbors()"
-        
+
         rep = self.getRepresentation()
         rows = len( rep.getBoard() )
         cols = len( rep.getBoard()[0] )
         out = set()
         for r in range(0, 8):
             for c in range(0, 8):
+                p = Peg(r,c, self.getRepresentation().getPiece(r, c))
                 print str(self)
-                print "state, neighbors(). r=",str(r), " c=", str(c)
-                if self.getRepresentation().getPiece(r,c) == ' ':
+                print "state, neighbors(). r=", str(r), " c=", str(c)
+                if p.content() == ' ' or p.content() != turn:  # if this is no peg or it's not a peg of mine I cannot move it
                     continue
 
-                if turn == 'w': # machine tries to maximize
-                    # moving towards south-east
-                    p1 = p2 = False  # true if previous if is successful
-                    if self.isAdmissible(r, c, r + 1, c + 1):
-                        newstate = self.makeMove(r, c, r + 1, c + 1)
-                        out.add(newstate)
-                    else:
-                        if r + 1 < rows and c + 1 < cols and rep.getPiece(r + 1, c + 1) == 'k' and self.isAdmissible(r,
-                                                                                                                    c,
-                                                                                                                    r + 2,
-                                                                                                                    c + 2):
-                            newstate = self.makeMove(r, c, r + 2, c + 2)
-                            out.add(newstate)
-                            p1 = True
-                        if p1 and r + 3 < rows and c + 3 < cols and rep.getPiece(r + 3,
-                                                                                c + 3) == 'k' and self.isAdmissible(r,
-                                                                                                                    c,
-                                                                                                                    r + 4,
-                                                                                                                    c + 4):
-                            newstate = self.makeMove(r, c, r + 4, c + 2)
-                            out.add(newstate)
-                            p2 = True
-                        if p2 and r - 5 < rows and c + 5 < cols and rep.getPiece(r + 5,
-                                                                                c + 5) == 'k' and self.isAdmissible(r,
-                                                                                                                    c,
-                                                                                                                    r + 6,
-                                                                                                                    c + 6):
-                            newstate = self.makeMove(r, c, r + 6, c + 2)
-                            out.add(newstate)
-                    # moving toward south-west
-                    p1 = p2 = False  # true if previous if is successful
-                    if self.isAdmissible(r, c, r + 1, c - 1):
-                        newstate = self.makeMove(r, c, r + 1, c - 1)
-                        out.add(newstate)
-                    else:
-                        if r + 1 < rows and c - 1 > 0 and rep.getPiece(r + 1, c - 1) == 'k' and self.isAdmissible(r,
-                                                                                                                 c,
-                                                                                                                 r + 2,
-                                                                                                                 c - 2):
-                            newstate = self.makeMove(r, c, r + 2, c - 2)
-                            out.add(newstate)
-                            p1 = True
-                        if p1 and r + 3 < rows and c + 3 > 0 and rep.getPiece(r + 3, c - 3) == 'k' and self.isAdmissible(
-                                r, c, r + 4, c - 4):
-                            newstate = self.makeMove(r, c, r + 4, c - 4)
-                            out.add(newstate)
-                            p2 = True
-                        if p2 and r + 5 < rows and c + 5 > 0 and rep.getPiece(r + 5, c - 5) == 'k' and self.isAdmissible(
-                                r, c, r + 6, c - 6):
-                            newstate = self.makeMove(r, c, r + 6, c - 6)
-                            out.add(newstate)
-                else: # human tries to minimise
-                    #moving towards north-east
-                    p1 = p2 = False # true if previous if is successful
-                    if self.isAdmissible(r,c,r-1,c+1):
+                # case not eating
+                if rep.getPiece(r,c) == 'k' or p in free:  # case moving towards north
+                    if rep.isFree(r-1, c-1):
+                        newstate = self.makeMove(r,c,r-1,c-1)
+                        out.add (newstate)
+                    if rep.isFree(r-1, c+1):
                         newstate = self.makeMove(r,c,r-1,c+1)
                         out.add(newstate)
-                    else:
-                        if r-1 >= 0 and c+1 < cols and rep.getPiece(r-1,c+1) == 'w' and self.isAdmissible(r,c,r-2,c+2):
-                            newstate = self.makeMove(r,c,r-2,c+2)
-                            out.add(newstate)
-                            p1 = True
-                        if p1 and r-3 >= 0 and c+3 < cols and rep.getPiece(r-3,c+3) == 'w' and self.isAdmissible(r,c,r-4,c+4):
-                            newstate = self.makeMove(r, c, r - 4, c + 2)
-                            out.add(newstate)
-                            p2 = True
-                        if p2 and r-5 >= 0 and c+5 < cols and rep.getPiece(r-5,c+5) == 'w' and self.isAdmissible(r,c,r-6,c+6):
-                            newstate = self.makeMove(r, c, r - 6, c + 2)
-                            out.add(newstate)
-                    #moving toward north-west
-                    p1 = p2 = False  # true if previous if is successful
-                    if self.isAdmissible(r, c, r - 1, c - 1):
-                        newstate = self.makeMove(r, c, r - 1, c - 1)
+                if rep.getPiece(r,c) == 'w' or p in free:  # moving towards south
+                    if rep.isFree(r+1,c+1):
+                        newstate = self.makeMove(r,c,r+1,c+1)
                         out.add(newstate)
-                    else:
-                        if r - 1 >= 0 and c - 1 > 0 and rep.getPiece(r - 1, c - 1) == 'w' and self.isAdmissible(r,
-                                                                                                                    c,
-                                                                                                                    r - 2,
-                                                                                                                    c - 2):
-                            newstate = self.makeMove(r, c, r - 2, c - 2)
+                    if rep.isFree(r+1,c-1):
+                        newstate = self.makeMove(r,c,r+1,c-1)
+                        out.add(newstate)
+
+                # case eating
+                caseBefore = False  # True if it possible to eat n-1 pegs
+                if rep.getPiece(r,c) == 'k' or p in free:  # case moving towards north
+                    if self.isAdmissible(r,c,r-6,c+6):  # if I can eat 3 pegs, moving towards north-east
+                        if rep.getPiece(r-5,c+5) == self.enemy(p) and rep.isFree(r-4,c+4) and rep.getPiece(r-3,c+3) == self.enemy(p) and rep.isFree(r-2,c+2) and rep.getPiece(r-1,c+1) == self.enemy(p):  # moving towards north-east
+                            newstate = self.makeMove(r,c,r-6,c+6)
                             out.add(newstate)
-                            p1 = True
-                        if p1 and r-3 >= 0 and c+3 > 0 and rep.getPiece(r - 3, c - 3) == 'w' and self.isAdmissible(r, c, r - 4, c - 4):
+                            caseBefore = True
+                    if self.isAdmissible(r, c, r - 6, c - 6):  # if I can eat 3 pegs, moving towards north-west
+                        if rep.getPiece(r-5,c-5) == self.enemy(p) and rep.isFree(r-4,c-4) and rep.getPiece(r-3,c-3) == self.enemy(p) and rep.isFree(r-2,c-2) and rep.getPiece(r-1,c-1) == self.enemy(p):
+                            newstate = self.makeMove(r,c,r-6,c-6)
+                            out.add(newstate)
+                            caseBefore = True
+
+                    if not caseBefore and self.isAdmissible(r,c,r-4,c-4):  # if I can eat 2 pegs, moving towards north-west
+                        if rep.getPiece(r - 3, c + 3) == self.enemy(p) and rep.isFree(r - 2, c + 2) and rep.getPiece(
+                                        r - 1, c + 1) == self.enemy(p):
+                            newstate = self.makeMove(r, c, r - 6, c + 6)
+                            out.add(newstate)
+                            caseBefore = True
+                    if not caseBefore and self.isAdmissible(r, c, r - 4, c + 4):  # if I can eat 2 pegs, moving towards north-est
+                        if rep.getPiece(r - 3, c - 3) == self.enemy(p) and rep.isFree(r - 2, c - 2) and rep.getPiece(
+                                        r - 1, c - 1) == self.enemy(p):
                             newstate = self.makeMove(r, c, r - 4, c - 4)
                             out.add(newstate)
-                            p2 = True
-                        if p2 and r-5 >= 0 and c+5 > 0 and rep.getPiece(r - 5, c - 5) == 'w' and self.isAdmissible(r, c, r - 6, c - 6):
-                            newstate = self.makeMove(r, c, r - 6, c - 6)
+                            caseBefore = True
+
+                    if not caseBefore and self.isAdmissible(r,c,r-2,c-2): # if I can eat 1 peg, moving towards north-west
+                        if rep.getPiece(r-1,c-1) == self.enemy(p):
+                            newstate = self.makeMove(r,c,r-2,c-2)
+                            out.add(newstate)
+                    if not caseBefore and self.isAdmissible(r, c, r - 2, c + 2):  # if I can eat 1 peg, moving towards north-east
+                        if rep.getPiece(r-1,c+1) == self.enemy(p):
+                            newstate = self.makeMove(r,c,r-2,c+2)
+                            out.add(newstate)
+                caseBefore = False            
+                if rep.getPiece(r,c) == 'w' or p in free:  # case moving towards south
+                    if self.isAdmissible(r,c,r+6,c+6):  # if I can eat 3 pegs, moving towards north-east
+                        if rep.getPiece(r+5,c+5) == self.enemy(p) and rep.isFree(r+4,c+4) and rep.getPiece(r+3,c+3) == self.enemy(p) and rep.isFree(r+2,c+2) and rep.getPiece(r+1,c+1) == self.enemy(p):  # moving towards north-east
+                            newstate = self.makeMove(r,c,r+6,c+6)
+                            out.add(newstate)
+                            caseBefore = True
+                    if self.isAdmissible(r, c, r - 6, c - 6):  # if I can eat 3 pegs, moving towards north-west
+                        if rep.getPiece(r+5,c-5) == self.enemy(p) and rep.isFree(r+4,c-4) and rep.getPiece(r+3,c-3) == self.enemy(p) and rep.isFree(r+2,c-2) and rep.getPiece(r+1,c-1) == self.enemy(p):
+                            newstate = self.makeMove(r,c,r+6,c-6)
+                            out.add(newstate)
+                            caseBefore = True
+
+                    if not caseBefore and self.isAdmissible(r,c,r+4,c-4):  # if I can eat 2 pegs, moving towards north-west
+                        if rep.getPiece(r - 3, c + 3) == self.enemy(p) and rep.isFree(r - 2, c + 2) and rep.getPiece(
+                                        r - 1, c + 1) == self.enemy(p):
+                            newstate = self.makeMove(r, c, r - 6, c + 6)
+                            out.add(newstate)
+                            caseBefore = True
+                    if not caseBefore and self.isAdmissible(r, c, r - 4, c + 4):  # if I can eat 2 pegs, moving towards north-est
+                        if rep.getPiece(r - 3, c - 3) == self.enemy(p) and rep.isFree(r - 2, c - 2) and rep.getPiece(
+                                        r - 1, c - 1) == self.enemy(p):
+                            newstate = self.makeMove(r, c, r - 4, c - 4)
+                            out.add(newstate)
+                            caseBefore = True
+
+                    if not caseBefore and self.isAdmissible(r,c,r+2,c-2): # if I can eat 1 peg, moving towards north-west
+                        if rep.getPiece(r+1,c-1) == self.enemy(p):
+                            newstate = self.makeMove(r,c,r+2,c-2)
+                            out.add(newstate)
+                    if not caseBefore and self.isAdmissible(r, c, r - 2, c + 2):  # if I can eat 1 peg, moving towards north-east
+                        if rep.getPiece(r+1,c+1) == self.enemy(p):
+                            newstate = self.makeMove(r,c,r+2,c+2)
                             out.add(newstate)
         return out
 
     def setCurrentPlayer(self, player):
         self.getRepresentation().setCurrentPlayer(player)
 
-    """
-    Returns 'human' if the current board is solution for human player
-    Returns 'machine' if current board is solution for machine player
-    Returns None if current board is solution for neither machine and human player
-    """
     def solution(self):
-        rep = self.repesentation
+        """
+            Returns 'human' if the current board is solution for human player
+            Returns 'machine' if current board is solution for machine player
+            Returns None if current board is solution for neither machine and human player
+            :rtype: str
+            :return: 'machine' or 'human' or None
+        """
+        rep = self.representation
         solmachine = True
         solhuman = True
 
@@ -303,8 +385,9 @@ class CheckerState:
 
     #note: this does not touch current state!!!!!!
     #assumes move is legal
-    def makeMove(self,r,c,er,ec):
-        rep = self.representation.makeMove(r,c,er,ec)
+    def makeMove(self, r, c, er, ec):
+        global free
+        rep = self.representation.makeMove(r, c, er, ec)
         newstate = CheckerState(self.H, rep)
         newstate.setCurrentPlayer(self.representation.player)
         return newstate
@@ -314,4 +397,28 @@ class CheckerState:
     
     def __repr__(self):
         return repr(self.getRepresentation())
-    
+
+
+class Peg:
+    def __init__(self, r, c, content = ''):
+        self.r = r
+        self.c = c
+        self.content = content
+
+    def r(self):
+        return self.r
+
+    def c(self):
+        return self.c
+
+    def content(self):
+        return self.content
+
+    def __hash__(self):
+        s = str(self.r) + str(self.c)
+        return int(s)
+
+    def __eq__(self, other):
+        if self.r == other.r and self.c == other.c:
+            return True
+        return False
