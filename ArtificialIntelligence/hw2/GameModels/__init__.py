@@ -7,6 +7,7 @@ import copy
 
 free = set()  # set of pegs free to move wherever they want
 
+
 class CheckerRepresentation:
 
     def __init__(self, board):
@@ -27,14 +28,22 @@ class CheckerRepresentation:
     def getBoard(self):
         return self.board
 
+    def getDeepCopy(self):
+        b = copy.deepcopy(self.board)
+        r = CheckerRepresentation(b)
+        r.setCurrentPlayer(self.player[:])  # deep copy of self.player (otw. shallow copy)
+        return r
+
     def setPiece(self, r,c,piece):
-        self.board[r,c] = piece
+        self.board[r, c] = piece
 
     def setCurrentPlayer(self, player):
         self.player = player
 
     def isFree(self, r, c):
-        return self.getPiece(r,c) == ' '
+        if 0 <= r < len(self.board) and 0 <= c < len(self.board[0]):
+            return self.getPiece(r, c) == ' '
+        return False
 
     def getEnemy(self):
         if self.player == 'k':
@@ -49,7 +58,7 @@ class CheckerRepresentation:
             for c in range(0,len(self.board[r])):
                 row += self.board[r][c] + " "
             s += row + "\n"
-        s += "____________________________"
+        s += "________________"
         return s
         
     def __repr__(self):
@@ -146,70 +155,96 @@ class CheckerRepresentation:
             if r-er == 2:
                 # check peg in the middle is one of enemy
                 newboard[er+1][ec-1] = ' '
-                free.remove(Peg(er+1, ec-1))
+                if Peg(er+1, ec-1) in free:
+                    free.remove(Peg(er+1, ec-1))
             if r-er == 4:
                 newboard[er+1][ec-1] = ' '
                 newboard[er+3][ec-3] = ' '
-                free.remove(Peg(er + 1, ec - 1))
-                free.remove(Peg(er + 3, ec - 3))
+                if Peg(er + 1, ec - 1) in free:
+                    free.remove(Peg(er + 1, ec - 1))
+                if Peg(er + 3, ec - 3) in free:
+                    free.remove(Peg(er + 3, ec - 3))
             if r-er == 6:
                 newboard[er+1][ec-1] = ' '
                 newboard[er+3][ec-3] = ' '
                 newboard[er+6][er-6] = ' '
-                free.remove(Peg(er + 1, ec - 1))
-                free.remove(Peg(er + 3, ec - 3))
-                free.remove(Peg(er + 6, ec - 6))
+                if Peg(er + 1, ec - 1) in free: 
+                    free.remove(Peg(er + 1, ec - 1))
+                if Peg(er + 3, ec - 3) in free:
+                    free.remove(Peg(er + 3, ec - 3))
+                if Peg(er + 6, ec - 6) in free:
+                    free.remove(Peg(er + 6, ec - 6))
         elif er < r and ec < c: # if moving towards north-west
             if r-er == 2:
                 # check peg in the middle is one of enemy
                 newboard[er+1][ec+1] = ' '
-                free.remove(Peg(er + 1, ec + 1))
+                if Peg(er + 1, ec + 1) in free:
+                    free.remove(Peg(er + 1, ec + 1))
             if r-er == 4:
                 newboard[er+1][ec+1] = ' '
                 newboard[er+3][ec+3] = ' '
-                free.remove(Peg(er + 1, ec + 1))
-                free.remove(Peg(er + 3, ec + 3))
+                if Peg(er + 3, ec + 3) in free:
+                    free.remove(Peg(er + 1, ec + 1))
+                if Peg(er+1, ec+1) in free: 
+                    free.remove(Peg(er + 3, ec + 3))
             if r-er == 6:
                 newboard[er+1][ec+1] = ' '
                 newboard[er+3][ec+3] = ' '
                 newboard[er+6][er+6] = ' '
-                free.remove(Peg(er + 1, ec + 1))
-                free.remove(Peg(er + 3, ec + 3))
-                free.remove(Peg(er + 6, ec + 6))
+                if Peg(er + 1, ec + 1) in free:
+                    free.remove(Peg(er + 1, ec + 1))
+                if Peg(er + 3, ec + 3) in free:
+                    free.remove(Peg(er + 3, ec + 3))
+                if Peg(er + 6, ec + 6) in free:
+                    free.remove(Peg(er + 6, ec + 6))
         elif er > r and ec > c: # if moving towards south-east
             if er-r == 2:
                 # check peg in the middle is one of enemy
                 newboard[er-1][ec-1] = ' '
-                free.remove(Peg(er - 1, ec - 1))
+                if Peg(er - 1, ec - 1) in free:
+                    free.remove(Peg(er - 1, ec - 1))
             if er-r == 4:
                 newboard[er-1][ec-1] = ' '
                 newboard[er-3][ec-3] = ' '
-                free.remove(Peg(er - 1, ec - 1))
-                free.remove(Peg(er - 3, ec - 3))
+                if Peg(er - 1, ec - 1) in free:
+                    free.remove(Peg(er - 1, ec - 1))
+                if Peg(er - 3, ec - 3) in free:
+                    free.remove(Peg(er - 3, ec - 3))
             if er-r == 6:
                 newboard[er-1][ec-1] = ' '
                 newboard[er-3][ec-3] = ' '
                 newboard[er-6][er-6] = ' '
-                free.remove(Peg(er - 1, ec - 1))
-                free.remove(Peg(er - 3, ec - 3))
-                free.remove(Peg(er - 6, ec - 6))
+                if Peg(er - 1, ec - 1) in free:
+                    free.remove(Peg(er - 1, ec - 1))
+                if Peg(er - 3, ec - 3) in free:
+                    free.remove(Peg(er - 3, ec - 3))
+                if Peg(er - 6, ec - 6) in free:
+                    free.remove(Peg(er - 6, ec - 6))
         else: # if moving towards south-west
             if er-r == 2:
                 # check peg in the middle is one of enemy
                 newboard[er-1][ec+1] = ' '
-                free.remove(Peg(er - 1, ec + 1))
+                print str(er-1), str(ec+1)
+                p = Peg(er - 1, ec + 1)
+                if p in free:
+                    free.remove(p)
             if er-r == 4:
                 newboard[er-1][ec+1] = ' '
                 newboard[er-3][ec+3] = ' '
-                free.remove(Peg(er - 1, ec + 1))
-                free.remove(Peg(er - 3, ec + 3))
+                if Peg(er - 1, ec + 1) in free:
+                    free.remove(Peg(er - 1, ec + 1))
+                if Peg(er - 3, ec + 3) in free:
+                    free.remove(Peg(er - 3, ec + 3))
             if er-r == 6:
                 newboard[er-1][ec+1] = ' '
                 newboard[er-3][ec+3] = ' '
                 newboard[er-6][er+6] = ' '
-                free.remove(Peg(er - 1, ec + 1))
-                free.remove(Peg(er - 3, ec + 3))
-                free.remove(Peg(er - 6, ec + 6))
+                if Peg(er - 1, ec + 1) in free:
+                    free.remove(Peg(er - 1, ec + 1))
+                if Peg(er - 1, ec + 1) in free:
+                    free.remove(Peg(er - 3, ec + 3))
+                if Peg(er - 1, ec + 1) in free:
+                    free.remove(Peg(er - 6, ec + 6))
 
         return CheckerRepresentation(newboard)
 
@@ -230,6 +265,8 @@ class CheckerState:
     def getRepresentation(self):
         return self.representation
 
+    def getHeuristic(self):
+        return self.H
 
     def neighbors(self, turn):
         """
@@ -246,15 +283,13 @@ class CheckerState:
         print "state, neighbors()"
 
         rep = self.getRepresentation()
-        rows = len( rep.getBoard() )
-        cols = len( rep.getBoard()[0] )
         out = set()
         for r in range(0, 8):
             for c in range(0, 8):
-                p = Peg(r,c, self.getRepresentation().getPiece(r, c))
+                p = Peg(r, c, self.getRepresentation().getPiece(r, c))
                 print str(self)
                 print "state, neighbors(). r=", str(r), " c=", str(c)
-                if p.content() == ' ' or p.content() != turn:  # if this is no peg or it's not a peg of mine I cannot move it
+                if p.getcontent() == ' ' or p.getcontent() != turn:  # if this is no peg or it's not a peg of mine I cannot move it
                     continue
 
                 # case not eating
@@ -400,7 +435,7 @@ class CheckerState:
 
 
 class Peg:
-    def __init__(self, r, c, content = ''):
+    def __init__(self, r, c, content=' '):
         self.r = r
         self.c = c
         self.content = content
@@ -411,7 +446,7 @@ class Peg:
     def c(self):
         return self.c
 
-    def content(self):
+    def getcontent(self):
         return self.content
 
     def __hash__(self):
