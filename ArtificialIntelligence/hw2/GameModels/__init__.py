@@ -52,13 +52,13 @@ class CheckerRepresentation:
             return 'k'
         
     def printMatrix(self):
-        s = "________________\n"
+        s = "________________\n  0 1 2 3 4 5 6 7\n"
         for r in range(0,len(self.board)):
-            row = ""
+            row = str(r) + " "
             for c in range(0,len(self.board[r])):
                 row += self.board[r][c] + " "
-            s += row + "\n"
-        s += "________________"
+            s += row + str(r) + "\n"
+        s += "  0 1 2 3 4 5 6 7\n________________"
         return s
         
     def __repr__(self):
