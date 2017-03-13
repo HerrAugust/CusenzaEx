@@ -20,7 +20,7 @@ def game():
         [' ', 'k', ' ', 'k', ' ', 'k', ' ', 'k'],
         ['k', ' ', 'k', ' ', 'k', ' ', 'k', ' ']
     ]
-
+    
     LEVEL = 3
     heuristic = H.CheckerHeuristic()
     rep = G.CheckerRepresentation(board)
@@ -32,14 +32,14 @@ def game():
     while True:
         turn = 'w'  # machine
         curState.setCurrentPlayer(turn)
-        states = curState.neighbors(turn)  # find possible moves from here (1 level deeper)
-        for j in states:
-            print str(j)
+        states = curState.neighbors(turn)  # find possible moves from here (1 level deeper). these are first level TRIANGLES DOWN
+        for s in states:
+            print str(s)
         mx = -9999
         ix = None  # best state
-        for s in states:
+        for s in states:  # in this loop I want to choose the best move
             start = time.time()
-            h = heuristic.H(s, LEVEL, 'k', mx)  # for each move, calculate heuristic value. this is the beginning MAX
+            h = heuristic.H(s, LEVEL, 'k', mx)  # for each move, calculate heuristic value
             end = time.time()
             print "Time needed for heuristic: ", str( (end-start) )
             if h > mx:  # find best heuristic value (MAX one) and remember the corresponding state
@@ -78,11 +78,11 @@ def game():
         f = open("log", "a")
         f.write(str(curState))
         f.close()
-        time.sleep(3)
         # check if final break BLACK wins!
         if curState.solution() == 'human':
             print "You win"
             return
 
+        time.sleep(3)
 # Main
 game()

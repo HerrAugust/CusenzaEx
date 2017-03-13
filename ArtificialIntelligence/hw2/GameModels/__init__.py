@@ -68,10 +68,18 @@ class CheckerRepresentation:
         return self.printMatrix()
 
     def isAdmissible(self, r,c,er,ec):
+        #if we stay in the board
+        if not ( 0 <= r < len(self.board) and 0 <= er < len(self.board) and 0 <= c < len(self.board[0]) and 0 <= ec < len(self.board[0]) ):
+            return False
+        
         # cannot move a not-existing peg
         if self.isFree(r,c):
             return False
 
+        # human player's pegs cannot move towards south if they haven't reached the enemy's last row
+        if self.board[r][c] == 'k' and er > r and not(Peg(r,c) in free):
+            return False
+        
         # cannot move a peg of enemy
         if self.board[r][c] != self.player:
             return False
@@ -80,11 +88,7 @@ class CheckerRepresentation:
         if r == er and c == ec:
             return False
 
-        #if we stay in the board
-        if not ( 0 <= r < len(self.board) and 0 <= er < len(self.board) and 0 <= c < len(self.board[0]) and 0 <= ec < len(self.board[0]) ):
-            return False
-
-        # final position of peg must not be occupied
+                # final position of peg must not be occupied
         if self.isFree(er, ec) == False:
             return False
 
@@ -288,7 +292,7 @@ class CheckerState:
             for c in range(0, 8):
                 p = Peg(r, c, self.getRepresentation().getPiece(r, c))
                 print str(self)
-                print "state, neighbors(). r=", str(r), " c=", str(c)
+                print "state, neighbors(). r=", str(r), " c=", str(c) + " turn=", turn
                 if p.getcontent() == ' ' or p.getcontent() != turn:  # if this is no peg or it's not a peg of mine I cannot move it
                     continue
 
@@ -323,15 +327,15 @@ class CheckerState:
                             caseBefore = True
 
                     if not caseBefore and self.isAdmissible(r,c,r-4,c-4):  # if I can eat 2 pegs, moving towards north-west
-                        if rep.getPiece(r - 3, c + 3) == self.enemy(p) and rep.isFree(r - 2, c + 2) and rep.getPiece(
-                                        r - 1, c + 1) == self.enemy(p):
-                            newstate = self.makeMove(r, c, r - 6, c + 6)
-                            out.add(newstate)
-                            caseBefore = True
-                    if not caseBefore and self.isAdmissible(r, c, r - 4, c + 4):  # if I can eat 2 pegs, moving towards north-est
                         if rep.getPiece(r - 3, c - 3) == self.enemy(p) and rep.isFree(r - 2, c - 2) and rep.getPiece(
                                         r - 1, c - 1) == self.enemy(p):
                             newstate = self.makeMove(r, c, r - 4, c - 4)
+                            out.add(newstate)
+                            caseBefore = True
+                    if not caseBefore and self.isAdmissible(r, c, r - 4, c + 4):  # if I can eat 2 pegs, moving towards north-est
+                        if rep.getPiece(r - 3, c + 3) == self.enemy(p) and rep.isFree(r - 2, c + 2) and rep.getPiece(
+                                        r - 1, c + 1) == self.enemy(p):
+                            newstate = self.makeMove(r, c, r - 4, c + 4)
                             out.add(newstate)
                             caseBefore = True
 
@@ -344,36 +348,37 @@ class CheckerState:
                             newstate = self.makeMove(r,c,r-2,c+2)
                             out.add(newstate)
                 caseBefore = False            
+                # case moving towards south
                 if rep.getPiece(r,c) == 'w' or p in free:  # case moving towards south
-                    if self.isAdmissible(r,c,r+6,c+6):  # if I can eat 3 pegs, moving towards north-east
+                    if self.isAdmissible(r,c,r+6,c+6):  # if I can eat 3 pegs, moving towards south-east
                         if rep.getPiece(r+5,c+5) == self.enemy(p) and rep.isFree(r+4,c+4) and rep.getPiece(r+3,c+3) == self.enemy(p) and rep.isFree(r+2,c+2) and rep.getPiece(r+1,c+1) == self.enemy(p):  # moving towards north-east
                             newstate = self.makeMove(r,c,r+6,c+6)
                             out.add(newstate)
                             caseBefore = True
-                    if self.isAdmissible(r, c, r - 6, c - 6):  # if I can eat 3 pegs, moving towards north-west
+                    if self.isAdmissible(r, c, r + 6, c - 6):  # if I can eat 3 pegs, moving towards south-west
                         if rep.getPiece(r+5,c-5) == self.enemy(p) and rep.isFree(r+4,c-4) and rep.getPiece(r+3,c-3) == self.enemy(p) and rep.isFree(r+2,c-2) and rep.getPiece(r+1,c-1) == self.enemy(p):
                             newstate = self.makeMove(r,c,r+6,c-6)
                             out.add(newstate)
                             caseBefore = True
 
-                    if not caseBefore and self.isAdmissible(r,c,r+4,c-4):  # if I can eat 2 pegs, moving towards north-west
-                        if rep.getPiece(r - 3, c + 3) == self.enemy(p) and rep.isFree(r - 2, c + 2) and rep.getPiece(
-                                        r - 1, c + 1) == self.enemy(p):
-                            newstate = self.makeMove(r, c, r - 6, c + 6)
+                    if not caseBefore and self.isAdmissible(r,c,r+4,c-4):  # if I can eat 2 pegs, moving towards south-west
+                        if rep.getPiece(r + 3, c - 3) == self.enemy(p) and rep.isFree(r + 2, c - 2) and rep.getPiece(
+                                        r + 1, c - 1) == self.enemy(p):
+                            newstate = self.makeMove(r, c, r + 4, c - 4)
                             out.add(newstate)
                             caseBefore = True
-                    if not caseBefore and self.isAdmissible(r, c, r - 4, c + 4):  # if I can eat 2 pegs, moving towards north-est
-                        if rep.getPiece(r - 3, c - 3) == self.enemy(p) and rep.isFree(r - 2, c - 2) and rep.getPiece(
-                                        r - 1, c - 1) == self.enemy(p):
-                            newstate = self.makeMove(r, c, r - 4, c - 4)
+                    if not caseBefore and self.isAdmissible(r, c, r + 4, c + 4):  # if I can eat 2 pegs, moving towards south-east
+                        if rep.getPiece(r + 3, c + 3) == self.enemy(p) and rep.isFree(r + 2, c + 2) and rep.getPiece(
+                                        r + 1, c + 1) == self.enemy(p):
+                            newstate = self.makeMove(r, c, r + 4, c + 4)
                             out.add(newstate)
                             caseBefore = True
 
-                    if not caseBefore and self.isAdmissible(r,c,r+2,c-2): # if I can eat 1 peg, moving towards north-west
+                    if not caseBefore and self.isAdmissible(r,c,r+2,c-2): # if I can eat 1 peg, moving towards south-west
                         if rep.getPiece(r+1,c-1) == self.enemy(p):
                             newstate = self.makeMove(r,c,r+2,c-2)
                             out.add(newstate)
-                    if not caseBefore and self.isAdmissible(r, c, r - 2, c + 2):  # if I can eat 1 peg, moving towards north-east
+                    if not caseBefore and self.isAdmissible(r, c, r + 2, c + 2):  # if I can eat 1 peg, moving towards soutb-east
                         if rep.getPiece(r+1,c+1) == self.enemy(p):
                             newstate = self.makeMove(r,c,r+2,c+2)
                             out.add(newstate)
@@ -397,7 +402,7 @@ class CheckerState:
         # win for machine (w)
         for r in range(0, 8):
             for c in range(0, 8):
-                if rep.getPiece(r,c) == 'w':
+                if rep.getPiece(r,c) == 'k':
                     solmachine = False
 
         if solmachine == True:
@@ -406,7 +411,7 @@ class CheckerState:
         # win for human (k)
         for r in range(0, 8):
             for c in range(0, 8):
-                if rep.getPiece(r, c) == 'k':
+                if rep.getPiece(r, c) == 'w':
                     solhuman = False
 
         if solhuman == True:

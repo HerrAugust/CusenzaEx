@@ -50,10 +50,13 @@ class CheckerHeuristic(Heuristic):
             n = state.neighbors(turn)
             h_vals = []
             for x in n:
+                x.setCurrentPlayer(turn)  # turn = w
                 v = self.H(x, l - 1, nexTurn, alfabeta)
                 if v > alfabeta:  # stop here and do not deep other paths of the tree
                     alfabeta = v
                 h_vals.append(v)
+            if len(h_vals) == 0:   
+                return 0
             m = max (h_vals)
             return m
         else:  # TRIANGLE DOWN. k = human
@@ -61,10 +64,13 @@ class CheckerHeuristic(Heuristic):
             n = state.neighbors(turn)
             h_vals = []  # list of heuristic value of child-nodes (neighbors)
             for x in n:
+                x.setCurrentPlayer(turn)  # turn = k
                 v = self.H(x, l - 1, nexTurn, alfabeta)
                 if alfabeta >= v:  # stop here and do not deep other paths of the tree
                     return v
                 h_vals.append(v)
+            if len(h_vals) == 0:  # case one player wins => v always 0 
+                return 0
             m = min (h_vals)
             return m
             #return min([self.Hl(game, x, l - 1, nexTurn) for x in game.neighbors(turn)])
