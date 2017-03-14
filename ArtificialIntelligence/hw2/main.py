@@ -54,6 +54,11 @@ def game():
         f.write(str(curState))
         f.close()
 
+        # if machine has just moved a peg to the last line of human frontier (row 7) => add it to free set
+        for i in range(0,8):
+            if curState.getRepresentation().getPiece(7,i) == 'w':
+                curState.addToFree(7,i)
+
         # check if final break WHITE wins!
         if curState.solution() == 'machine':
             print "You lose"
@@ -63,10 +68,14 @@ def game():
         curState.setCurrentPlayer(turn)
         movePossible = False
         while movePossible == False:
-            r = input('Position of move start. row: ')
-            c = input('Position of move start. column: ')
-            re = input('Position of move end. row: ')
-            ce = input('Position of move end. column: ')
+            s = input('Position of move start. [row.column]: ')
+            s = str(s)
+            r = int(s.split('.')[0])
+            c = int(s.split('.')[1])
+            s = input('Position of move end. [row.column]: ')
+            s = str(s)
+            re = int(s.split(".")[0])
+            ce = int(s.split(".")[1])
             # is it feasible?
             movePossible = curState.isAdmissible(r, c, re, ce)
             if not movePossible:

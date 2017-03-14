@@ -12,6 +12,11 @@ class CheckerRepresentation:
 
     def __init__(self, board):
         self.board = board
+
+    def addToFree(self, r, c):
+        global free
+        if not(Peg(r, c) in free):
+            free.add(Peg(r, c))
         
     def player(self):
         return self.player
@@ -258,6 +263,9 @@ class CheckerState:
         self.H = heuristic
         self.representation = representation
 
+    def addToFree(self, r, c):
+        self.representation.addToFree(r, c)
+
     def enemy(self, peg):
         r = peg.r
         c = peg.c
@@ -426,7 +434,6 @@ class CheckerState:
     #note: this does not touch current state!!!!!!
     #assumes move is legal
     def makeMove(self, r, c, er, ec):
-        global free
         rep = self.representation.makeMove(r, c, er, ec)
         newstate = CheckerState(self.H, rep)
         newstate.setCurrentPlayer(self.representation.player)

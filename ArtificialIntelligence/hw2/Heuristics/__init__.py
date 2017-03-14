@@ -56,7 +56,7 @@ class CheckerHeuristic(Heuristic):
                     alfabeta = v
                 h_vals.append(v)
             if len(h_vals) == 0:   
-                return 0
+                return self.H0(state)
             m = max (h_vals)
             return m
         else:  # TRIANGLE DOWN. k = human
@@ -69,8 +69,8 @@ class CheckerHeuristic(Heuristic):
                 if alfabeta >= v:  # stop here and do not deep other paths of the tree
                     return v
                 h_vals.append(v)
-            if len(h_vals) == 0:  # case one player wins => v always 0 
-                return 0
+            if len(h_vals) == 0:  # case one player wins
+                return self.H0(state)
             m = min (h_vals)
             return m
             #return min([self.Hl(game, x, l - 1, nexTurn) for x in game.neighbors(turn)])
