@@ -2,14 +2,15 @@
 
 :- 	consult('Parser.pl').
 
+write_list([]).
+write_list([H|List]) :- write(H),write(", "),write_list(List).
+
 % calls a predicate in Parser.pl
 parse(Sentence, Tree) :- s(Tree, Sentence, []).
 
-run :- 	repeat,
-		flush,
-		write("Ask me to check something (e.g., if a block is on the table): "),
+run :- 	write("Ask me to check something (e.g., 'Is block a on the table?'): "),
 		read(Assertion),
-		write(Assertion),
 		tokenize(Assertion, Tokens),
 		parse(Tokens, Tree),
-		write(Tree).
+		write('Got tree:'),write(Tree).
+

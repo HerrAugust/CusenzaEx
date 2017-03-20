@@ -1,1 +1,0 @@
-tokenize(Sentence, Tokens) :- string_lower(Sentence,PrivSentence),split_string(PrivSentence, " ", "", Tokens).
