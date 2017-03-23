@@ -1,0 +1,3 @@
+Create a program in Prolog to reply assertions in english about the Blocks World.
+
+For example, if I ask "Is b on c?", it must reply "Yes" or "No" according to the state of the Blocks World.

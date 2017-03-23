@@ -21,11 +21,15 @@ instanciate([H|ListToken], [J|ListVars]) :- H==',',instanciate(ListToken,[J|List
 % Interpreter
 %%%%%%%%%%%%%%%%%%%%
 
-int_assertion(Tree) :-	term_string(Tree,String),
-						writeln(String),
-						extract(String,"on(",Args),
-						writeln(''),write('Got question: '), write('on '), write(Args), write('?'),
-						writeln(''), write('Answer: '),
-						instanciate(Args,[Object,RelativeObject]),
-						!, % the ! is needed if on(X,Y) is false, in order not to backtrack
-						( on(Object,RelativeObject) -> ( writeln( 'Yes.') , fail ) ; writeln('No.') ).
+% Assertion: Is b on c?
+interpret(Stringtree)   :- 	extract(Stringtree,"on(",Args),
+							writeln(''),write('Got question: '), write('on '), write(Args), write('?'),
+							writeln(''), write('Answer: '),
+							instanciate(Args,[Object,RelativeObject]),
+							!, % the ! is needed if on(X,Y) is false, in order not to backtrack
+							( on(Object,RelativeObject) -> ( writeln( 'Yes.') , fail ) ; writeln('No.') ).
+
+
+
+% If none of the previous attempts to interpret fail, show error message
+interpret(_)			:- 	writeln("Sorry, I do not understand what you say...").

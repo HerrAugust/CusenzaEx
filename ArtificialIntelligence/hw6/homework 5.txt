@@ -1,0 +1,5 @@
+Create a program in Prolog to reply assertions and excute commands and queries in english about the Blocks World.
+
+For example, if I ask "Is b on c?", it must reply "Yes" or "No" according to the state of the Blocks World (assertion).
+For example, if I say "Put block b onto the table" it must do it (command).
+For example, if I ask "What is there on the table?" it must reply it (query/question).
