@@ -1,3 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%
+% Author: 	HerrAugust
+% Source: 	https://github.com/HerrAugust/EserciziUni/tree/master/ArtificialIntelligence/hw6
+% License: 	Opensource. This code is provided AS IS, WITHOUT ANY WORRANTY
+%%%%%%%%%%%%%%%%%%%%%%%
+
 :- 	consult('Knowledge.pl').
 
 :- 	consult('Planner.pl').
@@ -139,9 +145,9 @@ interpret(Stringtree)	:-	extract(Stringtree,"putonto(",Args),
 							instanciate(Args,[Object,RelativeObject]),
 							!,
 							getstate(Init),
-							 write('Init: '),write_list(Init),
+							write('Current state: '),write_list(Init),
 							getstate(Object,RelativeObject, Final),
-							 write('Final:'),write_list(Final),
+							nl,write('Final state:'),write_list(Final),
 							!,
 							solve(Init,Final,Steps),							% see Planner.pl
 							write('Steps: '),write(Steps),nl,

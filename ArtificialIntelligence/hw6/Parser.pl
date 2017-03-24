@@ -1,11 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%
+% Author: 	HerrAugust
+% Source: 	https://github.com/HerrAugust/EserciziUni/tree/master/ArtificialIntelligence/hw6
+% License: 	Opensource. This code is provided AS IS, WITHOUT ANY WORRANTY
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%
 % Accepting assertions:
 % 	1. is b on the table?
 % 	2. is b on c?
 % Accepting commands:
 % 	1. Grasp block b
-%	2. Put it onto the table (intented to be in combination with grasping command 1.)
-%	3. Put it onto c (intented to be in combination with grasping command 1.)
+%	2. Put it onto the table (intended to be in combination with grasping command 1.)
+%	3. Put it onto c (intended to be in combination with grasping command 1.)
 %	4. Print state
 %	5. Put a onto b (this is the command that needs Planner.pl)
 % Accepting queries:

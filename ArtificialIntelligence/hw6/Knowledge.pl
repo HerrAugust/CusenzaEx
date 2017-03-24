@@ -1,3 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%
+% Author: 	HerrAugust
+% Source: 	https://github.com/HerrAugust/EserciziUni/tree/master/ArtificialIntelligence/hw6
+% License: 	Opensource. This code is provided AS IS, WITHOUT ANY WORRANTY
+%%%%%%%%%%%%%%%%%%%%%%%
+
 % static knowledge: this knowledge will not change
 block(a).
 block(b).
