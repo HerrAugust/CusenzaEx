@@ -1,5 +1,7 @@
 :- 	consult('Knowledge.pl').
 
+:- 	consult('Planner.pl').
+
 %%%%%%%%%%%%%%%%%%%%
 % utility functions
 %%%%%%%%%%%%%%%%%%%%
@@ -22,8 +24,45 @@ instanciate([H|ListToken], [J|ListVars]) :- H==',',instanciate(ListToken,[J|List
 cancelOn([],Object).
 cancelOn([H|List],Object) :- retract(on(Object,H)),assert(clear(H)),cancelOn(List,Object).
 
+% get current state of Blocks World
+% e.g., if the state is the initial one, it returns [clear(b),clear(c),clear(table),block(b),block(c),block(a),on(b,a),on(b,table),on(c,table)]
+getstate(State)							:-	findall(clear(X),clear(X),L1),findall(block(X),block(X),L2),append(L1,L2,ResL1),findall(on(X,Y),on(X,Y),L3),
+											append(ResL1,L3,State).
+
+% get state resulting from on(Object,RelativeObject).
+% e.g., if the state is the initial one and Object=a,RelativeObject=b, then it returns this list (repetitions are possible):
+% [clear(table),clear(b),clear(a),on(a,table),on(c,table),on(b,c),block(a),block(b),block(c)]
+% and what the method does is:
+% on(b,c) duable if clear(b),clear(c)
+% on(b,c) implies clear(c),on(b,X) for each X are no more true; on(b,c),clear(b),clear(X) for each X,clear(table) become true
+getstate(Object, RelativeObject, Final)	:- 	getstate(State),											% first, check if movement makes sense (admissible?)
+											member(clear(Object),State),
+											member(clear(RelativeObject),State),
+											findall(on(Object,X),on(Object,X),Delete),					% compute new state
+											findall(clear(X),on(Object,X),NewClear),
+											append(Delete,[clear(RelativeObject)],NewDelete),
+											subtract(State,NewDelete,Res),
+											append(Res,NewClear,Res1),
+											append(Res1,[on(Object,RelativeObject),clear(Object),clear(table)],Final).
+
 % true if X is substring of S.
 substring(X,Y) :- forall(sub_atom(X,_,1,_,C), sub_atom(Y,_,1,_,C)).
+
+% turns result of Planner.pl into StepsEnglish
+translateEnglish([],S).
+translateEnglish([H|Steps],Eng)			:-	term_string(H,Str),
+											extract(Stringtree,"move(",Args),
+											instanciate(Args,[Block,FromOn,ToOn]),
+											format(Output,'Move block ~w from ~w onto ~w.',Args),
+											append(Eng,Output,Eng),
+											translateEnglish(Steps,Eng).
+
+translateEnglish([H|Steps],Eng)			:-	term_string(H,Str),
+											extract(Stringtree,"moveToTable(",Args),
+											instanciate(Args,[Block,FromOn]),
+											format(Output,'Move block ~w from ~w onto the table.',Args),
+											append(Eng,Output,Eng),
+											translateEnglish(Steps,Eng).
 
 %%%%%%%%%%%%%%%%%%%%
 % Interpreter
@@ -83,7 +122,8 @@ interpret(Stringtree)   :- 	extract(Stringtree,"toplace(",Args),
 							write('0K, put '), write(Object), write(' on '), write(RelativeObject).
 
 % Command: Print state
-interpret(Stringtree)	:-	extract(Stringtree,"printstate(",DiscartedArgs),
+interpret(Stringtree)	:-	extract(Stringtree,"printstate(",DiscartedArgs),	% check command
+							!,
 							findall(X,block(X),LBlocks),
 							write('blocks: '),write(LBlocks),
 							findall([B,C],color(B,C),L),
@@ -95,6 +135,18 @@ interpret(Stringtree)	:-	extract(Stringtree,"printstate(",DiscartedArgs),
 							holding(X),
 							nl,write('holding: '),write(X).
 
+% Command: Put a onto b (this is the command that needs Planner.pl. Here is the culmination of AI for this homework).
+% Notice that it does not modify the state of the Blocks world, it just returns the steps to reach that state!
+interpret(Stringtree)	:-	extract(Stringtree,"putonto(",Args),
+							instanciate(Args,[Object,RelativeObject]),
+							!,
+							getstate(Init),
+							% write('Init: '),write_list(Init),
+							getstate(Object,RelativeObject, Final),
+							% write('Final:'),write_list(Final),
+							solve(Init,Final,Steps),						% see Planner.pl
+							translateEnglish(Steps,StepsEnglish),
+							writeln('Steps:'),write_list(StepsEnglish).
 
 % If none of the previous attempts to interpret fail, show error message
 interpret(_)			:- 	nl,writeln("Sorry, I do not understand what you say...").

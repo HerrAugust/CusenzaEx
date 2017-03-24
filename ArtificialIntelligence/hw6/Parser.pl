@@ -67,6 +67,10 @@ toplace(B)										--> [onto],block(B).
 % 4. Print state
 command(printstate())							--> [print],[state].
 
+% 5. Put b onto c
+command(putonto(B1,B2))							--> [put],block(B1),[onto],block(B2).
+command(putonto(B1,B2))							--> [put],block(B1),[onto],fixplace(B2).
+
 
 % launch and make 	the query "s(T,[is,block,a,on,the,table,?],[])."
 % or also 			the query "s(T,[is,block,a,on,the,block,c,?],[])."
