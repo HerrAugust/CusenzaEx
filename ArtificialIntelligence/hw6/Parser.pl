@@ -4,8 +4,10 @@
 % 	2. is b on c?
 % Accepting commands:
 % 	1. Grasp block b
-%	2. Put it on the table
-%	3. Put it on c
+%	2. Put it onto the table (intented to be in combination with grasping command 1.)
+%	3. Put it onto c (intented to be in combination with grasping command 1.)
+%	4. Print state
+%	5. Put a onto b (this is the command that needs Planner.pl)
 % Accepting queries:
 % 	1. Which blocks are on the table?
 %	2. What color is b?
@@ -40,6 +42,7 @@ fixplace(table)									--> article(_),[table].
 s(Q)											--> query(Q).
 % 1. Which blocks are on the table?
 query(blockson(W))								--> which(WHICH),verb(_),place(W),questionmark(_).
+verb(are)										--> [are].
 which(which(W))									--> [which],([block];[blocks]). 		% notice AND and OR to force a certain sequence of words
 
 % 2. What color is b?
@@ -55,11 +58,14 @@ command(grasp(O))								--> [grasp],obj(O).
 obj(O)											--> block(O).
 
 % 2. Put it onto the table
-command(toplace(C,TP))							--> [put],[it],toplace(TP).
+command(toplace(TP))							--> [put],[it],toplace(TP).
 toplace(FP)										--> [onto],fixplace(FP).
 
 % 3. Put it onto c
 toplace(B)										--> [onto],block(B).
+
+% 4. Print state
+command(printstate())							--> [print],[state].
 
 
 % launch and make 	the query "s(T,[is,block,a,on,the,table,?],[])."
