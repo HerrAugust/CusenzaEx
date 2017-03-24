@@ -39,6 +39,5 @@ run :- 	write("Ask me something (e.g., 'Is block a on the table?'): "),
 		read(Request),
 		tokenize(Request, Tokens),
 		parse(Tokens, Tree),
-		write('Got tree:'),write(Tree),
 		term_string(Tree,String),
 		interpret(String).

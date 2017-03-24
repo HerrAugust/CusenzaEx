@@ -9,8 +9,8 @@
 % extracts the arguments from a predicate.
 % e.g., extract("on(b,a)","on(",Args). ---> Args=[b,,,a]. (",,," because
 % "," are considered "anything else" by tokenize_atom() (see online doc for SWI Prolog), which expects spaces )
-extract(From,PredName,Args) :- 	substring(PredName,From),writeln(PredName),string_length(PredName,PredLen),sub_string(From, PredLen, _, 1, TempArgs), 
-								writeln(TempArgs),tokenize_atom(TempArgs,Args), writeln(Args).
+extract(From,PredName,Args) :- 	substring(PredName,From),string_length(PredName,PredLen),sub_string(From, PredLen, _, 1, TempArgs), 
+								tokenize_atom(TempArgs,Args).
 
 % instanciates a list of Atoms to some variables. Because this function is made to work with extract() (above),
 % it checks if the token is a ',' (see tokenize_atom() documentation for more info).
@@ -48,21 +48,19 @@ getstate(Object, RelativeObject, Final)	:- 	getstate(State),											% first, 
 % true if X is substring of S.
 substring(X,Y) :- forall(sub_atom(X,_,1,_,C), sub_atom(Y,_,1,_,C)).
 
-% turns result of Planner.pl into StepsEnglish
-translateEnglish([],S).
-translateEnglish([H|Steps],Eng)			:-	term_string(H,Str),
-											extract(Stringtree,"move(",Args),
-											instanciate(Args,[Block,FromOn,ToOn]),
-											format(Output,'Move block ~w from ~w onto ~w.',Args),
-											append(Eng,Output,Eng),
-											translateEnglish(Steps,Eng).
+% prints result of Planner.pl in English
+translateEnglish([]).
+translateEnglish([H|Steps])			:-	term_string(H,Str),
+										extract(Str,"move(",Args),
+										instanciate(Args,[Block,FromOn,ToOn]),
+										nl,write('Move block '),write(Block),write(' from '),write(FromOn),write(' onto '),write(ToOn),write('.'),
+										translateEnglish(Steps).
 
-translateEnglish([H|Steps],Eng)			:-	term_string(H,Str),
-											extract(Stringtree,"moveToTable(",Args),
-											instanciate(Args,[Block,FromOn]),
-											format(Output,'Move block ~w from ~w onto the table.',Args),
-											append(Eng,Output,Eng),
-											translateEnglish(Steps,Eng).
+translateEnglish([H|Steps])			:-	term_string(H,Str),
+										extract(Str,"moveToTable(",Args),
+										instanciate(Args,[Block,FromOn]),
+										nl,write('Move block '),write(Block),write(' from '),write(FromOn),write(' onto the table.'),
+										translateEnglish(Steps).
 
 %%%%%%%%%%%%%%%%%%%%
 % Interpreter
@@ -141,12 +139,13 @@ interpret(Stringtree)	:-	extract(Stringtree,"putonto(",Args),
 							instanciate(Args,[Object,RelativeObject]),
 							!,
 							getstate(Init),
-							% write('Init: '),write_list(Init),
+							 write('Init: '),write_list(Init),
 							getstate(Object,RelativeObject, Final),
-							% write('Final:'),write_list(Final),
-							solve(Init,Final,Steps),						% see Planner.pl
-							translateEnglish(Steps,StepsEnglish),
-							writeln('Steps:'),write_list(StepsEnglish).
+							 write('Final:'),write_list(Final),
+							!,
+							solve(Init,Final,Steps),							% see Planner.pl
+							write('Steps: '),write(Steps),nl,
+							translateEnglish(Steps).
 
 % If none of the previous attempts to interpret fail, show error message
 interpret(_)			:- 	nl,writeln("Sorry, I do not understand what you say...").

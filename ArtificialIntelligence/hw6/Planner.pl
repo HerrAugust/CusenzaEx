@@ -46,19 +46,20 @@ action( moveToTable(B,X),								% Name of action
 solve([], Goal, Steps). % no need to go to goal. It is impossible to achieve it
 solve(Init, [], Steps). % no need to go to goal. It is impossible to achieve it
 
-solve(State, Goal, Steps) :- 	apply(State,Goal),									% base case of recursion
-								naiverev(Steps,StepsReverse),
-								write_list(StepsReverse).
-																					% given a (the current) state, a goal state and the list of steps that you are looking for:
-solve(State, Goal, Steps) :-	action(Name, Preconditions, Effects, Old, Vars),	% take a possible action
-								alldif(Vars),										% (if some variables are equal in action => assignment not correct)
-								apply(Preconditions, State),						% if that preconditions apply to current state
-								subtract(State, Effects, NewState),					% apply its effects (i.e., remove effects from state and add the new information)...
-								subtract(NewState, Old, NewState2),
-								find_missing(Effects, NewState2,Missing),
-								append(NewState2, Missing,NewState3),
-								subtract(NewState3, [clear(table)], NewState4),	 	% (otherwise "table" could be added with action 1, wrong)
-								solve(NewState4,Goal,[Name|Steps]).					% ...and add the move into solution, which is Steps
+	solve(State, Goal, Steps) :- 	apply(State,Goal),									% base case of recursion
+									naiverev(Steps,StepsReverse),
+									Steps=StepsReverse,
+									write_list(StepsReverse).
+																						% given a (the current) state, a goal state and the list of steps that you are looking for:
+solve(State, Goal, [Name|Steps]) :-	action(Name, Preconditions, Effects, Old, Vars),	% take a possible action
+									alldif(Vars),										% (if some variables are equal in action => assignment not correct)
+									apply(Preconditions, State),						% if that preconditions apply to current state
+									subtract(State, Effects, NewState),					% apply its effects (i.e., remove effects from state and add the new information)...
+									subtract(NewState, Old, NewState2),
+									find_missing(Effects, NewState2,Missing),
+									append(NewState2, Missing,NewState3),
+									subtract(NewState3, [clear(table)], NewState4),	 	% (otherwise "table" could be added with action 1, wrong)
+									solve(NewState4,Goal,[Name|Steps]).					% ...and add the move into solution, which is Steps
 
 
 
@@ -72,12 +73,17 @@ solve(State, Goal, Steps) :-	action(Name, Preconditions, Effects, Old, Vars),	% 
 ex1 :- solve(		[block(a),block(c),clear(c),on(c,table),clear(a),on(a,table)],
 					[block(a),block(c),clear(a),on(a,c),on(c,table)],
 					Steps),
-					write_list(Steps).
+					write('Steps: '),write_list(Steps).
 
 % Steps expected: "moveToTable(b,a), move(a,table,b)"
 ex2 :- solve(		[block(a),block(b),clear(b),on(a,table),on(b,a)],
 					[block(a),block(b),clear(a),on(b,table),on(a,b)],
 					Steps),
-					write_list(Steps).
+					write('Steps: '),write_list(Steps).
+
+ex3 :- solve(		[block(a),block(b),block(c),clear(table),clear(b),clear(c),on(c,table),on(b,a),on(a,table)],
+					[block(a),block(b),block(c),clear(table),clear(b),clear(a),on(c,table),on(b,c),on(a,table)],
+					Steps),
+					write('Steps: '),write_list(Steps).
 
 % Note: to make it run, write into console "ex1." or "ex2."
