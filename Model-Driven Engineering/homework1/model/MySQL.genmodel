@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="" modelDirectory="/homework1/src" modelPluginID="homework1"
+    modelName="PrimitiveTypes" importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0"
+    copyrightFields="false">
+  <foreignModel>MySQL.ecore</foreignModel>
+  <genPackages prefix="PrimitiveTypes" disposableProviderFactory="true" ecorePackage="MySQL.ecore#/0">
+    <genDataTypes ecoreDataType="MySQL.ecore#/0/Boolean"/>
+    <genDataTypes ecoreDataType="MySQL.ecore#/0/Integer"/>
+    <genDataTypes ecoreDataType="MySQL.ecore#/0/String"/>
+  </genPackages>
+  <genPackages prefix="MySQL" disposableProviderFactory="true" ecorePackage="MySQL.ecore#/1">
+    <genClasses image="false" ecoreClass="MySQL.ecore#/1/NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MySQL.ecore#/1/NamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="MySQL.ecore#/1/DataBase">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MySQL.ecore#/1/DataBase/tables"/>
+    </genClasses>
+    <genClasses ecoreClass="MySQL.ecore#/1/Table">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MySQL.ecore#/1/Table/columns"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference MySQL.ecore#/1/Table/database"/>
+    </genClasses>
+    <genClasses ecoreClass="MySQL.ecore#/1/Column">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MySQL.ecore#/1/Column/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MySQL.ecore#/1/Column/isPrimaryKey"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MySQL.ecore#/1/Column/defaultValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MySQL.ecore#/1/Column/comment"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference MySQL.ecore#/1/Column/table"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MySQL.ecore#/1/Column/isForeignKey"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MySQL.ecore#/1/Column/ForeignKey"/>
+    </genClasses>
+    <genClasses ecoreClass="MySQL.ecore#/1/IntegerColumn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MySQL.ecore#/1/IntegerColumn/isAutoIncrement"/>
+    </genClasses>
+    <genClasses ecoreClass="MySQL.ecore#/1/EnumColumn">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MySQL.ecore#/1/EnumColumn/enumSet"/>
+    </genClasses>
+    <genClasses ecoreClass="MySQL.ecore#/1/EnumSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MySQL.ecore#/1/EnumSet/enumItems"/>
+    </genClasses>
+    <genClasses ecoreClass="MySQL.ecore#/1/EnumItem">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference MySQL.ecore#/1/EnumItem/enumSet"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

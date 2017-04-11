@@ -1,0 +1,27 @@
+module WebApplication2MySql;
+
+create OUT : MySQL from IN : WebApplication;
+
+rule WebApplication2DataBase{
+	from 	s : WebApplication!WebApplicationModel
+	to   	t : MySQL!DataBase (
+			name <- s.name,
+			tables <- s.entities		
+	)
+}
+
+rule Entity2Table{
+	from 	s : WebApplication!Entity
+	to		t : MySQL!Table (
+			name <- 'dbo.' + s.name,
+			columns <- s.columns
+	)
+}
+
+rule Column2Column{
+	from	s : WebApplication!Column
+	to		t : MySQL!Column (
+		isPrimaryKey <- s.PK,
+		name <- s.name
+	)
+}

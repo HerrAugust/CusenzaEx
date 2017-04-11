@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ASCII"?>
+<mysql:DataBase xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:mysql="http:///mysql.ecore" xmi:id="_aYSb8B7iEeeBk8rJsWv0DA">
+  <tables xmi:id="_bFT6AB7iEeeBk8rJsWv0DA" name="SharedHouse">
+    <columns xmi:id="_bwdIwB7iEeeBk8rJsWv0DA" name="id_sh" type="int" isPrimaryKey="true" defaultValue="" comment="id of the shared house">
+      <isForeignKey>false</isForeignKey>
+    </columns>
+    <columns xmi:id="_cJ908B7iEeeBk8rJsWv0DA" name="street" type="string" isPrimaryKey="false" defaultValue="via Roma 4, L'Aquila" comment="street of the shared house">
+      <isForeignKey>false</isForeignKey>
+    </columns>
+  </tables>
+  <tables xmi:id="_ck2aIB7iEeeBk8rJsWv0DA" name="live">
+    <columns xmi:id="_eLr1EB7iEeeBk8rJsWv0DA" name="sharedhouseid" type="int" isPrimaryKey="true" defaultValue="" comment="id of the shared house" ForeignKey="_bwdIwB7iEeeBk8rJsWv0DA">
+      <isForeignKey>true</isForeignKey>
+    </columns>
+    <columns xmi:id="_ekgkwB7iEeeBk8rJsWv0DA" name="userid" type="int" isPrimaryKey="true" defaultValue="" comment="id of the user" ForeignKey="_fbcMwB7iEeeBk8rJsWv0DA">
+      <isForeignKey>true</isForeignKey>
+    </columns>
+  </tables>
+  <tables xmi:id="_e4hs8B7iEeeBk8rJsWv0DA" name="User">
+    <columns xmi:id="_fbcMwB7iEeeBk8rJsWv0DA" name="id_u" type="int" isPrimaryKey="true" defaultValue="" comment="id of the user">
+      <isForeignKey>false</isForeignKey>
+    </columns>
+    <columns xmi:id="_fu24AB7iEeeBk8rJsWv0DA" name="name" type="string" isPrimaryKey="false" defaultValue="Ugo" comment="Name of the user">
+      <isForeignKey>false</isForeignKey>
+    </columns>
+  </tables>
+  <tables xmi:id="_0ReAcB7iEeeBk8rJsWv0DA" name="Page">
+    <columns xmi:id="_663WUB7iEeeBk8rJsWv0DA" name="id_p" type="int" isPrimaryKey="true" defaultValue="" comment="the id of the user that wrote this page">
+      <isForeignKey>false</isForeignKey>
+    </columns>
+    <columns xmi:id="_7gDHAB7iEeeBk8rJsWv0DA" name="name" type="string" isPrimaryKey="false" defaultValue="Untitled" comment="the name of the page">
+      <isForeignKey>false</isForeignKey>
+    </columns>
+    <columns xmi:id="_RJDPwB7jEeeBk8rJsWv0DA" name="writerid" type="int" isPrimaryKey="false" comment="the id of the writer (user)" ForeignKey="_fbcMwB7iEeeBk8rJsWv0DA">
+      <isForeignKey>true</isForeignKey>
+    </columns>
+  </tables>
+</mysql:DataBase>
