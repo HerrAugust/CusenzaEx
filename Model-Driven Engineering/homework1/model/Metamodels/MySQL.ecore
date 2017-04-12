@@ -32,10 +32,6 @@
           unique="false" lowerBound="1" eType="#/0/String"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="table" ordered="false"
           lowerBound="1" eType="#/1/Table" eOpposite="#/1/Table/columns"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isForeignKey" lowerBound="1"
-          eType="#/0/Boolean" defaultValueLiteral=""/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="ForeignKey" upperBound="-1"
-          eType="#/1/Column"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="IntegerColumn" eSuperTypes="#/1/Column">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAutoIncrement" ordered="false"
@@ -52,6 +48,10 @@
     <eClassifiers xsi:type="ecore:EClass" name="EnumItem" eSuperTypes="#/1/NamedElement">
       <eStructuralFeatures xsi:type="ecore:EReference" name="enumSet" ordered="false"
           lowerBound="1" eType="#/1/EnumSet" eOpposite="#/1/EnumSet/enumItems"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ForeignColumn" eSuperTypes="#/1/Column">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="refers" lowerBound="1"
+          eType="#/1/Table"/>
     </eClassifiers>
   </ecore:EPackage>
 </xmi:XMI>

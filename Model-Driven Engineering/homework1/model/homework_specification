@@ -1,0 +1,2 @@
+1) Extend the MySQL metamodel in order to accommodate also Foreign Key
+2) Refine the ATL transformation in order to map WebApplication Entity relations into the newly created Foreign Keys 

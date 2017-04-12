@@ -22,6 +22,15 @@ rule Column2Column{
 	from	s : WebApplication!Column
 	to		t : MySQL!Column (
 		isPrimaryKey <- s.PK,
-		name <- s.name
+		name <- s.name,
+		type <- s.type,
+		comment <- 'No comment'
+	)
+}
+
+rule RelatedEntity2ForeignColumn {
+	from	s : WebApplication!RelatedEntity
+	to		t : MySQL!ForeignColumn (
+			
 	)
 }

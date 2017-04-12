@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webApplication:WebApplicationModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:webApplication="http://org.disim/WebApplication"
+    xsi:schemaLocation="http://org.disim/WebApplication http://org.disim/WebApplication/content">
+  <entities
+      name="Department"
+      references="//@entities.1">
+    <columns
+        name="name"
+        type="Text"/>
+    <columns
+        name="location"
+        type="Text"/>
+    <columns
+        name="departmentCode"
+        PK="true"/>
+  </entities>
+  <entities
+      name="Person"
+      references="//@entities.0">
+    <columns
+        name="firstName"/>
+    <columns
+        name="socialNumber"
+        PK="true"/>
+  </entities>
+</webApplication:WebApplicationModel>
