@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mysql:DataBase xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:mysql="http:///mysql.ecore" name="UniversityModel">
+  <tables name="dbo.Person">
+    <columns name="name" type="String" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+    <columns name="socialNumber" type="Integer" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+  </tables>
+  <tables name="dbo.Department">
+    <columns name="name" type="String" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+    <columns name="location" type="String" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+    <columns name="departmentCode" type="Integer" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+  </tables>
+</mysql:DataBase>

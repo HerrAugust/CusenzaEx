@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mysql:DataBase xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mysql="http:///mysql.ecore" name="UniversityModel">
+  <tables name="dbo.Person">
+    <columns name="name" type="String" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+    <columns name="socialNumber" type="Integer" isPrimaryKey="true" defaultValue="None" comment="No comment"/>
+    <columns xsi:type="mysql:ForeignColumn" name="works" type="int" isPrimaryKey="false" defaultValue="-1" comment="No comment" refers="//@tables.1"/>
+  </tables>
+  <tables name="dbo.Department">
+    <columns name="name" type="String" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+    <columns name="location" type="String" isPrimaryKey="false" defaultValue="None" comment="No comment"/>
+    <columns name="departmentCode" type="Integer" isPrimaryKey="true" defaultValue="None" comment="No comment"/>
+  </tables>
+</mysql:DataBase>

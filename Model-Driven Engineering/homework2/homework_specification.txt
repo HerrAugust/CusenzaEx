@@ -1,0 +1,11 @@
+Consider the enclosed metamodel (EMFWebApplication2), define the following OCLinEcore entities:
+
+    Invariant: the number of columns within the entity metaclass must be > 0
+    Invariant: an Entity must have at least one column specified as primary key
+    Derived attribute: an attribute within entity denoting the number of columns 
+    Derived property:  a property within entity denoting the list of all related entities (the type must be entity)
+    Operation: an Entity operation that returns the list of primary keys of the related Entity
+
+Each item must be validated on at least three examplar models. 
+
+The artifacts must be submitted to juri.dirocco@univaq.it with subject "[MDE/HW2]" by  May 8, 2017 at 12:00am.

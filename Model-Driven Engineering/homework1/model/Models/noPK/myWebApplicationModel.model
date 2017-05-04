@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<webApplication:WebApplicationModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webApplication="http://org.disim/WebApplication" xmi:id="_AdfOIB-jEeekE6XoRumU2w" name="UniversityModel">
+  <entities xmi:id="_BaBH0B-jEeekE6XoRumU2w" name="Person">
+    <columns xmi:id="_QyxagB-jEeekE6XoRumU2w" name="name"/>
+    <columns xmi:id="_RC9LkB-jEeekE6XoRumU2w" name="socialNumber" type="Integer"/>
+    <relates xmi:id="_0D2bIB-mEeekE6XoRumU2w" name="works" relatesTo="_C3l5EB-jEeekE6XoRumU2w"/>
+  </entities>
+  <entities xmi:id="_C3l5EB-jEeekE6XoRumU2w" name="Department">
+    <columns xmi:id="_Px0T0B-jEeekE6XoRumU2w" name="name"/>
+    <columns xmi:id="_QIl1EB-jEeekE6XoRumU2w" name="location"/>
+    <columns xmi:id="_Qe6DUB-jEeekE6XoRumU2w" name="departmentCode" type="Integer"/>
+  </entities>
+</webApplication:WebApplicationModel>

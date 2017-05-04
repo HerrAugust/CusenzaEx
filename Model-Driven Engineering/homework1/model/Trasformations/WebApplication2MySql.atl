@@ -10,11 +10,11 @@ rule WebApplication2DataBase{
 	)
 }
 
-rule Entity2Table{
+rule Entity2Table {
 	from 	s : WebApplication!Entity
 	to		t : MySQL!Table (
-			name <- 'dbo.' + s.name,
-			columns <- s.columns
+				name <- 'dbo.' + s.name,
+				columns <- s.columns
 	)
 }
 
@@ -23,14 +23,26 @@ rule Column2Column{
 	to		t : MySQL!Column (
 		isPrimaryKey <- s.PK,
 		name <- s.name,
-		type <- s.type,
-		comment <- 'No comment'
+		type <- s.type.toString(),
+		comment <- 'No comment',
+		defaultValue <- 'None'
 	)
 }
 
+-- if there are no Private Keys => no table can refer to this table.
+-- This means that, if User has attributes id and name and Page id, name and writer (writer foreignKey)
+-- User - 1writes0..N - Page
+-- becomes
+-- User Page (without connections), where User has attributes id and name and Page id and name
 rule RelatedEntity2ForeignColumn {
-	from	s : WebApplication!RelatedEntity
+	from	s : WebApplication!RelatedEntity (not(s.relatesTo.columns->select(e | e.PK = true)->isEmpty()))
 	to		t : MySQL!ForeignColumn (
-			
+			name 			<- s.name,
+			comment 		<- 'No comment',
+			type 			<- 'int',
+			defaultValue 	<- '-1',
+			isPrimaryKey	<- false,
+			table 			<- s.refImmediateComposite(),
+			refers			<- s.relatesTo -- that's an entity
 	)
 }

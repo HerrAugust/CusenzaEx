@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ASCII"?>
+<mysql:DataBase xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mysql="http:///mysql.ecore" xmi:id="_aYSb8B7iEeeBk8rJsWv0DA" name="casual">
+  <tables xmi:id="_bFT6AB7iEeeBk8rJsWv0DA" name="SharedHouse">
+    <columns xmi:id="_bwdIwB7iEeeBk8rJsWv0DA" name="id_sh" type="int" isPrimaryKey="true" defaultValue="" comment="id of the shared house"/>
+    <columns xmi:id="_cJ908B7iEeeBk8rJsWv0DA" name="street" type="string" isPrimaryKey="false" defaultValue="via Roma 4, L'Aquila" comment="street of the shared house"/>
+  </tables>
+  <tables xmi:id="_ck2aIB7iEeeBk8rJsWv0DA" name="live">
+    <columns xsi:type="mysql:ForeignColumn" xmi:id="_ZOoJUB-fEeekE6XoRumU2w" name="sharedhouseid" type="int" isPrimaryKey="true" defaultValue="-1" comment="shared house id" refers="_bFT6AB7iEeeBk8rJsWv0DA"/>
+    <columns xsi:type="mysql:ForeignColumn" xmi:id="_iMVEIB-fEeekE6XoRumU2w" name="userid" type="int" isPrimaryKey="true" defaultValue="-1" comment="user id" refers="_e4hs8B7iEeeBk8rJsWv0DA"/>
+  </tables>
+  <tables xmi:id="_e4hs8B7iEeeBk8rJsWv0DA" name="User">
+    <columns xmi:id="_fbcMwB7iEeeBk8rJsWv0DA" name="id_u" type="int" isPrimaryKey="true" defaultValue="" comment="id of the user"/>
+    <columns xmi:id="_fu24AB7iEeeBk8rJsWv0DA" name="name" type="string" isPrimaryKey="false" defaultValue="Ugo" comment="Name of the user"/>
+  </tables>
+  <tables xmi:id="_0ReAcB7iEeeBk8rJsWv0DA" name="Page">
+    <columns xmi:id="_663WUB7iEeeBk8rJsWv0DA" name="id_p" type="int" isPrimaryKey="true" defaultValue="" comment="the id of the user that wrote this page"/>
+    <columns xmi:id="_7gDHAB7iEeeBk8rJsWv0DA" name="name" type="string" isPrimaryKey="false" defaultValue="Untitled" comment="the name of the page"/>
+    <columns xsi:type="mysql:ForeignColumn" xmi:id="_o4okEB-fEeekE6XoRumU2w" name="writerid" type="int" isPrimaryKey="false" defaultValue="-1" comment="writer's id" refers="_e4hs8B7iEeeBk8rJsWv0DA"/>
+  </tables>
+</mysql:DataBase>
