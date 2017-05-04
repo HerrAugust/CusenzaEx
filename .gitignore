@@ -8,3 +8,6 @@
 **/bin
 **/.settings
 **/.idea
+
+# It is relevant to load MDE projects, because it could be hard to understand how to create the project
+!/Model-Driven Engineering
