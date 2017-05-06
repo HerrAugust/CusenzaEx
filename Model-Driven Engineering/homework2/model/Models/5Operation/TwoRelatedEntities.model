@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<webApplication:WebApplicationModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webApplication="http://org.disim/WebApplication/homework2" xmi:id="_3BLDwDJxEeeZIdPUCQrToQ" name="Person_House">
+  <entities xmi:id="_6-spQDJxEeeZIdPUCQrToQ" name="Person">
+    <columns xmi:id="_A4ahwDKKEeeiRYhinRqiWg" name="id" PK="true"/>
+    <columns xmi:id="_GZ_T8DKKEeeiRYhinRqiWg" name="Role"/>
+    <columns xmi:id="_HXOYQDKKEeeiRYhinRqiWg" name="Surname"/>
+  </entities>
+  <entities xmi:id="_8gXQUDJxEeeZIdPUCQrToQ" name="Live">
+    <columns xmi:id="_MFUzADJyEeeZIdPUCQrToQ" name="Person" PK="true"/>
+    <columns xmi:id="_MZxZADJyEeeZIdPUCQrToQ" name="House" PK="true"/>
+    <relates xmi:id="_NASSgDKKEeeiRYhinRqiWg" name="person_live" relatesTo="_6-spQDJxEeeZIdPUCQrToQ"/>
+    <relates xmi:id="_PfT5sDKKEeeiRYhinRqiWg" name="house_live" relatesTo="_GiYu4DJyEeeZIdPUCQrToQ"/>
+  </entities>
+  <entities xmi:id="_GiYu4DJyEeeZIdPUCQrToQ" name="House">
+    <columns xmi:id="_PKtPkDJyEeeZIdPUCQrToQ" name="Street" PK="true"/>
+    <columns xmi:id="_Cr__QDKKEeeiRYhinRqiWg" name="StreetNumber" type="Integer" PK="true"/>
+    <columns xmi:id="_FH1vkDKKEeeiRYhinRqiWg" name="Nation"/>
+  </entities>
+</webApplication:WebApplicationModel>

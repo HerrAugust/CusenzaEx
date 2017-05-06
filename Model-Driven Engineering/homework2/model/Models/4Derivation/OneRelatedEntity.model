@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ASCII"?>
+<webApplication:WebApplicationModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webApplication="http://org.disim/WebApplication/homework2" xmi:id="_dvA4cDJwEeeZIdPUCQrToQ" name="People_House">
+  <entities xmi:id="_e9xxoDJwEeeZIdPUCQrToQ" name="Person">
+    <columns xmi:id="_jf5R8DJwEeeZIdPUCQrToQ" name="Name" PK="true"/>
+    <columns xmi:id="_j7TbkDJwEeeZIdPUCQrToQ" name="Role"/>
+    <columns xmi:id="_4c-WkDJ1EeeZIdPUCQrToQ" name="id" type="Integer" PK="true"/>
+    <relates xmi:id="_lxfXwDKJEeeiRYhinRqiWg" name="RelatedBook" relatesTo="_geYBsDJwEeeZIdPUCQrToQ"/>
+  </entities>
+  <entities xmi:id="_geYBsDJwEeeZIdPUCQrToQ" name="Book">
+    <columns xmi:id="_mKX7MDJwEeeZIdPUCQrToQ" name="Street" PK="true"/>
+    <columns xmi:id="_6y1asDJ1EeeZIdPUCQrToQ" name="Belongs"/>
+    <relates xmi:id="_ECJIQDKJEeeY9rIDl5aP3g" name="Belongs" relatesTo="_e9xxoDJwEeeZIdPUCQrToQ"/>
+  </entities>
+</webApplication:WebApplicationModel>

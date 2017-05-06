@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<webApplication:WebApplicationModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webApplication="http://org.disim/WebApplication/homework2" xmi:id="_3BLDwDJxEeeZIdPUCQrToQ" name="Person_live_House">
+  <entities xmi:id="_6-spQDJxEeeZIdPUCQrToQ" name="Person">
+    <columns xmi:id="_kKOPEDJ1EeeZIdPUCQrToQ" name="Name" PK="true"/>
+  </entities>
+  <entities xmi:id="_8gXQUDJxEeeZIdPUCQrToQ" name="Bank">
+    <columns xmi:id="_kgnV0DJ1EeeZIdPUCQrToQ" name="id" type="Integer" PK="true"/>
+    <columns xmi:id="_k2sTgDJ1EeeZIdPUCQrToQ" name="Name"/>
+  </entities>
+  <entities xmi:id="_GiYu4DJyEeeZIdPUCQrToQ" name="House">
+    <columns xmi:id="_PKtPkDJyEeeZIdPUCQrToQ" name="Street" PK="true"/>
+  </entities>
+</webApplication:WebApplicationModel>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ASCII"?>
+<webApplication:WebApplicationModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webApplication="http://org.disim/WebApplication/homework2" xmi:id="_dvA4cDJwEeeZIdPUCQrToQ" name="People_House">
+  <entities xmi:id="_e9xxoDJwEeeZIdPUCQrToQ" name="Person">
+    <columns xmi:id="_jf5R8DJwEeeZIdPUCQrToQ" name="Name" PK="true"/>
+    <columns xmi:id="_j7TbkDJwEeeZIdPUCQrToQ" name="Role"/>
+  </entities>
+</webApplication:WebApplicationModel>

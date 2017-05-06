@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="webApplication" nsURI="http://org.disim/WebApplication" nsPrefix="webApplication">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="webApplication" nsURI="http://org.disim/WebApplication/homework2"
+    nsPrefix="webApplication">
   <eAnnotations source="http://www.eclipse.org/OCL/Import">
     <details key="ecore" value="http://www.eclipse.org/emf/2002/Ecore"/>
   </eAnnotations>
@@ -15,7 +16,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="pages" upperBound="-1"
         eType="#//content/Page" containment="true"/>
   </eClassifiers>
-  <eSubpackages name="data" nsURI="http://org.disim/WebApplication/data" nsPrefix="data">
+  <eSubpackages name="data" nsURI="http://org.disim/WebApplication/homework2/data"
+      nsPrefix="data">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
       <details key="invocationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
       <details key="settingDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
@@ -35,7 +37,15 @@
       </eAnnotations>
       <eOperations name="getPK" ordered="false" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
         <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
-          <details key="body" value="self.columns->select(c | c.PK)->collect(name)"/>
+          <details key="body" value="self.columns->select(PK = true)->collect(name)"/>
+        </eAnnotations>
+        <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+          <details key="nullFree" value="false"/>
+        </eAnnotations>
+      </eOperations>
+      <eOperations name="getPKRelated" ordered="false" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+          <details key="body" value="self.relates.relatesTo.columns->select(c|c.PK = true)->collect(name)"/>
         </eAnnotations>
         <eAnnotations source="http://www.eclipse.org/OCL/Collection">
           <details key="nullFree" value="false"/>
@@ -51,10 +61,10 @@
           <details key="derivation" value="self.columns->size()"/>
         </eAnnotations>
       </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="relatedEntities" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"
-          volatile="true" derived="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relatedEntities" ordered="false"
+          upperBound="-1" eType="#//data/Entity" volatile="true" derived="true">
         <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
-          <details key="derivation" value="self.relates"/>
+          <details key="derivation" value="self.relates.relatesTo"/>
         </eAnnotations>
       </eStructuralFeatures>
     </eClassifiers>
@@ -76,7 +86,8 @@
           eType="#//data/Entity"/>
     </eClassifiers>
   </eSubpackages>
-  <eSubpackages name="content" nsURI="http://org.disim/WebApplication/content" nsPrefix="content">
+  <eSubpackages name="content" nsURI="http://org.disim/WebApplication/homework2/content"
+      nsPrefix="content">
     <eClassifiers xsi:type="ecore:EClass" name="Page" eSuperTypes="#//Named">
       <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1"
           eType="#//content/Content" containment="true"/>

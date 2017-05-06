@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ASCII"?>
+<webApplication:WebApplicationModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:webApplication="http://org.disim/WebApplication/homework2" xmi:id="_3BLDwDJxEeeZIdPUCQrToQ" name="Person_House">
+  <entities xmi:id="_6-spQDJxEeeZIdPUCQrToQ" name="Person"/>
+</webApplication:WebApplicationModel>
