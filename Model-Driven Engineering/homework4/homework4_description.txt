@@ -1,0 +1,1 @@
+Define the EMF Text concrete syntax for each meta class of the meta model given in Homework 2. 

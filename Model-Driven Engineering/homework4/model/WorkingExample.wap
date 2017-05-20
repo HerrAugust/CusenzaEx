@@ -1,0 +1,230 @@
+// To use this file:
+// Please right click .cs file (in "model") -> Generate All (EMFText).
+// Then, right-click on the automatically generated project ending with "_ui", Run As, Eclipse Application.
+// Finally, put this file in the project in the new instance of Eclipse.
+// Tested with Eclipse Neon
+
+WebApplication {
+		name=Ex1,
+		Data {
+			DataSources {
+				DS_Professors for Entity Professor
+			},
+			Entities {
+				Entity name=Professor {
+					Columns {
+						Column {
+							name=ID
+							length=0
+							isPK=true
+							type=Integer
+						}
+						Column {
+							name=Name
+							length=0
+							isPK=false
+							type=String
+						}
+						Column {
+							name=researchFieldID
+							length=0
+							isPK=false
+							type=Integer
+						}
+					}
+					Relates to {
+						RelatedEntity {
+							name=research
+							RelatedEntity=ResearchField
+						}
+					}
+				}
+				
+				Entity name=Work {
+					Columns {
+						Column {
+							name=role
+							length=0
+							isPK=false
+							type=String
+						}
+					}
+					Relates to {
+						RelatedEntity {
+							name=works
+							RelatedEntity=Professor
+						}
+						RelatedEntity {
+							name=is_in
+							RelatedEntity=University
+						}
+					}
+				}
+				
+				Entity name=University {
+					Columns {
+						Column {
+							name=Location
+							length=0
+							isPK=false
+							type=String
+						}
+						Column {
+							name=Name
+							isPK=true
+							type=String
+						}
+					}
+					Relates to {
+					
+					}
+				}
+				
+				Entity name=ResearchField {
+					Columns {
+						Column {
+							name=ID
+							length=0
+							isPK=true
+							type=Integer
+						}
+						Column {
+							name=Name
+							isPK=false
+							type=String
+						}
+					}
+					Relates to {
+						
+					}
+				}
+				
+				Entity name=Subject {
+					Columns {
+						Column {
+							name=ID
+							length=0
+							isPK=true
+							type=Integer
+						}
+						Column {
+							name=Name
+							length=0
+							isPK=false
+							type=String
+						}
+					}
+					Relates to {
+						
+					}
+				}
+				
+				Entity name=Study {
+					Columns {
+						Column {
+							name=ID
+							length=0
+							isPK=true
+							type=Integer
+						}
+					}
+					Relates to {
+						RelatedEntity {
+							name=studies
+							RelatedEntity=Professor
+						}
+						RelatedEntity {
+							name=is_studied
+							RelatedEntity=Subject
+						}
+					}
+				}
+				
+			}
+		}, 
+		Content {
+			Pages {
+				Page {
+					name=Homepage
+					Links {
+						Link {
+							name="Read this article"
+							from Homepage
+							to Article
+						}
+						Link {
+							name="Read this other article"
+							from Homepage
+							to Article
+						}
+					},
+					Forms {
+						
+					},
+					Contents {
+						SingleContent {
+							name="Brief news of today"
+							dataSource=DS_Professors
+						}
+						MultipleContent {
+							name="News Slider"
+							paginated=false
+							size=3
+							dataSource=DS_Professors
+						}
+						Menu {
+							name="Professor Menu"
+							itemName="Look for professors"
+							url="http://example.com/professors"
+							order=0
+							dataSource=DS_Professors
+						}
+					}
+				}
+				
+				Page {
+					name=Article
+					Links {
+						
+					},
+					Forms {
+						Form {
+							name=Contact
+							Fields {
+								Field {
+									name=Name
+									type=TextBox
+								}
+								Field {
+									name=Comment
+									type=TextBox
+								}
+								Field {
+									name=Send
+									type=SubmitButton
+								}
+							}
+						}
+					},
+					Contents {
+						SingleContent {
+							name="Content Summary"
+							dataSource=DS_Professors
+						}
+						SingleContent {
+							name="Content Body"
+							dataSource=DS_Professors
+						}
+						Menu {
+							name="Main Menu"
+							itemName="Main Menu"
+							url="http://example.com/"
+							order=0
+							dataSource=DS_Professors
+						}
+					}
+				}//page
+				
+			} //pages
+		}//content
+	}

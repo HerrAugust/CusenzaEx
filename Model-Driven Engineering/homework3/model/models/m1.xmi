@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ASCII"?>
+<webApplication:WebApplicationModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:content="http://org.disim/WebApplication/content"
+    xmlns:webApplication="http://org.disim/WebApplication"
+    xmi:id="_QJGY0DvmEee5hfpJcQ5JAA"
+    name="Ex1">
+  <entities
+      xmi:id="_ZKqf8DvmEee5hfpJcQ5JAA"
+      name="Professor">
+    <columns
+        xmi:id="_bzOdoDvmEee5hfpJcQ5JAA"
+        name="ID"
+        type="Integer"
+        PK="true"/>
+    <columns
+        xmi:id="_ciJZIDvmEee5hfpJcQ5JAA"
+        name="Name"/>
+    <columns
+        xmi:id="_c-9Q8DvmEee5hfpJcQ5JAA"
+        name="researchFieldID"
+        type="Integer"/>
+    <relates
+        xmi:id="_TH5aUDvoEee5hfpJcQ5JAA"
+        name="research"
+        relatesTo="_hNk7kDvoEee5hfpJcQ5JAA"/>
+  </entities>
+  <entities
+      xmi:id="_uLRL8DvmEee5hfpJcQ5JAA"
+      name="Work">
+    <columns
+        xmi:id="_74G58DvnEee5hfpJcQ5JAA"
+        name="role"/>
+    <relates
+        xmi:id="_a6Vb4DvoEee5hfpJcQ5JAA"
+        name="works"
+        relatesTo="_ZKqf8DvmEee5hfpJcQ5JAA"/>
+    <relates
+        xmi:id="_dKaBEDvoEee5hfpJcQ5JAA"
+        name="is_in"
+        relatesTo="_uhSfQDvmEee5hfpJcQ5JAA"/>
+  </entities>
+  <entities
+      xmi:id="_uhSfQDvmEee5hfpJcQ5JAA"
+      name="University">
+    <columns
+        xmi:id="_ClGWYDvoEee5hfpJcQ5JAA"
+        name="Location"
+        PK="true"/>
+    <columns
+        xmi:id="_Dfwn0DvoEee5hfpJcQ5JAA"
+        name="Name"
+        PK="true"/>
+  </entities>
+  <entities
+      xmi:id="_hNk7kDvoEee5hfpJcQ5JAA"
+      name="ResearchField">
+    <columns
+        xmi:id="_jLCt0DvoEee5hfpJcQ5JAA"
+        name="ID"
+        type="Integer"
+        PK="true"/>
+    <columns
+        xmi:id="_kKGXEDvoEee5hfpJcQ5JAA"
+        name="Name"/>
+  </entities>
+  <entities
+      xmi:id="_o3n2IDvoEee5hfpJcQ5JAA"
+      name="Subject">
+    <columns
+        xmi:id="_p8BSYDvoEee5hfpJcQ5JAA"
+        name="ID"
+        type="Integer"
+        PK="true"/>
+    <columns
+        xmi:id="_qml5YDvoEee5hfpJcQ5JAA"
+        name="Name"/>
+  </entities>
+  <entities
+      xmi:id="_vaoQIDvoEee5hfpJcQ5JAA"
+      name="Study">
+    <columns
+        xmi:id="_PQMMIDvsEee5hfpJcQ5JAA"
+        name="id"
+        type="Integer"
+        PK="true"/>
+    <relates
+        xmi:id="_yQWgEDvoEee5hfpJcQ5JAA"
+        name="studies"
+        relatesTo="_ZKqf8DvmEee5hfpJcQ5JAA"/>
+    <relates
+        xmi:id="_y3k4IDvoEee5hfpJcQ5JAA"
+        name="is_studied"
+        relatesTo="_o3n2IDvoEee5hfpJcQ5JAA"/>
+  </entities>
+  <dataSources
+      name="DS_Professors"
+      entity="_ZKqf8DvmEee5hfpJcQ5JAA"/>
+  <pages name="Homepage">
+    <contents
+        xsi:type="content:MultipleContent"
+        name="News Slider"
+        dataSource="//@dataSources.0"
+        size="3"/>
+    <contents
+        xsi:type="content:Menu"
+        name="Professors menu"
+        dataSource="//@dataSources.0"
+        itemName="Look for professors"
+        url="http://example.com/professors"/>
+    <contents
+        xsi:type="content:SingleContent"
+        name="Brief news of today"
+        dataSource="//@dataSources.0"/>
+    <links name="Read this article"
+        from="//@pages.0"
+        to="//@pages.1"/>
+    <links name="Read this other article"
+        from="//@pages.0"
+        to="//@pages.1"/>
+  </pages>
+  <pages name="Article">
+    <contents
+        xsi:type="content:Menu"
+        name="Main Menu"
+        dataSource="//@dataSources.0"
+        itemName="Main Menu"
+        url="http://example.com"/>
+    <contents
+        xsi:type="content:SingleContent"
+        name="Summary"
+        dataSource="//@dataSources.0"/>
+    <contents
+        xsi:type="content:SingleContent"
+        name="Body"
+        dataSource="//@dataSources.0"/>
+  </pages>
+</webApplication:WebApplicationModel>
