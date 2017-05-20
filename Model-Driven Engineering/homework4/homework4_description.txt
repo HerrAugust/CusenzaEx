@@ -1,1 +1,6 @@
-Define the EMF Text concrete syntax for each meta class of the meta model given in Homework 2. 
+Define the EMF Text concrete syntax for each meta class of the meta model given in Homework 2.
+
+Please notice that here the most important files are ./model/EMFWebApplication.cs, ./model/EMFWebApplication.ecore and ./model/WorkingExample.wap
+
+Credits:
+HerrAugust, https://github.com/HerrAugust/
