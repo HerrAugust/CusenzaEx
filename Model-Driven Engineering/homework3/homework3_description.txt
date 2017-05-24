@@ -1,4 +1,0 @@
-Consider the meta model given for the Homework 2, define different ACCELEO templates such that 
-
-    for each <<Page>> an HTML page must be generated with the corresponding <<Contents>> and <<Links>>
-    for each <<Entity> a corresponding MySQL Table must be create and queried 

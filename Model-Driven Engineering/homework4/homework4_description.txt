@@ -2,5 +2,18 @@ Define the EMF Text concrete syntax for each meta class of the meta model given 
 
 Please notice that here the most important files are ./model/EMFWebApplication.cs, ./model/EMFWebApplication.ecore and ./model/WorkingExample.wap
 
+
+HOW TO RUN IT?
+1. Open Eclipse
+2. Download EMFText and the needed plugins (see file in this repository root)
+2. right click on /model/EMFWebApplication.cs
+3. click "Generate All (EMFText)"
+4. right click on the newly generated project "webApplication.resource.wap.ui"
+5. Run As -> Eclipse Application (don't care about the error, just proceed)
+6. Create a new WAP project
+7. Write something conforming to the grammar (defined in EMFWebApplication.cs) inside the WAP file
+
+
 Credits:
 HerrAugust, https://github.com/HerrAugust/
+Tested with Eclipse Neon

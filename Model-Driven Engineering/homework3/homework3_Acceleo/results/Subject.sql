@@ -1,0 +1,8 @@
+	CREATE TABLE Subject (
+			ID INT NOT NULL AUTO_INCREMENT
+,			Name VARCHAR(50)
+		
+			,PRIMARY KEY(ID)
+	) ENGINE=InnoDB;
+	SELECT * FROM Subject;
+	SELECT Name FROM Subject WHERE ID = ?; 

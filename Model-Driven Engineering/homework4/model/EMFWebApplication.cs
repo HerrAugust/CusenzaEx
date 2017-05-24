@@ -104,7 +104,7 @@ RULES {
 	
 	Content.Form ::= "name=" name[]?;
 	
-	//Added to suppress Eclipse warning
+	//Added to suppress Eclipse warning. But now, Named is unreachable clearly
 	Named ::= "name=" name['"','"']?;
 	
 	//12 definitions (except Form and Named). classes are 15 - 1 abstract - 2 superclasses = 12 metaclasses => 0K.

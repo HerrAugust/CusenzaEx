@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/wa/src" modelPluginID="wa" modelName="EMFWebApplication2"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="8.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>EMFWebApplication2.ecore</foreignModel>
+  <genPackages prefix="WebApplication" disposableProviderFactory="true" ecorePackage="EMFWebApplication2.ecore#/">
+    <genClasses ecoreClass="EMFWebApplication2.ecore#//Named">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//Named/name"/>
+    </genClasses>
+    <genClasses ecoreClass="EMFWebApplication2.ecore#//WebApplicationModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//WebApplicationModel/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//WebApplicationModel/dataSources"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//WebApplicationModel/pages"/>
+    </genClasses>
+    <nestedGenPackages prefix="Data" disposableProviderFactory="true" ecorePackage="EMFWebApplication2.ecore#//data">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="EMFWebApplication2.ecore#//data/ColumnType">
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//data/ColumnType/String"/>
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//data/ColumnType/Boolean"/>
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//data/ColumnType/Integer"/>
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//data/ColumnType/Float"/>
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//data/ColumnType/Text"/>
+      </genEnums>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//data/DataSource">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//data/DataSource/entity"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//data/Entity">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//data/Entity/columns"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//data/Entity/relates"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//data/Column">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//data/Column/type"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//data/Column/lenght"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//data/Column/PK"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//data/RelatedEntity">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//data/RelatedEntity/relatesTo"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Content" disposableProviderFactory="true" ecorePackage="EMFWebApplication2.ecore#//content">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="EMFWebApplication2.ecore#//content/FieldType">
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//content/FieldType/TextBox"/>
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//content/FieldType/CheckBox"/>
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//content/FieldType/RadioButton"/>
+        <genEnumLiterals ecoreEnumLiteral="EMFWebApplication2.ecore#//content/FieldType/SubmitButton"/>
+      </genEnums>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/Page">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//content/Page/contents"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//content/Page/links"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//content/Page/forms"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="EMFWebApplication2.ecore#//content/Content">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//content/Content/dataSource"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/Form"/>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/Link">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//content/Link/from"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//content/Link/to"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/Menu">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//content/Menu/itemName"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//content/Menu/url"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//content/Menu/order"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/SingleContent"/>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/MultipleContent">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//content/MultipleContent/paginated"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//content/MultipleContent/size"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/CRUDForm">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EMFWebApplication2.ecore#//content/CRUDForm/fields"/>
+      </genClasses>
+      <genClasses ecoreClass="EMFWebApplication2.ecore#//content/Field">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EMFWebApplication2.ecore#//content/Field/type"/>
+      </genClasses>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>

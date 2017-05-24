@@ -122,7 +122,7 @@ WebApplication {
 				Entity name=Study {
 					Columns {
 						Column {
-							name=ID
+							name=years
 							length=0
 							isPK=true
 							type=Integer

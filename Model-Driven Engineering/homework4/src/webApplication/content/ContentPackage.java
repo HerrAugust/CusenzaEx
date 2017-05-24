@@ -115,15 +115,6 @@ public interface ContentPackage extends EPackage {
 	int PAGE_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 3;
 
 	/**
-	 * The number of operations of the '<em>Page</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.content.impl.ContentImpl <em>Content</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -161,15 +152,6 @@ public interface ContentPackage extends EPackage {
 	int CONTENT_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>Content</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTENT_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.content.impl.FormImpl <em>Form</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -196,15 +178,6 @@ public interface ContentPackage extends EPackage {
 	 * @ordered
 	 */
 	int FORM_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of operations of the '<em>Form</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FORM_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link webApplication.content.impl.LinkImpl <em>Link</em>}' class.
@@ -251,15 +224,6 @@ public interface ContentPackage extends EPackage {
 	 * @ordered
 	 */
 	int LINK_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Link</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link webApplication.content.impl.MenuImpl <em>Menu</em>}' class.
@@ -326,15 +290,6 @@ public interface ContentPackage extends EPackage {
 	int MENU_FEATURE_COUNT = CONTENT_FEATURE_COUNT + 3;
 
 	/**
-	 * The number of operations of the '<em>Menu</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MENU_OPERATION_COUNT = CONTENT_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.content.impl.SingleContentImpl <em>Single Content</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -370,15 +325,6 @@ public interface ContentPackage extends EPackage {
 	 * @ordered
 	 */
 	int SINGLE_CONTENT_FEATURE_COUNT = CONTENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of operations of the '<em>Single Content</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SINGLE_CONTENT_OPERATION_COUNT = CONTENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link webApplication.content.impl.MultipleContentImpl <em>Multiple Content</em>}' class.
@@ -436,15 +382,6 @@ public interface ContentPackage extends EPackage {
 	int MULTIPLE_CONTENT_FEATURE_COUNT = CONTENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of operations of the '<em>Multiple Content</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MULTIPLE_CONTENT_OPERATION_COUNT = CONTENT_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.content.impl.CRUDFormImpl <em>CRUD Form</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -482,15 +419,6 @@ public interface ContentPackage extends EPackage {
 	int CRUD_FORM_FEATURE_COUNT = FORM_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>CRUD Form</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CRUD_FORM_OPERATION_COUNT = FORM_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.content.impl.FieldImpl <em>Field</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -526,15 +454,6 @@ public interface ContentPackage extends EPackage {
 	 * @ordered
 	 */
 	int FIELD_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Field</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FIELD_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link webApplication.content.FieldType <em>Field Type</em>}' enum.

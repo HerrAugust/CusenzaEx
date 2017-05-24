@@ -1,0 +1,15 @@
+Consider the meta model given for the Homework 2, define different ACCELEO templates such that 
+
+    for each <<Page>> an HTML page must be generated with the corresponding <<Contents>> and <<Links>>
+    for each <<Entity> a corresponding MySQL Table must be create and queried
+
+
+HOW CAN I RUN IT?
+1. Download Eclipse
+2. Download all the needed plugins listed in the root of this repository
+3. Import the project homework3_EMF
+4. Import the project homework3_Acceleo
+5. homework3_Acceleo/src/*.main/generate.mtl -> right click -> Launch Acceleo Application and configure referencing the model (.xmi) inside homeowork3_EMF/model
+6. See generated file in the folder you chose during configuration (step 5). Mine is homework3_Acceleo/results
+
+Credits: HerrAugust, http://github.com/HerrAugust

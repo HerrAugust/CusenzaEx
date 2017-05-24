@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated EMFWebApplication2 -->
+      <package
+            uri="http://org.disim/WebApplication"
+            class="webApplication.WebApplicationPackage"
+            genModel="model/EMFWebApplication2.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated EMFWebApplication2 -->
+      <package
+            uri="http://org.disim/WebApplication/data"
+            class="webApplication.data.DataPackage"
+            genModel="model/EMFWebApplication2.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated EMFWebApplication2 -->
+      <package
+            uri="http://org.disim/WebApplication/content"
+            class="webApplication.content.ContentPackage"
+            genModel="model/EMFWebApplication2.genmodel"/>
+   </extension>
+
+</plugin>

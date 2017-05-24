@@ -1,0 +1,81 @@
+[comment encoding = UTF-8 /]
+[module generate('http://org.disim/WebApplication')]
+
+
+[template public generateElement(aWebApplicationModel : WebApplicationModel)]
+[comment @main/]
+
+[comment one file for each entity + related queries /]
+[comment
+CREATE TABLE MyGuests (
+id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+firstname VARCHAR(30) NOT NULL,
+lastname VARCHAR(30) NOT NULL,
+email VARCHAR(50),
+reg_date TIMESTAMP,
+FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+) /]
+[for(e : Entity | aWebApplicationModel.entities)]
+	[file (e.name.concat('.sql'), true, 'UTF-8')]
+	CREATE TABLE [e.name/] (
+		[for(c : Column | e.columns) separator(',')]
+			[c.name/][if(c.type = ColumnType::Integer)] INT [if(c.PK = true)]NOT NULL AUTO_INCREMENT[/if][/if][if(c.type = ColumnType::String)] VARCHAR(50)[if(c.PK=true)] NOT NULL[/if][/if]
+		[/for]
+		[if(e.relates->size() > 0 and e.columns->size() > 0)],[/if]
+		[for(r : RelatedEntity | e.relates) separator(',')]
+			[comment This section assumes that the referred entity has at least one PK. OCL check could be possible, but then how to respect the relationship between two enties? /]
+			[r.name/] [if(r.relatesTo.columns->select(PK=true)->asSequence()->at(1).type = ColumnType::Integer)] INT NOT NULL[/if] [if(r.relatesTo.columns->select(PK=true)->asSequence()->at(1).type = ColumnType::String)]VARCHAR(50) NOT NULL[/if],
+			FOREIGN KEY([r.name/]) REFERENCES [r.relatesTo.name/]([r.relatesTo.columns->select(PK = true)->asSequence()->at(1).name/])
+		[/for]
+		[if(e.relates->size() = 0)] [comment if an entity represents an ER relationship => it does not have any PK /]
+			,PRIMARY KEY([for(c : Column | e.columns->select(PK = true)) separator(',')][c.name/][/for])
+		[/if]
+	) ENGINE=InnoDB;
+	SELECT * FROM [e.name/];
+	[if(e.columns->select(PK = false)->size() > 0)]SELECT [for(pk : Column | e.columns->select(c1 | c1.PK = false)) separator(',')][pk.name/][/for] FROM [e.name/] WHERE [e.columns->asSequence()->at(1).name/] = ?;[/if] 
+	[/file]
+[/for]
+
+
+[comment one file for each page /]
+[for(p : Page | aWebApplicationModel.pages)]
+	[file(p.name.concat('.html'), false, 'UTF-8')]
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<meta charset="UTF-8">
+				<title>[p.name/]</title>
+			</head>
+			<body>
+				<h1>[p.name/]</h1>
+				[if(p.contents->select(oclIsTypeOf(Menu) = true)->size() > 0)]
+				<ul>
+					[for(m : Menu | p.contents->select(v | v.oclIsTypeOf(Menu) = true))]
+					<li><a href="[m.url/]">[m.name/]</a></li>
+					[/for]
+				</ul>
+				[/if]
+				[for(l : Link | p.links)]
+					<p>You could be interested in: <a href="www.example.com/[l.to.name/]">[l.name/]</a></p>
+				[/for]
+				[for(m : MultipleContent | p.contents->select(v | v.oclIsTypeOf(MultipleContent) = true))]
+					<p>MultipleContent: [m.name/]</p>
+				[/for]
+				[for(m : SingleContent | p.contents->select(v | v.oclIsTypeOf(SingleContent) = true))]
+					<p>SingleContent: [m.name/]</p>
+				[/for]
+
+				[for(f : CRUDForm | p.forms->select(v | v.oclIsTypeOf(CRUDForm) = true))]
+					<br/><br/>
+					 <form action="/action_page.php">
+						[for(field : Field | f.fields) separator('<br/>')]
+							  [if(field.type <> FieldType::SubmitButton)][field.name/]: [/if]<input type="[if(field.type = FieldType::TextBox)]text[/if][if(field.type = FieldType::CheckBox)]checkbox[/if][if(field.type = FieldType::RadioButton)]radio[/if][if(field.type = FieldType::SubmitButton)]submit[/if]">
+						[/for]
+					</form> 
+				[/for]
+			</body>
+		</html> 
+	[/file]
+[/for]
+
+[/template]

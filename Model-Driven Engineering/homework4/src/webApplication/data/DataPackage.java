@@ -97,15 +97,6 @@ public interface DataPackage extends EPackage {
 	int DATA_SOURCE_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>Source</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DATA_SOURCE_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.data.impl.EntityImpl <em>Entity</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -150,15 +141,6 @@ public interface DataPackage extends EPackage {
 	 * @ordered
 	 */
 	int ENTITY_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Entity</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENTITY_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link webApplication.data.impl.ColumnImpl <em>Column</em>}' class.
@@ -216,15 +198,6 @@ public interface DataPackage extends EPackage {
 	int COLUMN_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 3;
 
 	/**
-	 * The number of operations of the '<em>Column</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COLUMN_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.data.impl.RelatedEntityImpl <em>Related Entity</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -260,15 +233,6 @@ public interface DataPackage extends EPackage {
 	 * @ordered
 	 */
 	int RELATED_ENTITY_FEATURE_COUNT = WebApplicationPackage.NAMED_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Related Entity</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RELATED_ENTITY_OPERATION_COUNT = WebApplicationPackage.NAMED_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link webApplication.data.ColumnType <em>Column Type</em>}' enum.

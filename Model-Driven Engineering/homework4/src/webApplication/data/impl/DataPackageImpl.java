@@ -328,7 +328,7 @@ public class DataPackageImpl extends EPackageImpl implements DataPackage {
 		columnEClass.getESuperTypes().add(theWebApplicationPackage.getNamed());
 		relatedEntityEClass.getESuperTypes().add(theWebApplicationPackage.getNamed());
 
-		// Initialize classes, features, and operations; add parameters
+		// Initialize classes and features; add operations and parameters
 		initEClass(dataSourceEClass, DataSource.class, "DataSource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDataSource_Entity(), this.getEntity(), null, "entity", null, 1, 1, DataSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

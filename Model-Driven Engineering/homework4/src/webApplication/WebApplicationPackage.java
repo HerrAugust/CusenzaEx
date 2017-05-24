@@ -86,15 +86,6 @@ public interface WebApplicationPackage extends EPackage {
 	int NAMED_FEATURE_COUNT = 1;
 
 	/**
-	 * The number of operations of the '<em>Named</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NAMED_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link webApplication.impl.WebApplicationModelImpl <em>Model</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -148,16 +139,6 @@ public interface WebApplicationPackage extends EPackage {
 	 * @ordered
 	 */
 	int WEB_APPLICATION_MODEL_FEATURE_COUNT = NAMED_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of operations of the '<em>Model</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WEB_APPLICATION_MODEL_OPERATION_COUNT = NAMED_OPERATION_COUNT + 0;
-
 
 	/**
 	 * Returns the meta object for class '{@link webApplication.Named <em>Named</em>}'.
