@@ -19,15 +19,16 @@ FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
 	[file (e.name.concat('.sql'), true, 'UTF-8')]
 	CREATE TABLE [e.name/] (
 		[for(c : Column | e.columns) separator(',')]
-			[c.name/][if(c.type = ColumnType::Integer)] INT [if(c.PK = true)]NOT NULL AUTO_INCREMENT[/if][/if][if(c.type = ColumnType::String)] VARCHAR(50)[if(c.PK=true)] NOT NULL[/if][/if]
+			[c.name/][if(c.type = ColumnType::Integer)] INT [if(c.PK = true)]NOT NULL AUTO_INCREMENT[/if][/if][if(c.type = ColumnType::String)] VARCHAR(50)[if(c.PK=true)] NOT NULL[/if][/if][if(c.type = ColumnType::Float)] FLOAT [/if][if(c.type = ColumnType::Boolean)] TINYINT(1) [/if][if(c.type = ColumnType::Text)] TEXT [/if]
 		[/for]
 		[if(e.relates->size() > 0 and e.columns->size() > 0)],[/if]
 		[for(r : RelatedEntity | e.relates) separator(',')]
 			[comment This section assumes that the referred entity has at least one PK. OCL check could be possible, but then how to respect the relationship between two enties? /]
-			[r.name/] [if(r.relatesTo.columns->select(PK=true)->asSequence()->at(1).type = ColumnType::Integer)] INT NOT NULL[/if] [if(r.relatesTo.columns->select(PK=true)->asSequence()->at(1).type = ColumnType::String)]VARCHAR(50) NOT NULL[/if],
-			FOREIGN KEY([r.name/]) REFERENCES [r.relatesTo.name/]([r.relatesTo.columns->select(PK = true)->asSequence()->at(1).name/])
+			[r.name/] [if(r.relatesTo.columns->select(PK=true)->asSequence()->at(1).type = ColumnType::Integer)] INT NOT NULL[/if] [if(r.relatesTo.columns->select(PK=true)->asSequence()->at(1).type = ColumnType::String)] VARCHAR(50) NOT NULL[/if] [if(r.relatesTo.columns->select(PK=true)->asSequence()->at(1).type = ColumnType::Float)] FLOAT NOT NULL[/if], [comment texts, booleans cannot be FK /]
+			[comment For seak of simplicity, it is assumed that FOREIGN KEY(col_name,...) REFERENCES table_name(col_name, ...) cannot hold. In that case, you should generate as many new fields as the related entity has as PK and, placing them in the correct order inside the FOREIGN KEY(here), write the corresponding PKs /]
+			FOREIGN KEY([r.name/]) REFERENCES [r.relatesTo.name/]([r.relatesTo.columns->select(v | v.PK = true)->asSequence()->at(1).name/])
 		[/for]
-		[if(e.relates->size() = 0)] [comment if an entity represents an ER relationship => it does not have any PK /]
+		[if(e.columns->select(PK=true)->size() > 0)]
 			,PRIMARY KEY([for(c : Column | e.columns->select(PK = true)) separator(',')][c.name/][/for])
 		[/if]
 	) ENGINE=InnoDB;

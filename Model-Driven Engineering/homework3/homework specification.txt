@@ -1,7 +1,6 @@
-Consider the meta model given for the Homework 2, define different ACCELEO templates such that 
-
-    for each <<Page>> an HTML page must be generated with the corresponding <<Contents>> and <<Links>>
-    for each <<Entity> a corresponding MySQL Table must be create and queried
+Consider the meta model given for the Homework 2 (file Model-Driven Engineering\homework3\homework3_EMF\model\EMFWebApplication2.ecore), define different ACCELEO templates such that:
+1. for each <<Page>> an HTML page must be generated with the corresponding <<Contents>> and <<Links>>
+2. for each <<Entity> a corresponding MySQL Table must be create and queried
 
 
 HOW CAN I RUN IT?

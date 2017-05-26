@@ -3,8 +3,9 @@
 ,			Name VARCHAR(50)
 ,			researchFieldID INT 
 		,
-			research  INT NOT NULL ,
+			research  INT NOT NULL  , 
 			FOREIGN KEY(research) REFERENCES ResearchField(ID)
+			,PRIMARY KEY(ID)
 	) ENGINE=InnoDB;
 	SELECT * FROM Professor;
 	SELECT Name,researchFieldID FROM Professor WHERE ID = ?; 
