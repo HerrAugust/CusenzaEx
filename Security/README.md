@@ -1,7 +1,7 @@
 1. Create a certain structure client-router-server with virtual box
 2. on router, open terminal, navigate to the folder with iptables.sh and give
-sudo ./iptables2.sh restart
-sudo iptables --list -nv
+sudo ./iptables2.sh restart \
+sudo iptables --list -nv \
 
 now test with client and server:
 ICMP with ping, port -p icmp
