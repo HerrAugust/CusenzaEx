@@ -26,8 +26,3 @@ I also included a class, <b>Visualizzatore</b>, which allows to graphically show
 Paradigmi-di-Programmazione
 ==========
 Exercises about programming paradigms. In particular, ML and Lisp Scheme are studied.
-
-==========
-TecnologieDelWeb
-==========
-Exercises about web technologies (AJAX, Javascript, MySQL, HTML5, CSS, JQuery, etc). A project (a duplicate of Zalando.it) is also provided.
