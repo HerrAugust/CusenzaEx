@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ASCII"?>
+<WebApplication:Website xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:WebApplication="http://Agostino" xmi:id="_NCaUAGGeEee819LLkGP_lA" name="MyWebSite">
+  <pages xmi:id="_VDqNoGGeEee819LLkGP_lA" name="Home" belongs="_NkPOsGGeEee819LLkGP_lA">
+    <links xmi:id="_Ad-toGGfEee819LLkGP_lA" name="Github" URL="https://www.github.com"/>
+    <content xmi:id="_9jOMsGGeEee819LLkGP_lA" name="presentation txt" text="Ciao e benvenuto!"/>
+  </pages>
+  <pages xmi:id="_VUCL8GGeEee819LLkGP_lA" name="Page1" belongs="_NkPOsGGeEee819LLkGP_lA">
+    <content xmi:id="_Nri7IGGfEee819LLkGP_lA" name="main txt" text="The rule Entity again starts with the definition of a keyword followed by a name."/>
+    <content xmi:id="_S0t0YGGfEee819LLkGP_lA" name="secondary txt" text="alled ID. The rule ID is defined in the super grammar org.eclipse.xtext.common.Terminals and parses a si"/>
+  </pages>
+  <pages xmi:id="_V8WJIGGeEee819LLkGP_lA" name="Sitemap" belongs="_NkPOsGGeEee819LLkGP_lA">
+    <links xmi:id="_G7fjoGGfEee819LLkGP_lA" name="home" URL="/" PointsTo="_VDqNoGGeEee819LLkGP_lA"/>
+    <links xmi:id="_HN_o4GGfEee819LLkGP_lA" name="content" URL="/content" PointsTo="_VUCL8GGeEee819LLkGP_lA"/>
+  </pages>
+  <people xmi:id="_NkPOsGGeEee819LLkGP_lA" name="Agostino" has="_VUCL8GGeEee819LLkGP_lA _V8WJIGGeEee819LLkGP_lA _VDqNoGGeEee819LLkGP_lA"/>
+</WebApplication:Website>
