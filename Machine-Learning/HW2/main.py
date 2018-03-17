@@ -6,7 +6,7 @@ from holdoutMethod import holdoutMethod
 from kFolds import kFolds
 
 
-K_FOLD = True
+K_FOLD = False
 header = ['letter', 'xbox', 'ybox', 'width', 'height', 'onpix', 'xbar', 'ybar', 'x2bar', 'y2bar', 'xybar', 'x2ybr', 'xy2br', 'x-ege', 'xegvy', 'y-ege', 'yegvx']
 df = pandas.read_csv('Dataset/letter-recognition.data', names=header)
 print('Dataset with {} entries'.format(df.__len__()))

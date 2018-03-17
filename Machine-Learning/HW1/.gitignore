@@ -1,0 +1,7 @@
+ReportHW1/
+venv/
+_pycache_/
+.idea/
+build/
+.project
+.pydevproject
