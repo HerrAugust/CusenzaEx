@@ -32,7 +32,7 @@
 #define CB_TASK_PERIOD              1000
 
 #define MAX_PIZZAS                  10 /* max number of pizzas TODO CONFLITTO CON NUM_TASK?*/
-#define CB_PIECES_NUM               15 /* number of conveyor belt pieces */
+#define CB_PIECES_NUM               2 /* number of conveyor belt pieces */
 #define CB_INDEX_BEG                0 /* index of the first conveyor belt piece */
 #define PIZZA_INDEX_BEG             (CB_INDEX_BEG + CB_PIECES) /* index of the first pizza */
 
@@ -52,6 +52,8 @@
 
 #define CB_PIECE_H_X                100 /* horizontal conveyor belt piece x coord */
 #define CB_PIECE_H_Y                (ICONS_Y + 90) /* horizontal conveyor belt piece y coord */
+
+#define DELTA_X                     30 /* X offset for conveyor belt pieces*/
 
 #define AL_MAX_H_X                  XWIN /* Where the horizontal assembly line ends */
 
@@ -147,13 +149,9 @@ void init(void) {
     blit(cheese, screen, 0, 0, CHEESE_X, ICONS_Y, cheese->w, cheese->h);
     blit(tomato, screen, 0, 0, TOMATO_X, ICONS_Y, tomato->w, tomato->h);
 
-    cb_pieces[0].bitmap = cb_piece;
-    cb_pieces[0].coord.x = CB_PIECE_H_X;
-    cb_pieces[0].coord.y = CB_PIECE_H_Y;
-
 
     // create tasks to control conveyor belt pieces
-    for (i = CB_INDEX_BEG; i < 1/*CB_PIECES_NUM*/; i++) {
+    for (i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
         task_create(conveyor_belt, i, CB_TASK_PERIOD, CB_TASK_PERIOD, CB_TASKS_PRIORITY);
     }
 
@@ -172,15 +170,16 @@ void* conveyor_belt(void* arg) {
 	int i; // task index
 
 	i = get_task_index(arg);
-	printf("I'M TASK %d, T = %d\n", i, get_task_period(arg));
 
 	// Init conveyor belt pieces
-    cb_pieces[i].coord.x = CB_PIECE_H_X + (i != 0 ? i * cb_pieces[i - 1].coord.x : 0);
+    cb_pieces[i].bitmap  = cb_piece;
+    cb_pieces[i].coord.x = CB_PIECE_H_X + (i != 0 ? cb_pieces[i - 1].coord.x + cb_piece->w : 0);
     cb_pieces[i].coord.y = CB_PIECE_H_Y;
+    printf("");
 
     set_activation(i);
 	while (!end) {
-        cb_pieces[i].coord.x += (i != 0 ? cb_pieces[i - 1].coord.x : CB_PIECE_H_X);
+        cb_pieces[i].coord.x += cb_pieces[i].coord.x + DELTA_X;
 
 		// handling end of conveyor belt => go to begin
 		if(cb_pieces[i].coord.x > AL_MAX_H_X) cb_pieces[i].coord.x = CB_PIECE_H_X;
@@ -220,7 +219,7 @@ void* display(void* arg)
 	set_activation(id);
 	while (!end) {
 		rectfill(screen, 0, CB_PIECE_H_Y, XWIN-1, YWIN-1, BKG);
-		for (i = CB_INDEX_BEG; i < 1/*CB_PIECES_NUM*/; i++) {
+		for (i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
             draw_conveyor_belt(i);
 		}
 		//if ( has_deadline_miss(i) ) // check for deadline miss
