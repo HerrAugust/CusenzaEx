@@ -24,23 +24,22 @@
 
 //------------------------------------------------------------- SW logic params
 
-#define GUI_TASKS_PER               20 /* period of the GUI redrawing task */
 #define GUI_TASKS_PRIORITY          80 /* priority (SCHED_RR) of the GUI redrawing task */
+#define CB_TASKS_PRIORITY           80 /* conveyor belt tasks priority */
 
+#define GUI_TASKS_PER               20 /* period of the GUI redrawing task */
 #define USER_TASK_PER               80 /* period of user serving task */
+#define CB_TASK_PERIOD              1000
 
-#define MAX_PIZZAS                  10 /* max number of pizzas */
-#define CB_PIECES                   15 /* number of conveyor belt pieces */
+#define MAX_PIZZAS                  10 /* max number of pizzas TODO CONFLITTO CON NUM_TASK?*/
+#define CB_PIECES_NUM               15 /* number of conveyor belt pieces */
 #define CB_INDEX_BEG                0 /* index of the first conveyor belt piece */
 #define PIZZA_INDEX_BEG             (CB_INDEX_BEG + CB_PIECES) /* index of the first pizza */
 
-#define AL_BEGIN_X                  50 /* where the assembly line should begin (x) */
-#define AL_BEGIN_Y                  150 /* where the assembly line should begin (y) */
-
 //------------------------------------------------------------- Icons params
 
-#define ICONS_Y                     (YWIN - 580)
-#define ICONS_OFF_X                 80
+#define ICONS_Y                     (YWIN - 580) /* y coordinate of icons */
+#define ICONS_OFF_X                 80 /* Offset between 2 icons */
 
 #define CAMERA_X                    (XWIN - 250)
 #define OVEN_X                      (CAMERA_X - ICONS_OFF_X - 30)
@@ -50,6 +49,11 @@
 #define MUSHROOM_X                  (HAM_X - ICONS_OFF_X)
 #define CHEESE_X                    (MUSHROOM_X - ICONS_OFF_X)
 #define TOMATO_X                    (CHEESE_X - ICONS_OFF_X)
+
+#define CB_PIECE_H_X                100 /* horizontal conveyor belt piece x coord */
+#define CB_PIECE_H_Y                (ICONS_Y + 90) /* horizontal conveyor belt piece y coord */
+
+#define AL_MAX_H_X                  XWIN /* Where the horizontal assembly line ends */
 
 //------------------------------------------------------------- Functions
 
@@ -65,12 +69,17 @@ BITMAP* pizza_dough, *cb_piece;
 struct coordinates {
     long x;
     long y;
-} cb_coordinates[CB_PIECES]; // status of pieces of conveyor belt
+};
 
 struct pizza {
     struct coordinates coord;
 
 } pizzas[MAX_PIZZAS];
+
+struct cb_piece {
+    struct coordinates coord;
+    BITMAP*  bitmap;
+} cb_pieces[CB_PIECES_NUM];
 
 //------------------------------------------------------------------------------------- Utility functions
 
@@ -138,12 +147,14 @@ void init(void) {
     blit(cheese, screen, 0, 0, CHEESE_X, ICONS_Y, cheese->w, cheese->h);
     blit(tomato, screen, 0, 0, TOMATO_X, ICONS_Y, tomato->w, tomato->h);
 
+    cb_pieces[0].bitmap = cb_piece;
+    cb_pieces[0].coord.x = CB_PIECE_H_X;
+    cb_pieces[0].coord.y = CB_PIECE_H_Y;
 
-    return;
 
-    // INGREDIENTS TASKS FIRST TODO
-    for (i = CB_INDEX_BEG; i < CB_PIECES; i++) {
-        task_create(conveyor_belt, i, GUI_TASKS_PER, GUI_TASKS_PER, GUI_TASKS_PRIORITY);
+    // create tasks to control conveyor belt pieces
+    for (i = CB_INDEX_BEG; i < 1/*CB_PIECES_NUM*/; i++) {
+        task_create(conveyor_belt, i, CB_TASK_PERIOD, CB_TASK_PERIOD, CB_TASKS_PRIORITY);
     }
 
     // task that manages GUI
@@ -153,27 +164,26 @@ void init(void) {
 //------------------------------------------------------------------------------------- Conveyor belt
 
 /**
- * Function executed by the conveyor belts
- * @param arg task attributes (see struct task_par)
- * @return
+ * Movement function for the conveyor belt pieces
+ * @param arg task attributes (see struct task_par). You shouldn't care about this, it's injected
+ * @return nothing
  */
 void* conveyor_belt(void* arg) {
 	int i; // task index
-	char mes[80];
 
 	i = get_task_index(arg);
-	sprintf(mes, "I'M TASK %d, T = %d", i, get_task_period(arg));
+	printf("I'M TASK %d, T = %d\n", i, get_task_period(arg));
 
 	// Init conveyor belt pieces
-	cb_coordinates[i].x = AL_BEGIN_X + (i != 0 ? i * cb_coordinates[i - 1].x : 0);
-	cb_coordinates[i].y = AL_BEGIN_Y;
+    cb_pieces[i].coord.x = CB_PIECE_H_X + (i != 0 ? i * cb_pieces[i - 1].coord.x : 0);
+    cb_pieces[i].coord.y = CB_PIECE_H_Y;
 
+    set_activation(i);
 	while (!end) {
-		cb_coordinates[i].x += (i != 0 ? cb_coordinates[i - 1].x : AL_BEGIN_X);
-		cb_coordinates[i].y += cb_coordinates[i].y;
+        cb_pieces[i].coord.x += (i != 0 ? cb_pieces[i - 1].coord.x : CB_PIECE_H_X);
 
 		// handling end of conveyor belt => go to begin
-		//todo
+		if(cb_pieces[i].coord.x > AL_MAX_H_X) cb_pieces[i].coord.x = CB_PIECE_H_X;
 
 		wait_for_period(i);
 	}
@@ -184,7 +194,14 @@ void* conveyor_belt(void* arg) {
  * @param index conveyor belt piece index
  */
 void draw_conveyor_belt(int index) {
+    BITMAP* b = cb_pieces[index].bitmap;
+    int x = cb_pieces[index].coord.x;
+    int y = cb_pieces[index].coord.y;
+    printf("draw_conveyor_belt %d: (%d,%d)\n", index, x, y);
 
+    blit(b, screen, 0, 0, x, y, b->w, b->h);
+
+    wait_for_period(index);
 }
 
 //------------------------------------------------------------------------------------- Support logic (global management)
@@ -200,13 +217,14 @@ void* display(void* arg)
 
 	id = get_task_index(arg);
 
+	set_activation(id);
 	while (!end) {
-		//rectfill(screen, XBASE+1, YBASE+1, XWIN-1, YWIN-1, BKG);
-		for (i = CB_INDEX_BEG; i < CB_PIECES; i++) {
-			draw_conveyor_belt(i);
+		rectfill(screen, 0, CB_PIECE_H_Y, XWIN-1, YWIN-1, BKG);
+		for (i = CB_INDEX_BEG; i < 1/*CB_PIECES_NUM*/; i++) {
+            draw_conveyor_belt(i);
 		}
-		if ( has_deadline_miss(i) ) // check for deadline miss
-			; //show_dmiss(id); todo
+		//if ( has_deadline_miss(i) ) // check for deadline miss
+		//	; //show_dmiss(id); todo
 		wait_for_period(id);
 	}
 }
@@ -219,18 +237,16 @@ int main(void) {
 
     init();
 
-    /*do {
+    do {
         scan = 0;
         if (keypressed()) scan = readkey() >> 8;
-        if (scan == KEY_SPACE && nCurTask < NUM_TASKS) {
-            task_create(hello, nCurTask, PER + nCurTask * PINC, PER + nCurTask * PINC, 50);
-			nCurTask++;
+        if (scan == KEY_SPACE && MAX_PIZZAS < NUM_TASKS) {
+
         }
     } while (scan != KEY_ESC);
 
     end = 1;
-    for (i = 0; i <= nCurTask; i++)
-        wait_for_task_end(i);*/
+    // todo set task detatched
 
     readkey();
     allegro_exit();
