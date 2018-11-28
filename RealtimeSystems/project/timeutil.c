@@ -5,6 +5,7 @@
  * Giorgio Butazzo - original author
  */
 
+#include <stdio.h>
 #include "timeutil.h"
 
 void time_copy(struct timespec *td, struct timespec ts)
@@ -31,4 +32,15 @@ int time_cmp(struct timespec t1, struct timespec t2)
 	if (t1.tv_nsec < t2.tv_nsec) return -1;
 
 	return 0;
+}
+
+/**
+ * Tries to precisely show the current time. Needed for tests,...
+ */
+void printf_time() {
+	struct timespec t;
+
+	clock_gettime(CLOCK_MONOTONIC, &t);
+
+	printf("sec %lu\n", t.tv_sec);
 }

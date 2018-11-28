@@ -18,7 +18,7 @@
 // GLOBAL CONSTANTS
 //------------------------------------------------------------- Window params
 
-#define XWIN                        1024 // window x resolution
+#define XWIN                        980 // window x resolution
 #define YWIN                        780  // window y resolution
 #define BKG                         0 // background color black
 
@@ -29,10 +29,10 @@
 
 #define GUI_TASKS_PER               20 /* period of the GUI redrawing task */
 #define USER_TASK_PER               80 /* period of user serving task */
-#define CB_TASK_PERIOD              1000
+#define CB_TASK_PERIOD              1000 /* period of the conveyor belt pieces */
 
 #define MAX_PIZZAS                  10 /* max number of pizzas TODO CONFLITTO CON NUM_TASK?*/
-#define CB_PIECES_NUM               2 /* number of conveyor belt pieces */
+#define CB_PIECES_NUM               14 /* number of conveyor belt pieces */
 #define CB_INDEX_BEG                0 /* index of the first conveyor belt piece */
 #define PIZZA_INDEX_BEG             (CB_INDEX_BEG + CB_PIECES) /* index of the first pizza */
 
@@ -108,8 +108,6 @@ void wait_for_task_end(pthread_t i) {
  * Allegro initialization
  */
 void init(void) {
-	int i;
-
 	allegro_init();
     set_color_depth(32); // set max color depth
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, XWIN, YWIN, 0, 0);
@@ -151,12 +149,10 @@ void init(void) {
 
 
     // create tasks to control conveyor belt pieces
-    for (i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
-        task_create(conveyor_belt, i, CB_TASK_PERIOD, CB_TASK_PERIOD, CB_TASKS_PRIORITY);
-    }
+    task_create(conveyor_belt, 0, CB_TASK_PERIOD, CB_TASK_PERIOD, CB_TASKS_PRIORITY);
 
     // task that manages GUI
-    task_create(display, i + 1, GUI_TASKS_PER, GUI_TASKS_PER, GUI_TASKS_PRIORITY);
+    task_create(display, 1, GUI_TASKS_PER, GUI_TASKS_PER, GUI_TASKS_PRIORITY);
 }
 
 //------------------------------------------------------------------------------------- Conveyor belt
@@ -167,24 +163,29 @@ void init(void) {
  * @return nothing
  */
 void* conveyor_belt(void* arg) {
-	int i; // task index
+	int id, i; // task index
 
-	i = get_task_index(arg);
+    id = get_task_index(arg);
 
-	// Init conveyor belt pieces
-    cb_pieces[i].bitmap  = cb_piece;
-    cb_pieces[i].coord.x = CB_PIECE_H_X + (i != 0 ? cb_pieces[i - 1].coord.x + cb_piece->w : 0);
-    cb_pieces[i].coord.y = CB_PIECE_H_Y;
-    printf("");
+    // Init conveyor belt pieces
+    set_next_activation(id);
 
-    set_activation(i);
-	while (!end) {
-        cb_pieces[i].coord.x += cb_pieces[i].coord.x + DELTA_X;
+    for (i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
+        cb_pieces[i].bitmap = cb_piece;
+        cb_pieces[i].coord.x = (i != 0 ? cb_pieces[i - 1].coord.x + cb_piece->w : CB_PIECE_H_X); // initial pos.: array
+        cb_pieces[i].coord.y = CB_PIECE_H_Y;
+    }
 
-		// handling end of conveyor belt => go to begin
-		if(cb_pieces[i].coord.x > AL_MAX_H_X) cb_pieces[i].coord.x = CB_PIECE_H_X;
+    while (!end) {
+        for(i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
+            cb_pieces[i].coord.x += DELTA_X;
 
-		wait_for_period(i);
+            // handling end of conveyor belt => go to begin
+            if (cb_pieces[i].coord.x > AL_MAX_H_X)
+                cb_pieces[i].coord.x = CB_PIECE_H_X;
+        }
+
+		wait_for_period(id);
 	}
 }
 
@@ -196,11 +197,8 @@ void draw_conveyor_belt(int index) {
     BITMAP* b = cb_pieces[index].bitmap;
     int x = cb_pieces[index].coord.x;
     int y = cb_pieces[index].coord.y;
-    printf("draw_conveyor_belt %d: (%d,%d)\n", index, x, y);
 
     blit(b, screen, 0, 0, x, y, b->w, b->h);
-
-    wait_for_period(index);
 }
 
 //------------------------------------------------------------------------------------- Support logic (global management)
@@ -216,7 +214,7 @@ void* display(void* arg)
 
 	id = get_task_index(arg);
 
-	set_activation(id);
+	set_next_activation(id);
 	while (!end) {
 		rectfill(screen, 0, CB_PIECE_H_Y, XWIN-1, YWIN-1, BKG);
 		for (i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
@@ -231,7 +229,6 @@ void* display(void* arg)
 
 
 int main(void) {
-    int i = 0; // GUI
     char scan;
 
     init();

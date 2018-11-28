@@ -6,6 +6,7 @@
   * Agostino Mascitti - Documentation (Nov 2018)
   */
 
+#include <stdio.h>
 #include "ptask.h"
 
 // -------------------------------------------------------------- Globals
@@ -72,10 +73,10 @@ int get_task_period(void* arg) {
 }
 
 /**
- * Sets next period = deadline
+ * Sets next activation time. Here absolute deadlines are considered
  * @param i task index to be activated
  */
-void set_activation(int i)
+void set_next_activation(int i)
 {
 	struct timespec t;
 

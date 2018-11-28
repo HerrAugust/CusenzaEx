@@ -10,7 +10,10 @@ In particular, each string is managed by a task (implemeneted as extension of pt
 
 How to use Linux SCHED_RR to manage strings that must be shown with different priorities. It's important how the task is suspended until the next period.
 
+## Dependencies
+sudo apt install liballegro4-dev
+
 ## How to use it
 
 make
-./hellos
+make run
