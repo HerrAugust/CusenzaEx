@@ -18,7 +18,7 @@
 // GLOBAL CONSTANTS
 //------------------------------------------------------------- Window params
 
-#define XWIN                        980 // window x resolution
+#define XWIN                        1084  // window x resolution
 #define YWIN                        780  // window y resolution
 #define BKG                         0 // background color black
 
@@ -32,8 +32,7 @@
 #define CB_TASK_PERIOD              1000 /* period of the conveyor belt pieces */
 
 #define MAX_PIZZAS                  10 /* max number of pizzas TODO CONFLITTO CON NUM_TASK?*/
-#define CB_PIECES_NUM               14 /* number of conveyor belt pieces */
-#define CB_INDEX_BEG                0 /* index of the first conveyor belt piece */
+#define CB_PIECES_NUM               16 /* number of conveyor belt pieces */
 #define PIZZA_INDEX_BEG             (CB_INDEX_BEG + CB_PIECES) /* index of the first pizza */
 
 //------------------------------------------------------------- Icons params
@@ -170,14 +169,14 @@ void* conveyor_belt(void* arg) {
     // Init conveyor belt pieces
     set_next_activation(id);
 
-    for (i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
+    for (i = 0; i < CB_PIECES_NUM; i++) {
         cb_pieces[i].bitmap = cb_piece;
         cb_pieces[i].coord.x = (i != 0 ? cb_pieces[i - 1].coord.x + cb_piece->w : CB_PIECE_H_X); // initial pos.: array
         cb_pieces[i].coord.y = CB_PIECE_H_Y;
     }
 
     while (!end) {
-        for(i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
+        for(i = 0; i < CB_PIECES_NUM; i++) {
             cb_pieces[i].coord.x += DELTA_X;
 
             // handling end of conveyor belt => go to begin
@@ -217,7 +216,7 @@ void* display(void* arg)
 	set_next_activation(id);
 	while (!end) {
 		rectfill(screen, 0, CB_PIECE_H_Y, XWIN-1, YWIN-1, BKG);
-		for (i = CB_INDEX_BEG; i < CB_PIECES_NUM; i++) {
+		for (i = 0; i < CB_PIECES_NUM; i++) {
             draw_conveyor_belt(i);
 		}
 		//if ( has_deadline_miss(i) ) // check for deadline miss
