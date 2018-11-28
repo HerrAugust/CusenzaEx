@@ -19,4 +19,5 @@ clean:
 rebuild: clean all
 
 .PHONY: run
-run: sudo ./$(BIN)
+run: 
+	sudo ./$(BIN)
