@@ -353,10 +353,7 @@ void draw_pizza(int index) {
     if (strstr(pizza.ingr_already, "h") != NULL)
         blit(ingr_ham, screen, 0, 0, x + 3, y + 3, ingr_ham->w, ingr_ham->h);
     if (strstr(pizza.ingr_already, "o") != NULL)
-        blit(ingr_olive, screen, 0, 0, x + 1
-
-
-        3, y + 13, ingr_olive->w, ingr_olive->h);
+        blit(ingr_olive, screen, 0, 0, x + 3, y + 13, ingr_olive->w, ingr_olive->h);
     if (strstr(pizza.ingr_already, "a") != NULL)
         blit(ingr_artichoke, screen, 0, 0, x + 3, y + 3, ingr_artichoke->w, ingr_artichoke->h);
 }
