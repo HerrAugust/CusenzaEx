@@ -1,3 +1,7 @@
+/**
+  * This code turns white into transparent in Allegro 4 .bmp files.
+  */
+
 #include <allegro.h>
 #include <stdio.h>
 
@@ -14,24 +18,38 @@ int main(void) {
 	int x, y, c;
 	int pink, white;
 
-	white = makecol(255, 255, 255);
-	pink = makecol(255, 0, 255);
+	allegro_init();
+	set_color_depth(32);
+	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
+	clear_to_color(screen, makecol(0,0,0));
 
+	white = makecol(255, 255, 255);
+	pink  = makecol(255, 0, 255);
+
+	char str[50] = "", where[50] = "";	
 	for(int i = 0; i < sizeof(imgs); i++) {
-		char str[50] = "";
 		strcpy(str, imgs[i]);
 
-printf("%s\n", str);
-
-		fish = load_bitmap("icons/dough.bmp", NULL);printf("sa\n");
+		printf("Processing %s\n", str);
+		fish = load_bitmap(str, NULL);
 		fishp = create_bitmap(fish->w, fish->h);
-		for (x=0; x<fish->w; x++)
+		for (x=0; x<fish->w; x++) {
 			for (y=0; y<fish->h; y++) {
 				c = getpixel(fish, x, y);
-				if (c == white) c = pink;
-					putpixel(fishp, x, y, c);
+				if (c == white) {
+					c = pink;
+					printf("Found white at %d %d\n",x,y);
+				}
+				printf("Writing color %d\n",c);
+				putpixel(fishp, x, y, c);
 			}
+		}
 		get_palette(pal);
-		save_bitmap(str, fishp, pal);
+		strcpy(where, "new/");
+		strcat(where, str);
+		save_bitmap(where, fishp, pal);
+		
 	}
+
+	return 0;
 }
