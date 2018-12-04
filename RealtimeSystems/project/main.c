@@ -31,17 +31,19 @@
 #define PIZZA_TASK_PRIORITY         81 /* pizzas tasks priority */
 #define INGR_TASK_PRIORITY          80 /* ingredients task priority */
 #define PM_TASK_PRIORITY            80 /* Pizzas manager priority */
+#define MON_TASK_PRIORITY           80 /* Monitor window task priority */
 
 #define GUI_TASKS_PER               20 /* period of the GUI redrawing task */
 #define USER_TASK_PER               80 /* period of user serving task */
 #define CB_TASK_PERIOD              1000 /* period of the conveyor belt pieces */
-#define PIZZA_TASK_PER              CB_TASK_PERIOD
-#define INGR_TASK_PER               PIZZA_TASK_PER
+#define PIZZA_TASK_PER              CB_TASK_PERIOD /* period between pizza redrawings */
+#define INGR_TASK_PER               PIZZA_TASK_PER /* ingredients task period */
 #define PM_TASK_PER                 100 /* period of pizzas manager task */
+#define MON_TASK_PER                PIZZA_TASK_PER /* monitor window task period */
 
 #define MAX_PIZZAS                  10 /* max number of pizzas TODO CONFLITTO CON NUM_TASK?*/
 #define CB_PIECES_NUM               17 /* number of conveyor belt pieces */
-#define PIZZA_INDEX_BEG             5 /* index of the first pizza task */
+#define PIZZA_INDEX_BEG             6 /* index of the first pizza task */
 
 #define QUEUE_LENGTH                5 /* Pizzas queue length */
 
@@ -78,6 +80,13 @@
 #define ARTICHOKE_LINE_X            (ARTICHOKE_X + 64) / 2
 #define CAMERA_LINE_X               (CAMERA_X + 64) / 2
 
+//------------------------------------------------------------- Monitor window
+
+#define MONITOR_X                   150
+#define MONITOR_Y                   600
+#define MONITOR_WIDTH               300
+#define MONITOR_HEIGHT              300
+
 //------------------------------------------------------------- Functions
 
 void* display(void*);
@@ -86,6 +95,7 @@ void draw_conveyor_belt(int i);
 void* user_inputs(void*);
 void* ingredient(void*);
 void* new_orders(void* arg) ;
+void* monitor(void* arg);
 
 /**
  * Task to control a pizza motion
@@ -244,6 +254,8 @@ void init(void) {
     task_create(ingredient, nCurTasks++, INGR_TASK_PER, INGR_TASK_PER, INGR_TASK_PRIORITY);
 
     task_create(new_orders, nCurTasks++, PM_TASK_PER, PM_TASK_PER, PM_TASK_PRIORITY);
+
+    task_create(monitor, nCurTasks++, MON_TASK_PER, MON_TASK_PER, MON_TASK_PRIORITY);
 }
 
 //------------------------------------------------------------------------------------- Conveyor belt
@@ -314,7 +326,7 @@ void* ingredient(void* arg) {
     while (!end) {
         for (i = PIZZA_INDEX_BEG; i < nCurTasks + nOrderedPizzas; i++) {
             pizza = &pizzas[i];
-            printf("Ingredient for id %d x %lu center %ld VS %d\n", i, pizza->coord.x, (pizza->coord.x + pizza_dough->w) / 2, TOMATO_LINE_X);
+            //printf("Ingredient for id %d x %lu center %ld VS %d\n", i, pizza->coord.x, (pizza->coord.x + pizza_dough->w) / 2, TOMATO_LINE_X);
             switch ((int) (pizza->coord.x + pizza_dough->w) / 2) {
                 case TOMATO_LINE_X:
                     printf("%s\n", pizza->ingredients);
@@ -375,10 +387,10 @@ void* new_orders(void* arg) {
 
     while (!end) {
         if (index_last_queue > -1) { // if there are pizzas in queue
-            printf("ilq %d; last pizza id %d. cent = %lu >= %d?\n", index_last_queue,lastPizzaID, (pizzas[lastPizzaID].coord.x + pizza_dough->w) / 2, CHEESE_LINE_X);
+            //printf("ilq %d; last pizza id %d. cent = %lu >= %d?\n", index_last_queue,lastPizzaID, (pizzas[lastPizzaID].coord.x + pizza_dough->w) / 2, CHEESE_LINE_X);
             if (nOrderedPizzas == 0 || (pizzas[lastPizzaID].coord.x + pizza_dough->w) / 2 >= CHEESE_LINE_X) {
                 // if there is no pizza in production or the last one is at cheese at lease, make it immediately
-                printf("Putting new pizza on the assembly line ");
+                printf("Putting new pizza on the assembly line");
                 sem_wait(&sem_queue);
                     new_pizza_id = PIZZA_INDEX_BEG + nOrderedPizzas;
                     strncpy(ingredients, ordered_pizzas_queue[index_last_queue], INGREDIENTS_NUM);
@@ -515,8 +527,8 @@ void* user_inputs(void* arg) {
                 if (curIngredient == 0) // then user has only pressed ENTER => generate random ingredients
                     generate_random_pizza(ingredients);
 
+                printf("Ordering pizza with: %s...\n", ingredients);
                 manageOrders(ingredients);
-                printf("Ordered pizza: %s\n", ingredients);
 
                 curIngredient = 0;
                 strncpy(ingredients, "", INGREDIENTS_NUM);
@@ -532,7 +544,24 @@ void* user_inputs(void* arg) {
     } while (scan != KEY_ESC);
 }
 
+//------------------------------------------------------------------------------------- Monitor window (quality checks)
+
+void* monitor(void* arg) {
+    int id = get_task_index(arg);
+
+    set_next_activation(id);
+
+    while (!end) {
+        // zoom on img. todo costruire img pizza con ingredienti sopra, zoomarla con stretch e poi spostarla. se l'img è al centro del rettangolo, mostrare "v" else "x"
+        // todo considerare ultima pizza soltanto. una volta passato o no il test la pizza può essere distrutta
+        stretch_sprite(screen, image, SCREEN_W / 2 - width / 2, SCREEN_H / 2 - height / 2, width, height);
+
+        wait_for_period(id);
+    }
+}
+
 //------------------------------------------------------------------------------------- Support logic (global management)
+
 
 /**
  * Task refreshing the GUI
