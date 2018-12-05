@@ -12,5 +12,5 @@ How to use Linux SCHED_RR to manage strings that must be shown with different pr
 
 ## How to use it
 
-make
+make clean && make && make run
 ./hellos

@@ -12,8 +12,8 @@ How to use Linux SCHED_RR to manage strings that must be shown with different pr
 
 ## Dependencies
 sudo apt install liballegro4-dev
+Linux 4.15
 
 ## How to use it
 
-make
-make run
+make clean && make && make run
