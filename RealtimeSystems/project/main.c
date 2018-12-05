@@ -72,13 +72,13 @@
 #define PIZZA_H_Y                   CB_PIECE_H_Y + 30 /* init pizza y coordinate */
 #define INGREDIENTS_NUM             6 /* Number of ingredients */
 
-#define TOMATO_LINE_X               (TOMATO_X + 64) / 2
-#define CHEESE_LINE_X               (CHEESE_X + 64) / 2
-#define MUSHROOM_LINE_X             (MUSHROOM_X + 64) / 2
-#define HAM_LINE_X                  (HAM_X + 64) / 2
-#define OLIVE_LINE_X                (OLIVE_X + 64) / 2
-#define ARTICHOKE_LINE_X            (ARTICHOKE_X + 64) / 2
-#define CAMERA_LINE_X               (CAMERA_X + 64) / 2
+#define TOMATO_LINE_X               TOMATO_X + 64 / 2
+#define CHEESE_LINE_X               CHEESE_X + 64 / 2
+#define MUSHROOM_LINE_X             MUSHROOM_X + 64 / 2
+#define HAM_LINE_X                  HAM_X + 64 / 2
+#define OLIVE_LINE_X                OLIVE_X + 64 / 2
+#define ARTICHOKE_LINE_X            ARTICHOKE_X + 64 / 2
+#define CAMERA_LINE_X               CAMERA_X + 64 / 2
 
 //------------------------------------------------------------- Monitor window
 
@@ -327,6 +327,7 @@ void* ingredient(void* arg) {
     while (!end) {
         for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + nOrderedPizzas; i++) {
             pizza = &pizzas[i];
+            printf("%d vs %d\n", (int) pizza->coord.x + (pizza_dough->w / 2), TOMATO_LINE_X);
             switch ((int) pizza->coord.x + pizza_dough->w / 2) {
                 case TOMATO_LINE_X:
                     if (strstr(pizza->ingredients, "t") != NULL) {
@@ -626,6 +627,17 @@ void* monitor(void* arg) {
 
 //------------------------------------------------------------------------------------- Support logic (global management)
 
+void draw_lines() {
+    line(screen, TOMATO_LINE_X, CB_PIECE_H_Y, TOMATO_LINE_X, CB_PIECE_H_Y + 130, 255);
+    line(screen, CHEESE_LINE_X, CB_PIECE_H_Y, CHEESE_LINE_X, CB_PIECE_H_Y + 130, 255);
+    line(screen, MUSHROOM_LINE_X, CB_PIECE_H_Y, MUSHROOM_LINE_X, CB_PIECE_H_Y + 130, 255);
+    line(screen, HAM_LINE_X, CB_PIECE_H_Y, HAM_LINE_X, CB_PIECE_H_Y + 130, 255);
+    line(screen, OLIVE_LINE_X, CB_PIECE_H_Y, OLIVE_LINE_X, CB_PIECE_H_Y + 130, 255);
+    line(screen, ARTICHOKE_LINE_X, CB_PIECE_H_Y, ARTICHOKE_LINE_X, CB_PIECE_H_Y + 130, 255);
+    line(screen, OVEN_X + 32, CB_PIECE_H_Y, OVEN_X + 32, CB_PIECE_H_Y + 130, 255);
+    line(screen, CAMERA_LINE_X, CB_PIECE_H_Y, CAMERA_LINE_X, CB_PIECE_H_Y + 130, 255);
+}
+
 
 /**
  * Task refreshing the GUI
@@ -648,6 +660,8 @@ void* display(void* arg) {
 		    draw_pizza(i);
 
 		draw_monitor();
+
+		draw_lines();
 
 		//if ( has_deadline_miss(i) ) // check for deadline miss
 		//	; //show_dmiss(id); todo
