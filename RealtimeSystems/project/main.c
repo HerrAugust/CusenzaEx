@@ -324,41 +324,69 @@ void* ingredient(void* arg) {
     // Init conveyor belt pieces
     id = get_task_index(arg);
     set_next_activation(id);
-
     while (!end) {
-        for (i = PIZZA_INDEX_BEG; i < nCurTasks + nOrderedPizzas; i++) {
+        for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + nOrderedPizzas; i++) {
             pizza = &pizzas[i];
-            switch ((int) (pizza->coord.x + pizza_dough->w) / 2) {
+            switch ((int) pizza->coord.x + pizza_dough->w / 2) {
                 case TOMATO_LINE_X:
-                    printf("%s\n", pizza->ingredients);
                     if (strstr(pizza->ingredients, "t") != NULL) {
+                        if (rand() % 2) {
+                            printf("Tomato machine error: no such ingredient for %d\n", i);
+                            break;
+                        }
                         pizza->ingr_already[0] = 't';
-                        printf("pizza now has %s\n", pizza->ingr_already);
+                        draw_sprite(pizza->pizza_with_ingr, ingr_tomato, 6, 8);
                     }
                     break;
                 case CHEESE_LINE_X:
                     if (strstr(pizza->ingredients, "c") != NULL) {
+                        if (rand() % 2) {
+                            printf("Cheese machine error: no such ingredient for %d\n",i);
+                            break;
+                        }
                         pizza->ingr_already[1] = 'c';
+                        draw_sprite(pizza->pizza_with_ingr, ingr_cheese, 6, 10);
+                        printf("pizza now has %s\n", pizza->ingr_already);
                     }
                     break;
                 case MUSHROOM_LINE_X:
                     if (strstr(pizza->ingredients, "m") != NULL) {
+                        if (rand() % 2) {
+                            printf("Mushroom machine error: no such ingredient\n");
+                            break;
+                        }
                         pizza->ingr_already[2] = 'm';
+                        draw_sprite(pizza->pizza_with_ingr, ingr_mushroom, 25, 25);
                     }
                     break;
                 case HAM_LINE_X:
                     if (strstr(pizza->ingredients, "h") != NULL) {
+                        if (rand() % 2) {
+                            printf("Ham machine error: no such ingredient\n");
+                            break;
+                        }
                         pizza->ingr_already[3] = 'h';
+                        draw_sprite(pizza->pizza_with_ingr, ingr_ham, 25, 13);
                     }
                     break;
                 case OLIVE_LINE_X:
                     if (strstr(pizza->ingredients, "o") != NULL) {
+                        if (rand() % 2) {
+                            printf("Olive machine error: no such ingredient\n");
+                            break;
+                        }
                         pizza->ingr_already[4] = 'o';
+                        draw_sprite(pizza->pizza_with_ingr, ingr_olive, 35, 36);
                     }
                     break;
                 case ARTICHOKE_LINE_X:
                     if (strstr(pizza->ingredients, "a") != NULL) {
+                        if (rand() % 2) {
+                            printf("Artichoke machine error: no such ingredient\n");
+                            break;
+                        }
                         pizza->ingr_already[5] = 'a';
+                        draw_sprite(pizza->pizza_with_ingr, ingr_artichoke, 7, 23);
                     }
                     break;
                 default: break;
@@ -366,7 +394,7 @@ void* ingredient(void* arg) {
         }
 
         wait_for_period(id);
-    }
+    } // end while
 }
 
 //------------------------------------------------------------------------------------- Pizzas tasks
@@ -379,20 +407,6 @@ void draw_pizza(int index) {
     struct pizza pizza = pizzas[index];
     float x       = pizza.coord.x;
     float y       = pizza.coord.y;
-
-    // if pizza needs tomato, it's not already on it and dough has already reached tomato machine
-    if (strstr(pizza.ingredients, "t") != NULL && strstr(pizza.ingr_already, "t") == NULL && pizza.coord.x >= TOMATO_LINE_X)
-        draw_sprite(pizza.pizza_with_ingr, ingr_tomato, 6, 8);
-    if (strstr(pizza.ingredients, "c") != NULL && strstr(pizza.ingr_already, "c") == NULL && pizza.coord.x >= CHEESE_LINE_X)
-        draw_sprite(pizza.pizza_with_ingr, ingr_cheese, 6, 10);
-    if (strstr(pizza.ingredients, "m") != NULL && strstr(pizza.ingr_already, "m") == NULL && pizza.coord.x >= MUSHROOM_X)
-        draw_sprite(pizza.pizza_with_ingr, ingr_mushroom, 25, 25);
-    if (strstr(pizza.ingredients, "h") != NULL && strstr(pizza.ingr_already, "h") == NULL && pizza.coord.x >= HAM_LINE_X)
-        draw_sprite(pizza.pizza_with_ingr, ingr_ham, 25, 13);
-    if (strstr(pizza.ingredients, "o") != NULL && strstr(pizza.ingr_already, "o") == NULL && pizza.coord.x >= OLIVE_LINE_X)
-        draw_sprite(pizza.pizza_with_ingr, ingr_olive, 35, 36);
-    if (strstr(pizza.ingredients, "a") != NULL && strstr(pizza.ingr_already, "a") == NULL && pizza.coord.x >= ARTICHOKE_X)
-        draw_sprite(pizza.pizza_with_ingr, ingr_artichoke, 7, 23);
 
     draw_sprite(screen, pizza.pizza_with_ingr, x, y);
 }
@@ -439,7 +453,6 @@ void* new_orders(void* arg) {
 
     while (!end) {
         if (index_last_queue > -1) { // if there are pizzas in queue
-            //printf("ilq %d; last pizza id %d. cent = %lu >= %d?\n", index_last_queue,lastPizzaID, (pizzas[lastPizzaID].coord.x + pizza_dough->w) / 2, CHEESE_LINE_X);
             if (nOrderedPizzas == 0 || (pizzas[lastPizzaID].coord.x + pizza_dough->w) / 2 >= CHEESE_LINE_X) {
                 // if there is no pizza in production or the last one is at cheese at lease, make it immediately
                 printf("Putting new pizza on the assembly line");
