@@ -26,6 +26,7 @@ void    set_next_activation(int i);
 void    wait_for_period(int i);
 int     has_deadline_miss(int i);
 int     get_deadline_miss(int i);
+void    destroy_task(int id);
 
 // Application-dependent functions
 int     getIngredient(int i);

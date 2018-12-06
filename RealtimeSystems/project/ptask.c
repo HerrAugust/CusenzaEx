@@ -127,6 +127,13 @@ int get_deadline_miss(int i)
     return tp[i].dmiss;
 }
 
+/**
+ * Deallocate resources of task with ID id
+ */
+void destroy_task(int id) {
+	pthread_join(tid[id], NULL);
+}
+
 
 //------------------------------------------------------------ App-dependent functions
 

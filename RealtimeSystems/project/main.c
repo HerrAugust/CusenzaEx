@@ -34,11 +34,11 @@
 #define MON_TASK_PRIORITY           80 /* Monitor window task priority */
 
 #define GUI_TASKS_PER               25 /* period of the GUI redrawing task */
-#define USER_TASK_PER               80 /* period of user serving task */
+#define USER_TASK_PER               100 /* period of user serving task */
 #define CB_TASK_PERIOD              100 /* period of the conveyor belt pieces */
 #define PIZZA_TASK_PER              80 /* period between pizza redrawings */
-#define INGR_TASK_PER               90 /* ingredients task period */
-#define PM_TASK_PER                 200 /* period of pizzas manager task */
+#define INGR_TASK_PER               80 /* ingredients task period */
+#define PM_TASK_PER                 300 /* period of pizzas manager task */
 #define MON_TASK_PER                PIZZA_TASK_PER /* monitor window task period */
 
 #define MAX_PIZZAS                  10 /* max number of pizzas TODO CONFLITTO CON NUM_TASK?*/
@@ -48,9 +48,9 @@
 #define QUEUE_LENGTH                5 /* Pizzas queue length */
 
 #define TSCALE                      9.0 /* time scale factor */
-#define INITIAL_SPEED               28 /* Initial speed*/
+#define INITIAL_SPEED               10 /* Initial speed*/
 #define MIN_SPEED                   INITIAL_SPEED /* Min supported speed */
-#define MAX_SPEED                   28 /* Max supported speed */
+#define MAX_SPEED                   30 /* Max supported speed */
 
 //------------------------------------------------------------- Icons params
 
@@ -201,7 +201,7 @@ void wait_for_tasks_end() {
     int i, totalTasksNum = nCurTasks + nPizzasOnCB;
 
     for (i = 0; i < totalTasksNum; i++)
-        pthread_join(i, NULL);
+        destroy_task(i);
 }
 
 /**
@@ -296,7 +296,7 @@ void* conveyor_belt(void* arg) {
                 initial_piece_index = i;
             }
         }
-
+        has_deadline_miss(id);
 		wait_for_period(id);
 	}
 }
@@ -336,13 +336,13 @@ void manageIngr(const int xb, const int xe, const char* ingr_name, int ingr_id, 
 
             // don't put ingredient - machine error (thus quality check)...
             if (rand() % 2) {
-                printf("%s machine error: no such ingredient for %d\n", ingr_name, i + PIZZA_INDEX_BEG);
+                printf("%s - pump skips it for %d\n", ingr_name, i + PIZZA_INDEX_BEG);
                 break;
             }
 
             // ...or put it
             pizza->ingr_already[ingr_id] = ingr_name[0];
-            printf("pizza %d now has %s (ingr_id %d)\n", i + PIZZA_INDEX_BEG, pizza->ingr_already, ingr_id);
+            printf("%s - pizza %d now has %s (ingr_id %d)\n", ingr_name, i + PIZZA_INDEX_BEG, pizza->ingr_already, ingr_id);
             draw_sprite(pizza->pizza_with_ingr, ingr_sprite, ingr_x, ingr_y);
         }
     }
@@ -383,7 +383,7 @@ void* ingredient(void* arg) {
                 break;
             default: break;
         }
-
+        has_deadline_miss(id);
         wait_for_period(id);
     } // end while
 }
@@ -425,8 +425,10 @@ void* pizza_motion(void* arg) {
             nPizzasOnCB--; // # pizzas on conveyor belt -= 1
             destroy_bitmap(pizza->pizza_with_ingr);
             printf("Destroyed pizza ID %d\n", id);
+            destroy_task(id);
             break;
         }
+        has_deadline_miss(id);
         wait_for_period(id);
     }
 }
@@ -485,6 +487,7 @@ void* new_orders(void* arg) {
 
         }
 
+        has_deadline_miss(id);
         wait_for_period(id);
     }
 }
@@ -572,6 +575,7 @@ void* user_inputs(void* arg) {
             default:
                 break;
         }
+        has_deadline_miss(id);
         wait_for_period(id);
     } while (scan != KEY_ESC);
 }
@@ -616,7 +620,7 @@ void* monitor(void* arg) {
             for (i = 0; i < strlen(pizza->ingredients); i++)
                 if (!str_contains(pizza->ingr_already, pizza->ingredients[i])) {
                     pizza->ugly = 1;
-                    printf("Pizza ID %d doesn't contain %c (%s VS %s)\n", pizza_id, pizza->ingredients[i], pizza->ingredients, pizza->ingr_already);
+                    printf("Monitor - pizza ID %d doesn't contain %c (%s VS %s)\n", pizza_id, pizza->ingredients[i], pizza->ingredients, pizza->ingr_already);
                     break;
                 }
 
@@ -625,11 +629,12 @@ void* monitor(void* arg) {
                 textout_ex(monitor_bmp, font, "x", 0, 0, 0, 255);
             else {
                 textout_ex(monitor_bmp, font, "v", 0, 0, 0, 255);
-                printf("Pizza ID %d contains all its ingredients: %s VS %s\n", pizza_id, pizza->ingredients, pizza->ingr_already);
+                printf("Monitor - pizza ID %d contains all its ingredients: %s VS %s\n", pizza_id, pizza->ingredients, pizza->ingr_already);
             }
         }
         pizza = NULL;
 
+        has_deadline_miss(id);
         wait_for_period(id);
     }
 }
@@ -663,6 +668,7 @@ void draw_instructions() {
     show_string("  h - ham", 10, 70, 255);
     show_string("  o - olives", 10, 85, 255);
     show_string("  a - artichokes", 10, 100, 255);
+    show_string("  up/down - pizzas speed", 10, 115, 255);
 }
 
 void draw_ingr_icons() {
@@ -711,6 +717,7 @@ void* display(void* arg) {
 		draw_lines();
 		draw_ingr_icons();
 
+		has_deadline_miss(id);
 		wait_for_period(id);
 	}
 }
