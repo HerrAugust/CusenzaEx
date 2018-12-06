@@ -1,1 +1,0 @@
-/usr/bin/gcc  -lrt -lpthread $(allegro-config --cflags --libs) -g   CMakeFiles/assembly_chain.dir/main.c.o CMakeFiles/assembly_chain.dir/ptask.c.o CMakeFiles/assembly_chain.dir/timeutil.c.o  -o assembly_chain 
