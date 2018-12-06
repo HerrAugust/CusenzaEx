@@ -117,3 +117,33 @@ int has_deadline_miss(int i)
 	return 0;
 }
 
+/**
+ * Number of deadline misses
+ * @param i task index
+ * @return Number of deadline misses
+ */
+int get_deadline_miss(int i)
+{
+    return tp[i].dmiss;
+}
+
+
+//------------------------------------------------------------ App-dependent functions
+
+/**
+ * Returns the ingredient ID
+ * @param i task ID
+ * @return ingredient ID
+ */
+int     getIngredient(int i) {
+    return tp[i].ingredient_id;
+}
+
+/**
+ * Sets ingredient ID
+ * @param i task ID
+ * @param ingrID ingredient ID
+ */
+void    setIngredient(int i, int ingrID) {
+    tp[i].ingredient_id = ingrID;
+}

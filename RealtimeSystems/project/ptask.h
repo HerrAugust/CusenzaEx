@@ -15,6 +15,8 @@ struct task_par {
     int dmiss; /* no. of misses */
     struct timespec at; /* next activ. time */
     struct timespec dl; /* abs. deadline */
+
+    int ingredient_id; /* app-dependent field: ingredient id */
 };
 
 int     task_create(void* (*task) (void*), int i, int period, int drel, int prio);
@@ -23,5 +25,10 @@ int     get_task_period(void* arg);
 void    set_next_activation(int i);
 void    wait_for_period(int i);
 int     has_deadline_miss(int i);
+int     get_deadline_miss(int i);
+
+// Application-dependent functions
+int     getIngredient(int i);
+void    setIngredient(int i, int id);
 
 #endif // PTASK_H

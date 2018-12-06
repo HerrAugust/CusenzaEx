@@ -1,5 +1,5 @@
 CC 		= gcc
-CFLAGS 	= `allegro-config --cflags --libs` # sudo apt install liballegro4
+CFLAGS 	= -g `allegro-config --cflags --libs` # sudo apt install liballegro4
 LDLIBS 	= -lpthread -lrt
 
 SRC 	= main.c ptask.c timeutil.c
