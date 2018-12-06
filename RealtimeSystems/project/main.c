@@ -33,11 +33,11 @@
 #define PM_TASK_PRIORITY            80 /* Pizzas manager priority */
 #define MON_TASK_PRIORITY           80 /* Monitor window task priority */
 
-#define GUI_TASKS_PER               20 /* period of the GUI redrawing task */
+#define GUI_TASKS_PER               25 /* period of the GUI redrawing task */
 #define USER_TASK_PER               80 /* period of user serving task */
 #define CB_TASK_PERIOD              100 /* period of the conveyor belt pieces */
 #define PIZZA_TASK_PER              80 /* period between pizza redrawings */
-#define INGR_TASK_PER               100 /* ingredients task period */
+#define INGR_TASK_PER               90 /* ingredients task period */
 #define PM_TASK_PER                 200 /* period of pizzas manager task */
 #define MON_TASK_PER                PIZZA_TASK_PER /* monitor window task period */
 
@@ -98,7 +98,8 @@
 
 void* display(void*);
 void* conveyor_belt(void*);
-void draw_conveyor_belt(int i);
+void  draw_conveyor_belt(int i);
+void  draw_ingr_icons();
 void* user_inputs(void*);
 void* ingredient(void*);
 void* new_orders(void* arg) ;
@@ -109,10 +110,11 @@ void* pizza_motion(void* arg) ;
 
 int end = 0;                            // End of program flag
 
-int nCurTasks = 0, nOrderedPizzas = 0;  // Counters of currently active tasks and pizzas on the assembly line
+int nCurTasks = 0, nPizzasOnCB = 0;  // Counters of currently active tasks and pizzas on the assembly line
 int lastPizzaID = PIZZA_INDEX_BEG;      // Last pizza ID
 float speed = INITIAL_SPEED;            // Pizzas and conveyor belt pieces speed
 BITMAP* pizza_dough, *cb_piece, *ingr_tomato, *ingr_cheese, *ingr_mushroom, *ingr_ham, *ingr_olive, *ingr_artichoke, *monitor_bmp;
+BITMAP *videocam, *oven, *tomato, *cheese, *mushroom, *ham, *olive, *artichoke; // never moving objects
 
 char ordered_pizzas_queue[QUEUE_LENGTH][INGREDIENTS_NUM];
 int  index_last_queue = -1;
@@ -193,11 +195,10 @@ void generate_random_pizza(char *ingredients) {
 }
 
 /**
- * Wait for all tasks end
+ * Wait for all tasks end (destroy tasks)
  */
 void wait_for_tasks_end() {
-    int i;
-    int totalTasksNum = nCurTasks + nOrderedPizzas;
+    int i, totalTasksNum = nCurTasks + nPizzasOnCB;
 
     for (i = 0; i < totalTasksNum; i++)
         pthread_join(i, NULL);
@@ -226,17 +227,7 @@ void init(void) {
     for (i = 0; i < MAX_PIZZAS; i++)
         pizzas[i].shipped = 1;
 
-	// instructions on GUI
-	show_string("Press ENTER to order a random pizza or some letters + ENTER for a specific one:", 10, 10, 14);
-	show_string("  t - tomato", 10, 25, 14);
-	show_string("  c - cheese", 10, 40, 14);
-	show_string("  m - mushrooms", 10, 55, 14);
-	show_string("  h - ham", 10, 70, 14);
-	show_string("  o - olives", 10, 85, 14);
-	show_string("  a - artichokes", 10, 100, 14);
-
 	// load icons
-	BITMAP *videocam, *oven, *tomato, *cheese, *mushroom, *ham, *olive, *artichoke; // never moving objects
     videocam = load_bitmap("icons/videocam.bmp", NULL);
     pizza_dough = load_bitmap("icons/dough.bmp", NULL);
     oven = load_bitmap("icons/oven.bmp", NULL);
@@ -258,32 +249,16 @@ void init(void) {
     assert(ingr_tomato != NULL); assert(ingr_cheese != NULL); assert(ingr_ham != NULL); assert(ingr_mushroom != NULL);
     assert(ingr_olive != NULL); assert(ingr_artichoke != NULL);
 
-    draw_sprite(screen, videocam, CAMERA_X, ICONS_Y);
-    draw_sprite(screen, oven, OVEN_X, ICONS_Y);
-    draw_sprite(screen, artichoke, ARTICHOKE_X, ICONS_Y);
-    draw_sprite(screen, olive, OLIVE_X, ICONS_Y);
-    draw_sprite(screen, ham, HAM_X, ICONS_Y);
-    draw_sprite(screen, mushroom, MUSHROOM_X, ICONS_Y);
-    draw_sprite(screen, cheese, CHEESE_X, ICONS_Y);
-    draw_sprite(screen, tomato, TOMATO_X, ICONS_Y);
-
-
-    // create tasks to control conveyor belt pieces
+    // create tasks to control various parts of the program
     task_create(conveyor_belt, nCurTasks++, CB_TASK_PERIOD, CB_TASK_PERIOD, CB_TASKS_PRIORITY);
-
-    // task that manages GUI
     task_create(display, nCurTasks++, GUI_TASKS_PER, GUI_TASKS_PER, GUI_TASKS_PRIORITY);
-
     task_create(user_inputs, nCurTasks++, USER_TASK_PER, USER_TASK_PER, USER_TASK_PRIORITY);
-
     for (i = 0; i < INGREDIENTS_NUM; i++) {
         nCurTasks++;
         setIngredient(nCurTasks, i);
         task_create(ingredient, nCurTasks, INGR_TASK_PER, INGR_TASK_PER, INGR_TASK_PRIORITY);
     }
-
     task_create(new_orders, nCurTasks++, PM_TASK_PER, PM_TASK_PER, PM_TASK_PRIORITY);
-
     task_create(monitor, nCurTasks++, MON_TASK_PER, MON_TASK_PER, MON_TASK_PRIORITY);
 }
 
@@ -354,20 +329,20 @@ void manageIngr(const int xb, const int xe, const char* ingr_name, int ingr_id, 
     int i;
     struct pizza *pizza;
 
-    for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + nOrderedPizzas; i++) {
+    for (i = 0; i < nPizzasOnCB; i++) {
         pizza = &pizzas[i];
         if (pizza->coord.x >= xb && pizza->coord.x <= xe && str_contains(pizza->ingredients, ingr_name[0]) && !pizza->ingr_done[ingr_id]) {
             pizza->ingr_done[ingr_id] = 1;
 
             // don't put ingredient - machine error (thus quality check)...
             if (rand() % 2) {
-                printf("%s machine error: no such ingredient for %d\n", ingr_name, i);
+                printf("%s machine error: no such ingredient for %d\n", ingr_name, i + PIZZA_INDEX_BEG);
                 break;
             }
 
             // ...or put it
             pizza->ingr_already[ingr_id] = ingr_name[0];
-            printf("pizza %d now has %s (ingr_id %d)\n", i, pizza->ingr_already, ingr_id);
+            printf("pizza %d now has %s (ingr_id %d)\n", i + PIZZA_INDEX_BEG, pizza->ingr_already, ingr_id);
             draw_sprite(pizza->pizza_with_ingr, ingr_sprite, ingr_x, ingr_y);
         }
     }
@@ -420,7 +395,6 @@ void* ingredient(void* arg) {
  * @param task_index pizza task index
  */
 void draw_pizza(int task_index) {
-    printf("aaa %d\n", index - PIZZA_INDEX_BEG);
     struct pizza pizza = pizzas[task_index - PIZZA_INDEX_BEG];
     float x       = pizza.coord.x;
     float y       = pizza.coord.y;
@@ -436,9 +410,7 @@ void draw_pizza(int task_index) {
 void* pizza_motion(void* arg) {
     int id = get_task_index(arg);
     float dt = TSCALE * (float) get_task_period(arg) / 1000;
-    printf("uibdex %d\n", id - PIZZA_INDEX_BEG);
-    struct pizza *pizza= &pizzas[id - PIZZA_INDEX_BEG];
-
+    struct pizza *pizza = &pizzas[id - PIZZA_INDEX_BEG];
 
     pizza->coord.x = PIZZA_H_X;
     pizza->coord.y = PIZZA_H_Y;
@@ -450,12 +422,11 @@ void* pizza_motion(void* arg) {
 
         if (pizza->coord.x >= XWIN - 30) {
             pizza->shipped = 1;
-            nOrderedPizzas--; // # pizzas on conveyor belt -= 1
+            nPizzasOnCB--; // # pizzas on conveyor belt -= 1
             destroy_bitmap(pizza->pizza_with_ingr);
             printf("Destroyed pizza ID %d\n", id);
             break;
         }
-        printf("aa\n");
         wait_for_period(id);
     }
 }
@@ -475,11 +446,11 @@ void* new_orders(void* arg) {
 
     while (!end) {
         if (index_last_queue > -1) { // if there are pizzas in queue
-            if (nOrderedPizzas == 0 || pizzas[lastPizzaID].coord.x + pizza_dough->w / 2 >= CHEESE_LINE_X) {
+            if (nPizzasOnCB == 0 || pizzas[lastPizzaID - PIZZA_INDEX_BEG].coord.x + pizza_dough->w / 2 >= CHEESE_LINE_X) {
                 // there is no pizza in production or the last one is at cheese at least, so make it immediately
 
                 // decide new pizza ID
-                for (i = PIZZA_INDEX_BEG + nOrderedPizzas; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
+                for (i = PIZZA_INDEX_BEG + nPizzasOnCB; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
                     if (pizzas[i - PIZZA_INDEX_BEG].shipped) {
                         new_pizza_id = i;
                         break;
@@ -494,7 +465,7 @@ void* new_orders(void* arg) {
                     sem_post(&sem_queue);
                     printf("Putting new pizza on the assembly line with ID %d\n", new_pizza_id);
 
-                    pizza = &pizzas[new_pizza_id];
+                    pizza = &pizzas[new_pizza_id - PIZZA_INDEX_BEG];
                     strcpy(pizza->ingredients, ingredients);
                     strncpy(pizza->ingr_already, "        ", INGREDIENTS_NUM);
                     pizza->shipped = 0;
@@ -507,7 +478,7 @@ void* new_orders(void* arg) {
 
                     task_create(pizza_motion, new_pizza_id, PIZZA_TASK_PER, PIZZA_TASK_PER, PIZZA_TASK_PRIORITY);
                     lastPizzaID = new_pizza_id;
-                    nOrderedPizzas++;
+                    nPizzasOnCB++;
                     new_pizza_id = -1;
                 }
             }
@@ -523,7 +494,6 @@ void* new_orders(void* arg) {
  * @param ingredients ingredients of new pizza
  */
 void manageOrders(const char *ingredients) {
-    //printf("ilq %d VS QL %d\n", index_last_queue,QUEUE_LENGTH);
     if(index_last_queue + 1 >= QUEUE_LENGTH) { // todo eliminare max_pizzas macro
         printf("Sorry, pizza cannot be ordered.\n");
         return;
@@ -618,26 +588,22 @@ void draw_monitor() {
  * @return nothing
  */
 void* monitor(void* arg) {
-    int id = get_task_index(arg);
-    int i;
+    int i, id = get_task_index(arg), pizza_id = -1;
     struct pizza *pizza = NULL;
-    int pizza_id = -1;
     monitor_bmp = create_bitmap(MONITOR_WIDTH, MONITOR_HEIGHT);
 
-
     set_next_activation(id);
-
     while (!end) {
         // get first pizza on the assembly line
-        if (nOrderedPizzas == 0)
+        if (nPizzasOnCB == 0)
             continue;
 
-        for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + nOrderedPizzas; i++) {
+        for (i = 0; i < nPizzasOnCB; i++) {
             if (!pizzas[i].shipped && pizzas[i].coord.x >= CAMERA_X && pizzas[i].coord.x <= CAMERA_LINE_X && !pizzas[i].checked) {
-                pizza = &pizzas[i];
-                pizza_id = i;
-                pizza->checked = 1;
+                pizza_id = i + PIZZA_INDEX_BEG;
                 printf("Identified pizza %d at camera\n", pizza_id);
+                pizza = &pizzas[i];
+                pizza->checked = 1;
                 break;
             }
         }
@@ -657,8 +623,10 @@ void* monitor(void* arg) {
             // promote or discard pizza
             if (pizza->ugly)
                 textout_ex(monitor_bmp, font, "x", 0, 0, 0, 255);
-            else
+            else {
                 textout_ex(monitor_bmp, font, "v", 0, 0, 0, 255);
+                printf("Pizza ID %d contains all its ingredients: %s VS %s\n", pizza_id, pizza->ingredients, pizza->ingr_already);
+            }
         }
         pizza = NULL;
 
@@ -680,10 +648,32 @@ void draw_lines() {
 }
 
 void draw_dl_miss(int task_id) {
-    static char b[100] = "";
+    static char b[40] = "";
 
     sprintf(b, "Task %d: %d DLM", task_id, get_deadline_miss(task_id));
     show_string(b, DEADLINE_MISS_X, DEADLINE_MISS_Y + 20 * task_id, 255);
+}
+
+void draw_instructions() {
+    // instructions on GUI
+    show_string("Press ENTER to order a random pizza or some letters + ENTER for a specific one:", 10, 10, 255);
+    show_string("  t - tomato", 10, 25, 255);
+    show_string("  c - cheese", 10, 40, 255);
+    show_string("  m - mushrooms", 10, 55, 255);
+    show_string("  h - ham", 10, 70, 255);
+    show_string("  o - olives", 10, 85, 255);
+    show_string("  a - artichokes", 10, 100, 255);
+}
+
+void draw_ingr_icons() {
+    draw_sprite(screen, videocam, CAMERA_X, ICONS_Y);
+    draw_sprite(screen, oven, OVEN_X, ICONS_Y);
+    draw_sprite(screen, artichoke, ARTICHOKE_X, ICONS_Y);
+    draw_sprite(screen, olive, OLIVE_X, ICONS_Y);
+    draw_sprite(screen, ham, HAM_X, ICONS_Y);
+    draw_sprite(screen, mushroom, MUSHROOM_X, ICONS_Y);
+    draw_sprite(screen, cheese, CHEESE_X, ICONS_Y);
+    draw_sprite(screen, tomato, TOMATO_X, ICONS_Y);
 }
 
 /**
@@ -698,25 +688,28 @@ void* display(void* arg) {
 
 	set_next_activation(id);
 	while (!end) {
-		rectfill(screen, 0, CB_PIECE_H_Y, XWIN-1, YWIN-1, BKG);
+		rectfill(screen, 0, 0, XWIN - 1, YWIN - 1, BKG);
 		for (i = 0; i < CB_PIECES_NUM; i++) {
             draw_conveyor_belt(i);
-            draw_dl_miss(i);
 		}
 
-        line(screen, DEADLINE_MISS_X, 340, XWIN, 340, 255);
+		for (i = 0; i < nCurTasks; i++)
+		    draw_dl_miss(i);
 
-		for(i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + nOrderedPizzas; i++) {
-            printf("uuu %d\n", i - PIZZA_INDEX_BEG);
+        line(screen, DEADLINE_MISS_X, 220, XWIN, 220, 255);
+
+		for(i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
             if (!pizzas[i - PIZZA_INDEX_BEG].shipped) {
                 draw_pizza(i);
-                draw_dl_miss(nCurTasks + i - 1);
+                draw_dl_miss(i);
             }
         }
 
-		//draw_monitor();
+		draw_monitor();
 
+		draw_instructions();
 		draw_lines();
+		draw_ingr_icons();
 
 		wait_for_period(id);
 	}

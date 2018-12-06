@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/agost/workspace/rt/RealtimeSystems/project/main.c
+stdlib.h
+-
+stdio.h
+-
+sched.h
+-
+allegro.h
+-
+assert.h
+-
+semaphore.h
+-
+ptask.h
+/home/agost/workspace/rt/RealtimeSystems/project/ptask.h
+
+/home/agost/workspace/rt/RealtimeSystems/project/ptask.c
+stdio.h
+-
+ptask.h
+/home/agost/workspace/rt/RealtimeSystems/project/ptask.h
+
+/home/agost/workspace/rt/RealtimeSystems/project/ptask.h
+pthread.h
+-
+timeutil.h
+/home/agost/workspace/rt/RealtimeSystems/project/timeutil.h
+
+/home/agost/workspace/rt/RealtimeSystems/project/timeutil.c
+stdio.h
+-
+timeutil.h
+/home/agost/workspace/rt/RealtimeSystems/project/timeutil.h
+
+/home/agost/workspace/rt/RealtimeSystems/project/timeutil.h
+time.h
+-
+
