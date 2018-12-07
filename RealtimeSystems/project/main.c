@@ -332,7 +332,7 @@ void manageIngr(const int xb, const int xe, const char* ingr_name, int ingr_id, 
 
     for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
         pizza = &pizzas[i - PIZZA_INDEX_BEG];
-        if (pizza->coord.x >= xb && pizza->coord.x <= xe && str_contains(pizza->ingredients, ingr_name[0]) && !pizza->ingr_done[ingr_id]) {
+        if (!pizza->shipped && pizza->coord.x >= xb && pizza->coord.x <= xe && str_contains(pizza->ingredients, ingr_name[0]) && !pizza->ingr_done[ingr_id]) {
             pizza->ingr_done[ingr_id] = 1;
 
             // don't put ingredient - machine error (thus quality check)...
@@ -435,6 +435,10 @@ void* pizza_motion(void* arg) {
 }
 
 void init_pizza(struct pizza *pizza, char* ingredients) {
+    int i;
+
+    for (i = 0; i < INGREDIENTS_NUM; i++)
+        pizza->ingr_done[i] = 0;
     pizza->coord.x = 0.0; pizza->coord.y = 0.0;
     strcpy(pizza->ingredients, ingredients);
     strncpy(pizza->ingr_already, "        ", INGREDIENTS_NUM);
