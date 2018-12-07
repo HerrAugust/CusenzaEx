@@ -34,7 +34,7 @@
 #define PM_TASK_PRIORITY            80 /* Pizzas manager priority */
 #define MON_TASK_PRIORITY           80 /* Monitor window task priority */
 
-#define GUI_TASKS_PER               20 /* period of the GUI redrawing task */
+#define GUI_TASKS_PER               25 /* period of the GUI redrawing task */
 #define USER_TASK_PER               100 /* period of user serving task */
 #define CB_TASK_PERIOD              100 /* period of the conveyor belt pieces */
 #define PIZZA_TASK_PER              80 /* period between pizza redrawings */
@@ -94,8 +94,8 @@
 
 #define MONITOR_WIDTH               200
 #define MONITOR_HEIGHT              200
-#define MONITOR_X                   10
-#define MONITOR_Y                   YWIN - MONITOR_HEIGHT - 10
+#define MONITOR_X                   XWIN / 2
+#define MONITOR_Y                   200
 
 //------------------------------------------------------------- Asides
 
@@ -118,7 +118,7 @@ void* pizza_motion(void* arg) ;
 
 int end = 0;                            // End of program flag
 
-int nCurTasks = 0, nPizzasOnCB = 0;  // Counters of currently active tasks and pizzas on the assembly line
+int nCurTasks = 0, nPizzasOnCB = 0;     // Counters of currently active tasks and pizzas on the assembly line
 int lastPizzaID = PIZZA_INDEX_BEG;      // Last pizza ID
 float speed = INITIAL_SPEED;            // Pizzas and conveyor belt pieces speed
 BITMAP* pizza_dough, *cb_piece, *ingr_tomato, *ingr_cheese, *ingr_mushroom, *ingr_ham, *ingr_olive, *ingr_artichoke, *monitor_bmp;
@@ -148,11 +148,6 @@ struct cb_piece {
     struct coordinates coord;
     BITMAP*  bitmap;
 } cb_pieces[CB_PIECES_NUM] = { 0.0, 0.0, NULL };
-
-struct corresp {
-    int  task_id;
-    int  pizza_index;
-} corresp[MAX_PIZZAS] = {};
 
 //------------------------------------------------------------- Utility functions
 
@@ -605,19 +600,69 @@ void draw_monitor() {
 }
 
 /**
+ * Returns the RGB color corresponding to an ingredient
+ * @param ingr ingredient intial letter
+ * @return RGB color for ingredient
+ */
+int get_color_for_ingr(char ingr) {
+    int col;
+
+    switch(ingr) {
+        case 't':
+            col = COLOR_INGR_TOMATO;
+            break;
+        case 'c':
+            col = COLOR_INGR_CHEESE;
+            break;
+        case 'm':
+            col = COLOR_INGR_MUSHROOM;
+            break;
+        case 'h':
+            col = COLOR_INGR_HAM;
+            break;
+        case 'o':
+            col = COLOR_INGR_OLIVE;
+            break;
+        case 'a':
+            col = COLOR_INGR_ARTICHOKE;
+            break;
+        default: col = 0; break;
+    }
+    return col;
+}
+
+/**
  * Algorithm to check quality of pizzas
  */
-void check_quality(struct pizza* pizza, BITMAP* image)  {
-    int x, y, c;
+void check_quality(struct pizza* pizza, int pizza_id, BITMAP* image)  {
+    int x, y, c, i, searched_col, is_quality = 1;
 
-    for (x = 0; x < image->w; x++) {
-        for (y = 0; y < image->h; y++) {
-            /*c = getpixel(fish, x, y);
-            if (c == white) {
-                c = pink;
-            }*/
+    // look for clue of each ingredient the pizza should have got
+    for (i = 0; i < strlen(pizza->ingredients); i++) {
+        searched_col = get_color_for_ingr(pizza->ingredients[i]);
+        for (x = 0; x < image->w; x++) {
+            for (y = 0; y < image->h; y++) {
+                c = getpixel(image, x, y);
+                if (c == searched_col) {
+                    y = image->h; // ingredient found, check next one
+                    x = image->w;
+                    printf("found %c at (%d,%d)\n", pizza->ingredients[i], x,y);
+                }
+            }
+        }
+        // if ingredient not found, that's a bad quality pizza
+        if (x == image->w && y == image->h) {
+            printf("Monitor - %c not found on %d ([%d])\n", pizza->ingredients[i], pizza_id, pizza_id - PIZZA_INDEX_BEG);
+            is_quality = 0;
+            break;
         }
     }
+
+    // if pizza has all its ingredient, its quality is ok
+    if(is_quality)
+        textout_ex(monitor_bmp, font, "ok", 0, 0, 0, 255);
+    else
+        textout_ex(monitor_bmp, font, "x", 0, 0, 0, 255);
 }
 
 /**
@@ -638,6 +683,8 @@ void* monitor(void* arg) {
         if (nPizzasOnCB == 0)
             continue;
 
+        blit(screen, photo, CAMERA_X, PIZZA_H_Y, 0, 0, pizza_dough->w, pizza_dough->h);
+
         for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
             pizza = &pizzas[i - PIZZA_INDEX_BEG];
             if (!pizza->shipped && pizza->coord.x >= CAMERA_X && pizza->coord.x <= CAMERA_LINE_X && !pizza->checked) {
@@ -647,29 +694,10 @@ void* monitor(void* arg) {
                 break;
             }
         }
-
         if (pizza != NULL && !pizza->shipped) {
             // build zoomed pizza
-            blit(screen, photo, TOMATO_X, ICONS_Y, 0, 0, pizza_dough->w, pizza_dough->h);
-            blit(photo, screen, 0, 0, 0, 0, pizza_dough->w, pizza_dough->h);
-            //stretch_sprite(monitor_bmp, pizza->pizza_with_ingr, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
-            //stretch_sprite(monitor_bmp, photo, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
-/*
-            // check if it contains all ingredients it should have
-            for (i = 0; i < strlen(pizza->ingredients); i++)
-                if (!str_contains(pizza->ingr_already, pizza->ingredients[i])) {
-                    //pizza->ugly = 1;
-                    printf("Monitor - pizza ID %d doesn't contain %c (%s VS %s)\n", pizza_id, pizza->ingredients[i], pizza->ingredients, pizza->ingr_already);
-                    break;
-                }
-
-            // promote or discard pizza
-            if (pizza->ugly)
-                textout_ex(monitor_bmp, font, "x", 0, 0, 0, 255);
-            else {
-                textout_ex(monitor_bmp, font, "v", 0, 0, 0, 255);
-                printf("Monitor - pizza ID %d contains all its ingredients: %s VS %s\n", pizza_id, pizza->ingredients, pizza->ingr_already);
-            }*/
+            stretch_sprite(monitor_bmp, photo, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
+            check_quality(pizza, pizza_id, photo);
         }
         pizza = NULL;
 
@@ -750,14 +778,14 @@ void* display(void* arg) {
             }
         }
 
-		draw_monitor();
+        draw_instructions();
+        draw_lines();
+        draw_ingr_icons();
 
-		draw_instructions();
-		draw_lines();
-		draw_ingr_icons();
+        draw_monitor();
 
-		has_deadline_miss(id);
-		wait_for_period(id);
+        has_deadline_miss(id);
+        wait_for_period(id);
 	}
 }
 
