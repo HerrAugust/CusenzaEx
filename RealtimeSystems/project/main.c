@@ -83,7 +83,7 @@
 #define ARTICHOKE_LINE_X            ARTICHOKE_X + 64 / 2
 #define CAMERA_LINE_X               CAMERA_X + 64 / 2
 
-#define COLOR_INGR_TOMATO           makecol(215,24,24)
+#define COLOR_INGR_TOMATO           makecol(215,24,24) /* RGB color characterizing this ingredient (got with Gimp) */
 #define COLOR_INGR_CHEESE           makecol(255,243,207)
 #define COLOR_INGR_MUSHROOM         makecol(101,101,101)
 #define COLOR_INGR_OLIVE            makecol(24,24,24)
@@ -99,7 +99,7 @@
 
 //------------------------------------------------------------- Asides
 
-#define DEADLINE_MISS_X             XWIN - 150
+#define DEADLINE_MISS_X             XWIN - 150  /* Aside box with all deadline misses */
 #define DEADLINE_MISS_Y             0
 
 //------------------------------------------------------------- Functions
@@ -116,17 +116,17 @@ void* pizza_motion(void* arg) ;
 
 //------------------------------------------------------------- Global vars
 
-int end = 0;                            // End of program flag
+int     end = 0;                            // End of program flag
 
-int nCurTasks = 0, nPizzasOnCB = 0;     // Counters of currently active tasks and pizzas on the assembly line
-int lastPizzaID = PIZZA_INDEX_BEG;      // Last pizza ID
-float speed = INITIAL_SPEED;            // Pizzas and conveyor belt pieces speed
+int     nCurTasks = 0, nPizzasOnCB = 0;     // Counters of currently active tasks and pizzas on the assembly line
+int     lastPizzaID = PIZZA_INDEX_BEG;      // Last pizza ID
+float   speed = INITIAL_SPEED;            // Pizzas and conveyor belt pieces speed
 BITMAP* pizza_dough, *cb_piece, *ingr_tomato, *ingr_cheese, *ingr_mushroom, *ingr_ham, *ingr_olive, *ingr_artichoke, *monitor_bmp;
-BITMAP *videocam, *oven, *tomato, *cheese, *mushroom, *ham, *olive, *artichoke; // never moving objects
+BITMAP* videocam, *oven, *tomato, *cheese, *mushroom, *ham, *olive, *artichoke; // never moving objects
 
-char ordered_pizzas_queue[QUEUE_LENGTH][INGREDIENTS_NUM];
-int  index_last_queue = -1;
-sem_t sem_queue;
+char    ordered_pizzas_queue[QUEUE_LENGTH][INGREDIENTS_NUM];
+int     index_last_queue = -1;
+sem_t   sem_queue;
 
 struct coordinates {
     float x;
@@ -134,14 +134,13 @@ struct coordinates {
 };
 
 struct pizza {
-    struct coordinates coord;
-    int  ugly;                          // Has pizza passed quality test?
-    char ingredients[INGREDIENTS_NUM];  // Ingredients of pizza
-    char ingr_already[INGREDIENTS_NUM]; // Ingredients already on the pizza
-    int  shipped;                       // 1 if pizza can be destroyed and space left to the next one
-    BITMAP* pizza_with_ingr;            // pizza dough with its ingredients
-    int  ingr_done[INGREDIENTS_NUM];    // 1 if ingredient machine has already operated on this pizza
-    int  checked;                       // 1 if camera has checked pizza quality
+    struct coordinates  coord;
+    char                ingredients[INGREDIENTS_NUM];   // Ingredients of pizza
+    char                ingr_already[INGREDIENTS_NUM];  // Ingredients already on the pizza. For tests
+    int                 shipped;                        // 1 if pizza can be destroyed and space left to the next one
+    BITMAP*             pizza_with_ingr;                // pizza dough with its ingredients
+    int                 ingr_done[INGREDIENTS_NUM];     // 1 if ingredient machine has already operated on this pizza
+    int                 checked;                        // 1 if camera has checked pizza quality
 } pizzas[MAX_PIZZAS] = {};
 
 struct cb_piece {
@@ -158,12 +157,18 @@ struct cb_piece {
  * @param y y coordinate
  * @param color color
  */
-void show_string(char string[80], int x, int y, int color) {
+void show_string(const char string[80], const int x, const int y, const int color) {
 	textout_ex(screen, font, string, x, y, color, BKG);
 }
 
-int str_contains(char *str, char to_check) {
-    char buf[2] = "";
+/**
+ * True if str contains character to_check
+ * @param str string to test
+ * @param to_check character you look for
+ * @return true if str contains char to_check
+ */
+int str_contains(const char *str, const char to_check) {
+    char    buf[2] = "";
     buf[0] = to_check;
 
     return strstr(str, buf) != NULL;
@@ -184,8 +189,8 @@ char get_scancode() {
  * @param ingredients random ingredients
  */
 void generate_random_pizza(char *ingredients) {
-    char list_ingr[] = "tcmhoa";
-    int i;
+    char    list_ingr[] = "tcmhoa";
+    int     i;
 
     strncpy(ingredients, "", INGREDIENTS_NUM);
 
@@ -201,7 +206,7 @@ void generate_random_pizza(char *ingredients) {
  * Wait for all tasks end (destroy tasks)
  */
 void wait_for_tasks_end() {
-    int i, totalTasksNum = nCurTasks + nPizzasOnCB;
+    int     i, totalTasksNum = nCurTasks + nPizzasOnCB;
 
     for (i = 0; i < totalTasksNum; i++)
         destroy_task(i);
@@ -210,8 +215,8 @@ void wait_for_tasks_end() {
 /**
  * Allegro initialization
  */
-void init(void) {
-    int i;
+void init() {
+    int     i;
 
 	allegro_init();
     set_color_depth(32); // set max color depth
@@ -252,7 +257,7 @@ void init(void) {
     assert(ingr_tomato != NULL); assert(ingr_cheese != NULL); assert(ingr_ham != NULL); assert(ingr_mushroom != NULL);
     assert(ingr_olive != NULL); assert(ingr_artichoke != NULL);
 
-    // create tasks to control various parts of the program
+    // create tasks to control the various parts of the program
     task_create(conveyor_belt, nCurTasks++, CB_TASK_PERIOD, CB_TASK_PERIOD, CB_TASKS_PRIORITY);
     task_create(display, nCurTasks++, GUI_TASKS_PER, GUI_TASKS_PER, GUI_TASKS_PRIORITY);
     task_create(user_inputs, nCurTasks++, USER_TASK_PER, USER_TASK_PER, USER_TASK_PRIORITY);
@@ -273,9 +278,9 @@ void init(void) {
  * @return nothing
  */
 void* conveyor_belt(void* arg) {
-	int id, i, initial_piece_index = 0; // task index
-	float dt = TSCALE * (float) get_task_period(arg) / 1000;
-	float movement;
+	int     id, i, initial_piece_index = 0; // task index
+	float   dt = TSCALE * (float) get_task_period(arg) / 1000;
+	float   movement;
 
     // Init conveyor belt pieces
     id = get_task_index(arg);
@@ -308,10 +313,10 @@ void* conveyor_belt(void* arg) {
  * Draw conveyor belt piece
  * @param index conveyor belt piece index
  */
-void draw_conveyor_belt(int index) {
+void draw_conveyor_belt(const int index) {
     BITMAP* b = cb_pieces[index].bitmap;
-    float x = cb_pieces[index].coord.x;
-    float y = cb_pieces[index].coord.y;
+    float   x = cb_pieces[index].coord.x;
+    float   y = cb_pieces[index].coord.y;
 
     draw_sprite(screen, b, x, y);
 }
@@ -329,12 +334,14 @@ void draw_conveyor_belt(int index) {
  * @param ingr_y ingredient y offset on pizza
  */
 void manageIngr(const int xb, const int xe, const char* ingr_name, int ingr_id, BITMAP* ingr_sprite, int ingr_x, int ingr_y) {
-    int i;
-    struct pizza *pizza;
+    int             i;
+    struct pizza*   pizza;
 
     for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
         pizza = &pizzas[i - PIZZA_INDEX_BEG];
-        if (!pizza->shipped && pizza->coord.x >= xb && pizza->coord.x <= xe && str_contains(pizza->ingredients, ingr_name[0]) && !pizza->ingr_done[ingr_id]) {
+        if (!pizza->shipped && pizza->coord.x >= xb && pizza->coord.x <= xe &&
+            str_contains(pizza->ingredients, ingr_name[0]) && !pizza->ingr_done[ingr_id]) {
+
             pizza->ingr_done[ingr_id] = 1;
 
             // don't put ingredient - machine error (thus quality check)...
@@ -357,10 +364,10 @@ void manageIngr(const int xb, const int xe, const char* ingr_name, int ingr_id, 
  * @return nothing
  */
 void* ingredient(void* arg) {
-    int id, my_ingr; // task index
+    int     id, my_ingr; // task index
 
     // Init conveyor belt pieces
-    id = get_task_index(arg);
+    id      = get_task_index(arg);
     my_ingr = getIngredient(id);
     set_next_activation(id);
 
@@ -398,9 +405,9 @@ void* ingredient(void* arg) {
  * @param task_index pizza task index
  */
 void draw_pizza(int task_index) {
-    struct pizza pizza = pizzas[task_index - PIZZA_INDEX_BEG];
-    float x       = pizza.coord.x;
-    float y       = pizza.coord.y;
+    struct pizza    pizza = pizzas[task_index - PIZZA_INDEX_BEG];
+    float           x = pizza.coord.x;
+    float           y = pizza.coord.y;
 
     draw_sprite(screen, pizza.pizza_with_ingr, x, y);
 }
@@ -411,9 +418,9 @@ void draw_pizza(int task_index) {
  * @return nothing
  */
 void* pizza_motion(void* arg) {
-    int id = get_task_index(arg);
-    float dt = TSCALE * (float) get_task_period(arg) / 1000;
-    struct pizza *pizza = &pizzas[id - PIZZA_INDEX_BEG];
+    int             id = get_task_index(arg);
+    float           dt = TSCALE * (float) get_task_period(arg) / 1000;
+    struct pizza*   pizza = &pizzas[id - PIZZA_INDEX_BEG];
 
     pizza->coord.x = PIZZA_H_X;
     pizza->coord.y = PIZZA_H_Y;
@@ -437,7 +444,7 @@ void* pizza_motion(void* arg) {
 }
 
 void init_pizza(struct pizza *pizza, char* ingredients) {
-    int i;
+    int     i;
 
     for (i = 0; i < INGREDIENTS_NUM; i++)
         pizza->ingr_done[i] = 0;
@@ -445,7 +452,6 @@ void init_pizza(struct pizza *pizza, char* ingredients) {
     strcpy(pizza->ingredients, ingredients);
     strncpy(pizza->ingr_already, "        ", INGREDIENTS_NUM);
     pizza->shipped = 0;
-    pizza->ugly = 0;
     pizza->checked = 0;
     pizza->pizza_with_ingr = create_bitmap(pizza_dough->w, pizza_dough->h);
     // copy pizza dough
@@ -460,10 +466,10 @@ void init_pizza(struct pizza *pizza, char* ingredients) {
  * @return nothing
  */
 void* new_orders(void* arg) {
-    int i, id = get_task_index(arg);
-    int new_pizza_id = -1;
-    char ingredients[INGREDIENTS_NUM] = "";
-    struct pizza *pizza;
+    int             i, id = get_task_index(arg);
+    int             new_pizza_id = -1;
+    char            ingredients[INGREDIENTS_NUM] = "";
+    struct pizza*   pizza;
 
     set_next_activation(id);
 
@@ -532,10 +538,10 @@ void manageOrders(const char *ingredients) {
  * @return nothing
  */
 void* user_inputs(void* arg) {
-    int id = get_task_index(arg);
-    char scan;
-    char ingredients[INGREDIENTS_NUM] = { ' ' };
-    int curIngredient = 0; // number of ingredients the user has chosen
+    int     id = get_task_index(arg);
+    char    scan;
+    char    ingredients[INGREDIENTS_NUM] = { ' ' };
+    int     curIngredient = 0; // number of ingredients the user has chosen
 
     set_next_activation(id);
     do {
@@ -605,7 +611,7 @@ void draw_monitor() {
  * @return RGB color for ingredient
  */
 int get_color_for_ingr(char ingr) {
-    int col;
+    int     col;
 
     switch(ingr) {
         case 't':
@@ -635,9 +641,9 @@ int get_color_for_ingr(char ingr) {
  * Algorithm to check quality of pizzas
  */
 void check_quality(struct pizza* pizza, int pizza_id, BITMAP* image)  {
-    int x, y, c, i, searched_col, is_quality = 1;
+    int     x, y, c, i, searched_col, is_quality = 1;
 
-    // look for clue of each ingredient the pizza should have got
+    // look for clues of each ingredient the pizza should have got
     for (i = 0; i < strlen(pizza->ingredients); i++) {
         searched_col = get_color_for_ingr(pizza->ingredients[i]);
         for (x = 0; x < image->w; x++) {
@@ -646,10 +652,11 @@ void check_quality(struct pizza* pizza, int pizza_id, BITMAP* image)  {
                 if (c == searched_col) {
                     y = image->h; // ingredient found, check next one
                     x = image->w;
-                    printf("found %c at (%d,%d)\n", pizza->ingredients[i], x,y);
+                    //printf("found %c at (%d,%d)\n", pizza->ingredients[i], x,y);
                 }
             }
         }
+
         // if ingredient not found, that's a bad quality pizza
         if (x == image->w && y == image->h) {
             printf("Monitor - %c not found on %d ([%d])\n", pizza->ingredients[i], pizza_id, pizza_id - PIZZA_INDEX_BEG);
@@ -671,35 +678,38 @@ void check_quality(struct pizza* pizza, int pizza_id, BITMAP* image)  {
  * @return nothing
  */
 void* monitor(void* arg) {
-    int i, id = get_task_index(arg), pizza_id = -1;
-    struct pizza *pizza = NULL;
+    int             i, id = get_task_index(arg), pizza_id = -1;
+    struct pizza*   pizza = NULL;
+    BITMAP*         photo = create_bitmap(pizza_dough->w, pizza_dough->h);
+
     monitor_bmp = create_bitmap(MONITOR_WIDTH, MONITOR_HEIGHT);
     clear_to_color(monitor_bmp, 255);
-    BITMAP* photo = create_bitmap(pizza_dough->w, pizza_dough->h);
 
     set_next_activation(id);
     while (!end) {
-        // get first pizza on the assembly line
-        if (nPizzasOnCB == 0)
-            continue;
 
-        blit(screen, photo, CAMERA_X, PIZZA_H_Y, 0, 0, pizza_dough->w, pizza_dough->h);
+        // if there are pizzas on the conveyor belt
+        if (nPizzasOnCB != 0) {
+            blit(screen, photo, CAMERA_X, PIZZA_H_Y, 0, 0, pizza_dough->w, pizza_dough->h);
 
-        for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
-            pizza = &pizzas[i - PIZZA_INDEX_BEG];
-            if (!pizza->shipped && pizza->coord.x >= CAMERA_X && pizza->coord.x <= CAMERA_LINE_X && !pizza->checked) {
-                pizza_id = i;
-                printf("Monitor - identified pizza %d at camera\n", pizza_id);
-                pizza->checked = 1;
-                break;
+            // get first pizza on the assembly line, at the camera, if there exists
+            for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
+                pizza = &pizzas[i - PIZZA_INDEX_BEG];
+                if (!pizza->shipped && pizza->coord.x >= CAMERA_X && pizza->coord.x <= CAMERA_LINE_X && !pizza->checked) {
+                    pizza_id = i;
+                    printf("Monitor - identified pizza %d at camera\n", pizza_id);
+                    pizza->checked = 1;
+                    break;
+                }
             }
+
+            if (pizza != NULL && !pizza->shipped) {
+                // build zoomed pizza & check quality
+                stretch_sprite(monitor_bmp, photo, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
+                check_quality(pizza, pizza_id, photo);
+            }
+            pizza = NULL;
         }
-        if (pizza != NULL && !pizza->shipped) {
-            // build zoomed pizza
-            stretch_sprite(monitor_bmp, photo, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
-            check_quality(pizza, pizza_id, photo);
-        }
-        pizza = NULL;
 
         has_deadline_miss(id);
         wait_for_period(id);
@@ -708,6 +718,9 @@ void* monitor(void* arg) {
 
 //------------------------------------------------------------------------------------- Support logic (global management)
 
+/**
+ * Draws lines of each ingredient
+ */
 void draw_lines() {
     line(screen, TOMATO_LINE_X, CB_PIECE_H_Y, TOMATO_LINE_X, CB_PIECE_H_Y + 130, 255);
     line(screen, CHEESE_LINE_X, CB_PIECE_H_Y, CHEESE_LINE_X, CB_PIECE_H_Y + 130, 255);
@@ -752,10 +765,10 @@ void draw_ingr_icons() {
 /**
  * Task refreshing the GUI
  * @param arg its argument
- * @return
+ * @return nothing
  */
 void* display(void* arg) {
-	int id, i; // task index
+	int     id, i;
 
 	id = get_task_index(arg);
 
@@ -771,7 +784,7 @@ void* display(void* arg) {
 
         line(screen, DEADLINE_MISS_X, 220, XWIN, 220, 255);
 
-		for(i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
+		for (i = PIZZA_INDEX_BEG; i < PIZZA_INDEX_BEG + MAX_PIZZAS; i++) {
             if (!pizzas[i - PIZZA_INDEX_BEG].shipped) {
                 draw_pizza(i);
                 draw_dl_miss(i);
@@ -794,7 +807,7 @@ void* display(void* arg) {
 int main(void) {
     init();
 
-    while(!end);
+    while (!end);
 
     wait_for_tasks_end();
     allegro_exit();
