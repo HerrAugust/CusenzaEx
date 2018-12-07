@@ -456,8 +456,8 @@ void init_pizza(struct pizza *pizza, char* ingredients) {
     pizza->pizza_with_ingr = create_bitmap(pizza_dough->w, pizza_dough->h);
     // copy pizza dough
     BITMAP *buffer = create_bitmap(pizza_dough->w, pizza_dough->h);
-    draw_sprite(buffer, pizza_dough, 0, 0);
-    draw_sprite(pizza->pizza_with_ingr, buffer, 0, 0);
+    blit(pizza_dough, buffer, 0, 0, 0, 0, pizza_dough->w, pizza_dough->h);
+    blit(pizza_dough, pizza->pizza_with_ingr, 0, 0, 0, 0, pizza_dough->w, pizza_dough->h);
 }
 
 /**
