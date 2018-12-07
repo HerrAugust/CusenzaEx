@@ -83,6 +83,13 @@
 #define ARTICHOKE_LINE_X            ARTICHOKE_X + 64 / 2
 #define CAMERA_LINE_X               CAMERA_X + 64 / 2
 
+#define COLOR_INGR_TOMATO           makecol(215,24,24)
+#define COLOR_INGR_CHEESE           makecol(255,243,207)
+#define COLOR_INGR_MUSHROOM         makecol(101,101,101)
+#define COLOR_INGR_OLIVE            makecol(24,24,24)
+#define COLOR_INGR_HAM              makecol(255,0,0)
+#define COLOR_INGR_ARTICHOKE        makecol(81,235,48)
+
 //------------------------------------------------------------- Monitor window
 
 #define MONITOR_WIDTH               200
@@ -598,6 +605,22 @@ void draw_monitor() {
 }
 
 /**
+ * Algorithm to check quality of pizzas
+ */
+void check_quality(struct pizza* pizza, BITMAP* image)  {
+    int x, y, c;
+
+    for (x = 0; x < image->w; x++) {
+        for (y = 0; y < image->h; y++) {
+            /*c = getpixel(fish, x, y);
+            if (c == white) {
+                c = pink;
+            }*/
+        }
+    }
+}
+
+/**
  * Gets the first pizza on the assembly line for quality check
  * @param arg task args
  * @return nothing
@@ -606,6 +629,8 @@ void* monitor(void* arg) {
     int i, id = get_task_index(arg), pizza_id = -1;
     struct pizza *pizza = NULL;
     monitor_bmp = create_bitmap(MONITOR_WIDTH, MONITOR_HEIGHT);
+    clear_to_color(monitor_bmp, 255);
+    BITMAP* photo = create_bitmap(pizza_dough->w, pizza_dough->h);
 
     set_next_activation(id);
     while (!end) {
@@ -625,12 +650,15 @@ void* monitor(void* arg) {
 
         if (pizza != NULL && !pizza->shipped) {
             // build zoomed pizza
-            stretch_sprite(monitor_bmp, pizza->pizza_with_ingr, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
-
+            blit(screen, photo, TOMATO_X, ICONS_Y, 0, 0, pizza_dough->w, pizza_dough->h);
+            blit(photo, screen, 0, 0, 0, 0, pizza_dough->w, pizza_dough->h);
+            //stretch_sprite(monitor_bmp, pizza->pizza_with_ingr, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
+            //stretch_sprite(monitor_bmp, photo, 0, 0, MONITOR_WIDTH, MONITOR_HEIGHT);
+/*
             // check if it contains all ingredients it should have
             for (i = 0; i < strlen(pizza->ingredients); i++)
                 if (!str_contains(pizza->ingr_already, pizza->ingredients[i])) {
-                    pizza->ugly = 1;
+                    //pizza->ugly = 1;
                     printf("Monitor - pizza ID %d doesn't contain %c (%s VS %s)\n", pizza_id, pizza->ingredients[i], pizza->ingredients, pizza->ingr_already);
                     break;
                 }
@@ -641,7 +669,7 @@ void* monitor(void* arg) {
             else {
                 textout_ex(monitor_bmp, font, "v", 0, 0, 0, 255);
                 printf("Monitor - pizza ID %d contains all its ingredients: %s VS %s\n", pizza_id, pizza->ingredients, pizza->ingr_already);
-            }
+            }*/
         }
         pizza = NULL;
 
