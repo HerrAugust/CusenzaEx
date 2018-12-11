@@ -1,6 +1,6 @@
 ## Screenshots
 
-<img src="screens/hellos.gif" alt="gif test"/>
+<img src="screenshots/try_1.0.gif" alt="gif test"/>
 
 You can create different instances of the same string. They run with different priorities (SCHED_RR). The highest priority strings respond in a better way.
 
