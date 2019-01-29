@@ -1,0 +1,5 @@
+per lanciare il test, decompattare e dare
+cd ~/workspace/di_natale/code_c/swatch4
+gcc tests.c SWatch2018.c  -o tests -Wall -I/home/agost/di_natale/code_c/CUnit-2.0-1/CUnit/Headers/ -lcunit && ./tests
+
+il test restituisce 2 linee su terminale. Non c'è bisogno di nessuna infrastruttura tipo matlab o eclipse.
