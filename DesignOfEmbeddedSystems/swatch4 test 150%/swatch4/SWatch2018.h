@@ -96,6 +96,10 @@ uint8_T Shours;
 int AalarmIsSet;
 
 
+// debug
+void getStateName(struct FSM *fsm);
+
+// functions for Nested-switch pattern
 static void tranFSM(struct FSM *fsm, enum State dest);
 
 void initFSM(struct FSM *fsm, enum Subcomponent sc, char* name);

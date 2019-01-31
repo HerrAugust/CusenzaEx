@@ -201,6 +201,26 @@ void strencode2digit(char *str, int digit)
 	str[1]=digit%10+'0';
 }
 
+/**
+ * Take the active state and print its cur state and other useful info to be displayed
+ */
+void getUsefulInfo(struct FSM *fsmTimeSet, struct FSM *fsmAlarmSet, struct FSM *fsmAlarmManagement, struct FSM *fsmTimeCountStopwatch) {
+	int buzzing = (strlen(fsmAlarmManagement->curStateName) == 23);
+
+	if(Swatch2018_Y_mode == 0) {
+		sprintf(msg, "TIMEMODE %s", buzzing ? "(buzzing)":"");
+	}
+	else if(Swatch2018_Y_mode == 1) {
+		sprintf(msg, "TIMESETMODE: %s %s", fsmTimeSet->curStateName, buzzing ? "(buzzing)":"");
+	}
+	else if(Swatch2018_Y_mode == 2) {
+		sprintf(msg, "ALARMMODE: %s %s", fsmAlarmSet->curStateName, buzzing ? "(buzzing)":"");
+	}
+	else {
+		sprintf(msg, "TIMER: %s %s", fsmTimeCountStopwatch->curStateName, buzzing ? "(buzzing)":"");
+	}
+}
+
 TASK(TaskClock)
 {
 	unsigned char i;
@@ -215,6 +235,12 @@ TASK(TaskClock)
 	if IsEvent (PLUS) Swatch2018_U_plusbutton=1; else Swatch2018_U_plusbutton=0;
 	if IsEvent (MINUS) Swatch2018_U_minusbutton=1; else Swatch2018_U_minusbutton=0;
 
+	// take the active state and print its cur state and other useful info
+	getUsefulInfo(&fsmTimeSet, &fsmAlarmSet, &fsmAlarmManagement, &fsmTimeCountStopwatch);
+	LCD_DrawFullRect(0, 0, 500, 20);
+	LCD_SetTextColor(White);
+	LCD_SetFont(&Font8x8);
+	LCD_DisplayStringXY(0, 4, msg);
 
 	dispatchFSM(&fsm, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
