@@ -421,7 +421,7 @@ void manageAlarmSet_ALARMFINALLYSET(struct FSM *fsm, enum Signal signal, uint8_T
         uint8_T *SWatch2018_Y_mode) {
 	enum State  functionsState = ALARMSET_ALARMFINALLYSET;   // the state of this function
 	if(!fsm->isEntryDone) {
-		DEBUG("Init manAlarmSet_ALARMFINALLYSET at %u:%u. Waiting before to buzz...\r\n", Ahours, Aminutes);
+		DEBUG("Init manAlarmSet_ALARMFINALLYSET. Waiting before to buzz...\r\n");
 
 		// en:
 		AalarmIsSet = 1;
@@ -857,7 +857,7 @@ void dispatchFSM(struct FSM *fsm,
 			manageAlarmSet_SETMINUTES(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			break;
 		case ALARMSET_ALARMFINALLYSET:
-			printf2UART("dispatchFSM. ALARMSET_ALARMFINALLYSET\r\n");
+			DEBUG("dispatchFSM. ALARMSET_ALARMFINALLYSET at %u:%u\r\n", Ahours, Aminutes);
 			manageAlarmSet_ALARMFINALLYSET(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			break;
         default:
