@@ -131,7 +131,7 @@ CPU mySystem {
 	TASK TaskClock {
 		PRIORITY = 0x02;   /* High priority */
 		AUTOSTART = FALSE;
-		STACK = SHARED;
+		STACK = PRIVATE;//SHARED;
 		ACTIVATION = 1;    /* only one pending activation */
 		SCHEDULE = FULL;
 	};
@@ -139,7 +139,7 @@ CPU mySystem {
 	TASK TaskLCD {
 		PRIORITY = 0x01;   /* Low priority */
 		AUTOSTART = FALSE;
-		STACK = SHARED;
+		STACK = PRIVATE;//SHARED;
 		ACTIVATION = 1;    /* only one pending activation */
 		SCHEDULE = FULL;
 	};

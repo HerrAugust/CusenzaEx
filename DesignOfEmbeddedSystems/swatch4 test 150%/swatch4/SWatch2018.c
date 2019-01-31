@@ -42,7 +42,6 @@
 #define SWatch2018_event_minusbutton   (2)
 #define SWatch2018_event_plusbutton    (1)
 
-char msg[96] = ""; // for debug
 
 
 enum Signal getSignal(SWatch2018_U_plusbutton, SWatch2018_U_minusbutton,
@@ -702,13 +701,12 @@ void dispatchFSM(struct FSM *fsm,
               boolean_T SWatch2018_U_Timemode, boolean_T SWatch2018_U_Timesetmode, boolean_T SWatch2018_U_Alarmsetmode, boolean_T SWatch2018_U_Swatchmode, uint8_T *SWatch2018_Y_hours,
               uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
               uint8_T *SWatch2018_Y_mode) {
-
-	char msg[40] = ""; //debug
 	enum Signal signal = -1;
 
     // aggregate signals to make it possible to use nested switches
     signal = getSignal(SWatch2018_U_plusbutton, SWatch2018_U_minusbutton,
                        SWatch2018_U_Timemode, SWatch2018_U_Timesetmode, SWatch2018_U_Alarmsetmode, SWatch2018_U_Swatchmode);
+
 
     DEBUG("FSM %s entra in stato %s\r\n", fsm->name, fsm->curStateName);
     // the current state must be reinitialized also when the user clicks something

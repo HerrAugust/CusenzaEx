@@ -227,26 +227,27 @@ TASK(TaskClock)
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("%s (fsm) esce in stato %s\r\n", fsm.name, fsm.curStateName);
-	/*dispatchFSM(&fsmTimeCountStopwatch, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,
+
+	dispatchFSM(&fsmTimeCountStopwatch, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("AAA\r\n");DEBUG("fsmTimeCountStopwatch esce in stato %s\r\n", fsmTimeCountStopwatch.curStateName);
 	DEBUG("qui %u %u %u\r\n", Swatch2018_Y_hours, Swatch2018_Y_minutes, Swatch2018_Y_seconds);
-	*/
-	dispatchFSM(&fsmTimeSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
+
+	/*dispatchFSM(&fsmTimeSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
 						Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
 						&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("%s (fsmTimeSet) esce in state %s\r\n", fsmTimeSet.name, fsmTimeSet.curStateName);
-	//dispatchFSM(&fsmAlarmSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
+	dispatchFSM(&fsmAlarmSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
 						Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
 						&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
-	//DEBUG("fsmAlarmSet esce in state %s\r\n", fsmAlarmSet.curStateName);
-	//dispatchFSM(&fsmAlarmManagement, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
+	DEBUG("fsmAlarmSet esce in state %s\r\n", fsmAlarmSet.curStateName);
+	dispatchFSM(&fsmAlarmManagement, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
 						Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
 						&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
-	//DEBUG("fsmAlarmManagement esce in state %s\r\n", fsmAlarmManagement.curStateName);
-	//DEBUG( "uscito %u %u %u\r\n", Swatch2018_Y_hours, Swatch2018_Y_minutes, Swatch2018_Y_seconds);
-	//SWatch2018_step( SWatch2018_M, plusbutton, minusbutton, Timemode, Timesetmode,
+	DEBUG("fsmAlarmManagement esce in state %s\r\n", fsmAlarmManagement.curStateName);
+	DEBUG( "uscito %u %u %u\r\n", Swatch2018_Y_hours, Swatch2018_Y_minutes, Swatch2018_Y_seconds);
+	/*SWatch2018_step( SWatch2018_M, plusbutton, minusbutton, Timemode, Timesetmode,
 	//	Alarmsetmode, Swatchmode, &hours, &minutes, &seconds, &tenths, &mode);
 	/* seconds = seconds+1; */
 
