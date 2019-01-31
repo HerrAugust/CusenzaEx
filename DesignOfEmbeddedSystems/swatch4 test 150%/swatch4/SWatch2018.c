@@ -409,14 +409,6 @@ void manageTimeCountStopwatch_BEGIN(struct FSM *fsm, enum Signal signal, uint8_T
 		return;
 	}
 
-	printf2UART("manageTimeCountStopwatch_BEGIN\r\n");
-
-	if(curHighestLvState != STOPWATCH)
-    	return;
-
-	sprintf(msg,"manageTimeCountStopwatch_BEGIN (FSM %s)\r\n", fsm->name);
-	printf2UART(msg);
-
 	// handle signals:
 	switch(signal) {
 	case SIG_SWATCHMODE:
@@ -445,9 +437,6 @@ void manageTimeCountStopwatch_COUNT(struct FSM *fsm, enum Signal signal, uint8_T
 		fsm->isEntryDone = 1;
 		return;
 	}
-
-	if(curHighestLvState != STOPWATCH)
-    	return;
 
 	updateTimeStopwatch();
 

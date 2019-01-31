@@ -67,6 +67,7 @@ boolean_T Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemo
 
 struct FSM fsm, fsmTimeCountStopwatch, fsmAlarmManagement, fsmAlarmSet, fsmTimeSet;
 
+char msg[96];
 
 //---------------------------------------------------------- UART
 
@@ -207,15 +208,6 @@ TASK(TaskClock)
 	static unsigned char oh=99, om=99, os=99;
 	char tstr[3];
 
-	char msg[40]= ""; // for debug
-
-	//if (tick==0) tick=1; else tick=0;
-
-	//if (IsEvent(TIMEMODE)||IsEvent(TIMESETMODE)||IsEvent(ALARMMODE)||IsEvent(SWATCHMODE)) button[0]=1;
-	//if (IsEvent(PLUS)) button[2]=1;
-	//if (IsEvent(MINUS)) button[3]=1;
-
-//	debuginfo(6, button[0], button[2], button[3]);
 	if IsEvent (TIMEMODE) Swatch2018_U_timemode=1; else Swatch2018_U_timemode=0;
 	if IsEvent (TIMESETMODE) Swatch2018_U_timesetmode=1; else Swatch2018_U_timesetmode=0;
 	if IsEvent (ALARMMODE) Swatch2018_U_alarmmode=1; else Swatch2018_U_alarmmode=0;
@@ -223,21 +215,21 @@ TASK(TaskClock)
 	if IsEvent (PLUS) Swatch2018_U_plusbutton=1; else Swatch2018_U_plusbutton=0;
 	if IsEvent (MINUS) Swatch2018_U_minusbutton=1; else Swatch2018_U_minusbutton=0;
 
+	// TODO CORREGGERE: TIMEDISPLAY->TIMESET_SETHOURS->TIMESET_SETMINUTES->TIMEDISPLAY->TIMESET NON TORNA IN TIMESET_SETHOURS
+	dispatchFSM(&fsmTimeSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
+					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
+					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
+	DEBUG("%s (fsmTimeSet) esce in state %s\r\n", fsmTimeSet.name, fsmTimeSet.curStateName);
 	dispatchFSM(&fsm, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("%s (fsm) esce in stato %s\r\n", fsm.name, fsm.curStateName);
-
 	dispatchFSM(&fsmTimeCountStopwatch, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
-	DEBUG("AAA\r\n");DEBUG("fsmTimeCountStopwatch esce in stato %s\r\n", fsmTimeCountStopwatch.curStateName);
-	DEBUG("qui %u %u %u\r\n", Swatch2018_Y_hours, Swatch2018_Y_minutes, Swatch2018_Y_seconds);
+	DEBUG("fsmTimeCountStopwatch esce in stato %s\r\n", fsmTimeCountStopwatch.curStateName);
 
-	/*dispatchFSM(&fsmTimeSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
-						Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
-						&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
-	DEBUG("%s (fsmTimeSet) esce in state %s\r\n", fsmTimeSet.name, fsmTimeSet.curStateName);
+	/*
 	dispatchFSM(&fsmAlarmSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
 						Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
 						&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
