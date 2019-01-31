@@ -308,7 +308,7 @@ void manageAlarmSet_SETHOURS(struct FSM *fsm, enum Signal signal, uint8_T *SWatc
         uint8_T *SWatch2018_Y_mode) {
 	enum State  functionsState = ALARMSET_SETHOURS;   // the state of this function
 	if(!fsm->isEntryDone) {
-		//printf2UART("Init manageAlarmSet_SETHOURS\r\n");
+		DEBUG("Init manageAlarmSet_SETHOURS\r\n");
 
 		fsm->isEntryDone = 1;
 		return;
@@ -592,9 +592,9 @@ void manageTIMESET(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_ho
             curHighestLvState = TIMEDISPLAY;
             break;
         case SIG_TIMESETMODE:
-        	//printf2UART("manTIMESET(). Received SIG_TIMESETMODE\r\n");
-            tranFSM(fsm, TIMESET);
-            curHighestLvState = TIMESET;
+        	printf2UART("manTIMESET(). Received SIG_TIMESETMODE\r\n");
+            //tranFSM(fsm, TIMESET);
+            //curHighestLvState = TIMESET;
             break;
         case SIG_ALARMSETMODE:
         	//printf2UART("manTIMESET(). Received SIG_ALARMSETMODE\r\n");

@@ -59,8 +59,8 @@
 #define SWatch2018_M_TYPE              RT_MODEL_SWatch2018_T
 
 #define DEBUG(MSG, ...)\
-			sprintf(msg, MSG, ##__VA_ARGS__);\
-			printf2UART(msg);
+            sprintf(msg, MSG, ##__VA_ARGS__);\
+            printf2UART(msg);
 
 extern char msg[96];
 
@@ -73,10 +73,10 @@ static enum Signal { SIG_TIMEMODE, SIG_TIMESETMODE, SIG_ALARMSETMODE, SIG_SWATCH
 static enum Subcomponent { SC_TIMECOUNTSTOPWATCH, SC_ALARMMANAGEMENT, SC_TIMESET, SC_ALARMSET, SC_NONE }; // NONE representing the high-lv one
 
 struct FSM {
-	char name[20]; // a name for the FSM, so that I can identify it in debug
-	char curStateName[40]; // current state name, for debug
-    enum State 	curState;
-    int  		isEntryDone; // true when entry code has been executed once
+    char name[20]; // a name for the FSM, so that I can identify it in debug
+    char curStateName[40]; // current state name, for debug
+    enum State  curState;
+    int         isEntryDone; // true when entry code has been executed once
 };
 
 static enum State curHighestLvState = TIMEDISPLAY; // the current highest level Statechart state
