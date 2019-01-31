@@ -228,8 +228,6 @@ TASK(TaskClock)
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("fsmTimeCountStopwatch esce in stato %s\r\n", fsmTimeCountStopwatch.curStateName);
-
-	/*
 	dispatchFSM(&fsmAlarmSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
@@ -238,7 +236,6 @@ TASK(TaskClock)
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("fsmAlarmManagement esce in state %s\r\n", fsmAlarmManagement.curStateName);
-	*/
 
 	ClearEvents();
 	//for (i=0;i<4;i++) button[i]=0;
