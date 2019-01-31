@@ -215,15 +215,15 @@ TASK(TaskClock)
 	if IsEvent (PLUS) Swatch2018_U_plusbutton=1; else Swatch2018_U_plusbutton=0;
 	if IsEvent (MINUS) Swatch2018_U_minusbutton=1; else Swatch2018_U_minusbutton=0;
 
-	// TODO CORREGGERE: TIMEDISPLAY->TIMESET_SETHOURS->TIMESET_SETMINUTES->TIMEDISPLAY->TIMESET NON TORNA IN TIMESET_SETHOURS
-	dispatchFSM(&fsmTimeSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
-					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
-					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
-	DEBUG("%s (fsmTimeSet) esce in state %s\r\n", fsmTimeSet.name, fsmTimeSet.curStateName);
+
 	dispatchFSM(&fsm, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("%s (fsm) esce in stato %s\r\n", fsm.name, fsm.curStateName);
+	dispatchFSM(&fsmTimeSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
+					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
+					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
+	DEBUG("%s (fsmTimeSet) esce in state %s\r\n", fsmTimeSet.name, fsmTimeSet.curStateName);
 	dispatchFSM(&fsmTimeCountStopwatch, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,
 					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,
 					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
@@ -231,17 +231,14 @@ TASK(TaskClock)
 
 	/*
 	dispatchFSM(&fsmAlarmSet, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
-						Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
-						&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
+					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
+					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("fsmAlarmSet esce in state %s\r\n", fsmAlarmSet.curStateName);
 	dispatchFSM(&fsmAlarmManagement, Swatch2018_U_plusbutton, Swatch2018_U_minusbutton, Swatch2018_U_timemode,\
-						Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
-						&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
+					Swatch2018_U_timesetmode, Swatch2018_U_alarmmode, Swatch2018_U_swatchmode, &Swatch2018_Y_hours,\
+					&Swatch2018_Y_minutes, &Swatch2018_Y_seconds, &Swatch2018_Y_tenths, &Swatch2018_Y_mode);
 	DEBUG("fsmAlarmManagement esce in state %s\r\n", fsmAlarmManagement.curStateName);
-	DEBUG( "uscito %u %u %u\r\n", Swatch2018_Y_hours, Swatch2018_Y_minutes, Swatch2018_Y_seconds);
-	/*SWatch2018_step( SWatch2018_M, plusbutton, minusbutton, Timemode, Timesetmode,
-	//	Alarmsetmode, Swatchmode, &hours, &minutes, &seconds, &tenths, &mode);
-	/* seconds = seconds+1; */
+	*/
 
 	ClearEvents();
 	//for (i=0;i<4;i++) button[i]=0;
@@ -317,7 +314,8 @@ int main(void)
 	/* Set the LCD Text size */
 	//LCD_SetFont(&Font8x12);
 //	Lcd_Touch_Calibration();
-	InitTouch(-0.102, 0.0656, -335, 10);
+	InitTouch(-0.112, 0.0656, -335, 10);
+	//InitTouch(-0.102, 0.0656, -335, 10); funziona così così
 	//InitTouch(-0.09, 0.0656, -353, 10);
 
 	/* Draw the background */

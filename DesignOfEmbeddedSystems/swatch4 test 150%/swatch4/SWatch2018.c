@@ -185,6 +185,22 @@ void state2str(char* msg) {
 
 //----------------------------------------------------------- TimeSet
 
+void manageTimeSet_INIT(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
+        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+        uint8_T *SWatch2018_Y_mode) {
+	DEBUG("manageTimeSet_INIT()");
+
+	// handle signals:
+	switch(signal) {
+	case SIG_TIMESETMODE:
+		printf2UART("manageTimeSet_INIT received a SIG_TIMESET\r\n");
+		tranFSM(fsm, TIMESET_SETHOURS);
+		break;
+	default:
+		break;
+	}
+}
+
 void manageTimeSet_SETHOURS(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
         uint8_T *SWatch2018_Y_mode) {
@@ -199,10 +215,6 @@ void manageTimeSet_SETHOURS(struct FSM *fsm, enum Signal signal, uint8_T *SWatch
 		fsm->isEntryDone = 1;
 		return;
 	}
-	DEBUG("a %d\r\n", curHighestLvState);
-	if(curHighestLvState != TIMESET)
-    	return;
-	DEBUG("curHighestLvState is TIMESET(%d)\r\n", curHighestLvState);
 
 	// handle signals:
 	switch(signal) {
@@ -221,8 +233,14 @@ void manageTimeSet_SETHOURS(struct FSM *fsm, enum Signal signal, uint8_T *SWatch
 			hours--;
 		break;
 	case SIG_TIMESETMODE:
-		printf2UART("manageTimeSet_SETHOURS received a SIG_{Å,T,TS}\r\n");
+		printf2UART("manageTimeSet_SETHOURS received a SIG_TIMESETMODE\r\n");
 		tranFSM(fsm, TIMESET_SETMINUTES);
+		break;
+	case SIG_ALARMSETMODE:
+	case SIG_TIMEMODE:
+	case SIG_SWATCHMODE:
+		printf2UART("manageTimeSet_SETHOURS received a SIG_{Å,T,S}\r\n");
+		tranFSM(fsm, TIMESET_INIT);
 		break;
 	default:
 		//du:
@@ -244,9 +262,6 @@ void manageTimeSet_SETMINUTES(struct FSM *fsm, enum Signal signal, uint8_T *SWat
 		return;
 	}
 
-	if(curHighestLvState != TIMESET)
-    	return;
-
 	// handle signals:
 	switch(signal) {
 	case SIG_PLUSBUTTON:
@@ -267,6 +282,12 @@ void manageTimeSet_SETMINUTES(struct FSM *fsm, enum Signal signal, uint8_T *SWat
 		//printf2UART("manTimeSet_SETMIN received a SIG_TIMESETMODE\r\n");
 		tranFSM(fsm, TIMESET_SETHOURS);
 		break;
+	case SIG_ALARMSETMODE:
+	case SIG_TIMEMODE:
+	case SIG_SWATCHMODE:
+		printf2UART("manageTimeSet_SETMINUTES received a SIG_{Å,T,S}\r\n");
+		tranFSM(fsm, TIMESET_INIT);
+		break;
 	default:
 		//du:
 		*SWatch2018_Y_hours 	= hours;
@@ -276,32 +297,6 @@ void manageTimeSet_SETMINUTES(struct FSM *fsm, enum Signal signal, uint8_T *SWat
 }
 
 //----------------------------------------------------------- AlarmSet FSM
-
-void manageAlarmSet_ALARMFINALLYSET(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
-        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
-        uint8_T *SWatch2018_Y_mode) {
-	enum State  functionsState = ALARMSET_ALARMFINALLYSET;   // the state of this function
-	if(!fsm->isEntryDone) {
-		//printf2UART("Init manAlarmSet_ALARMFINALLYSET. Waiting before to buzz...\r\n");
-
-		// en:
-		AalarmIsSet = 1;
-
-		fsm->isEntryDone = 1;
-		return;
-	}
-
-	// handle signals:
-	switch(signal) {
-	case SIG_ALARMSETMODE:
-		//printf2UART("manageAlarmSet_ALARMFINALLYSET received a SIG_ALARMSETMODE\r\n");
-		tranFSM(fsm, ALARMSET_SETHOURS);
-		break;
-	default:
-		//du:
-		break;
-	}
-}
 
 void manageAlarmSet_SETHOURS(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
@@ -385,6 +380,32 @@ void manageAlarmSet_SETMINUTES(struct FSM *fsm, enum Signal signal, uint8_T *SWa
 		//du:
 		*SWatch2018_Y_hours 	= hours;
 		*SWatch2018_Y_minutes 	= Aminutes;
+		break;
+	}
+}
+
+void manageAlarmSet_ALARMFINALLYSET(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
+        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+        uint8_T *SWatch2018_Y_mode) {
+	enum State  functionsState = ALARMSET_ALARMFINALLYSET;   // the state of this function
+	if(!fsm->isEntryDone) {
+		//printf2UART("Init manAlarmSet_ALARMFINALLYSET. Waiting before to buzz...\r\n");
+
+		// en:
+		AalarmIsSet = 1;
+
+		fsm->isEntryDone = 1;
+		return;
+	}
+
+	// handle signals:
+	switch(signal) {
+	case SIG_ALARMSETMODE:
+		//printf2UART("manageAlarmSet_ALARMFINALLYSET received a SIG_ALARMSETMODE\r\n");
+		tranFSM(fsm, ALARMSET_SETHOURS);
+		break;
+	default:
+		//du:
 		break;
 	}
 }
@@ -747,10 +768,12 @@ void dispatchFSM(struct FSM *fsm,
 			break;
 
 		// TimeSet FSM
+		case TIMESET_INIT:
+			printf2UART("displatchFSM. TIMESET_INIT\r\n");
+			manageTimeSet_INIT(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 		case TIMESET_SETHOURS:
 			printf2UART("displatchFSM. TIMESET_SETHOURS\r\n");
 			manageTimeSet_SETHOURS(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
-			DEBUG("%u %u %u\r\n", *SWatch2018_Y_hours, *SWatch2018_Y_minutes, *SWatch2018_Y_seconds);
 			break;
 		case TIMESET_SETMINUTES:
 			printf2UART("displatchFSM. TIMESET_SETMINUTES\r\n");
@@ -823,8 +846,10 @@ void initFSM(struct FSM *fsm, enum Subcomponent sc, char* name) {
     	strcpy(fsm->curStateName, "TIMECOUNTSTOPWATCH_BEGIN");
     	break;
     case SC_TIMESET:
-    	fsm->curState = TIMESET_SETHOURS;
-    	strcpy(fsm->curStateName, "TIMESET_SETHOURS");
+    	//fsm->curState = TIMESET_SETHOURS;
+    	//strcpy(fsm->curStateName, "TIMESET_SETHOURS");
+    	fsm->curState = TIMESET_INIT;
+    	strcpy(fsm->curStateName, "TIMESET_INIT");
     	break;
     case SC_ALARMSET:
     	fsm->curState = ALARMSET_INIT;
