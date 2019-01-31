@@ -118,6 +118,12 @@ void getStateName(struct FSM *fsm) {
 	case TIMECOUNTSTOPWATCH_COUNT:
 		strcpy(fsm->curStateName, "TIMECOUNTSTOPWATCH_COUNT");
 		break;
+	case TIMESET_INIT:
+		strcpy(fsm->curStateName, "TIMESET_INIT");
+		break;
+	case TIMECOUNTSTOPWATCH_INIT:
+		strcpy(fsm->curStateName, "TIMECOUNTSTOPWATCH_INIT");
+		break;
 	default:
 		strcpy(fsm->curStateName, "?");
 		break;
@@ -188,7 +194,7 @@ void state2str(char* msg) {
 void manageTimeSet_INIT(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
         uint8_T *SWatch2018_Y_mode) {
-	DEBUG("manageTimeSet_INIT()");
+	DEBUG("manageTimeSet_INIT()\r\n");
 
 	// handle signals:
 	switch(signal) {
@@ -412,36 +418,49 @@ void manageAlarmSet_ALARMFINALLYSET(struct FSM *fsm, enum Signal signal, uint8_T
 
 //----------------------------------------------------------- TimeCountStopwatch FSM
 
+void manageTimeCountStopwatch_INIT(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
+        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+        uint8_T *SWatch2018_Y_mode) {
+	DEBUG("manageTimeCountStopwatch_INIT()\r\n");
+
+	// handle signals:
+	switch(signal) {
+	case SIG_SWATCHMODE:
+		printf2UART("manageTimeCountStopwatch_INIT received a SIG_SWATCHMODE\r\n");
+		tranFSM(fsm, TIMECOUNTSTOPWATCH_BEGIN);
+		break;
+	default:
+		break;
+	}
+}
+
 void manageTimeCountStopwatch_BEGIN(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,
         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
         uint8_T *SWatch2018_Y_mode) {
-	// en.
 	enum State  functionsState = TIMECOUNTSTOPWATCH_BEGIN;   // the state of this function                 // the state mode
-	printf2UART("ciao\r\n");
-	if(!fsm->isEntryDone) {
-		Stenths 	= 0;
-		Sseconds 	= 0;
-		Sminutes 	= 0;
-		Shours 		= 0;
-
-		printf2UART("Init manageTimeCountStopwatch_BEGIN\r\n");
-
-		fsm->isEntryDone = 1;
-		return;
-	}
 
 	// handle signals:
 	switch(signal) {
 	case SIG_SWATCHMODE:
 		// begin to count
 		printf2UART("manageTimeCountStopwatch_BEGIN received a SIG_SWATCHMODE\r\n");
+
+		// entry:
+		printf2UART("Init manageTimeCountStopwatch_BEGIN\r\n");
+		Stenths 	= 0;
+		Sseconds 	= 0;
+		Sminutes 	= 0;
+		Shours 		= 0;
+		fsm->isEntryDone = 1;
+
 		tranFSM(fsm, TIMECOUNTSTOPWATCH_COUNT);
 		break;
 	case SIG_ALARMSETMODE:
 	case SIG_TIMESETMODE:
 	case SIG_TIMEMODE:
 		printf2UART("manageTimeCountStopwatch_BEGIN received a SIG_{Å,T,TS}\r\n");
-		tranFSM(fsm, TIMECOUNTSTOPWATCH_BEGIN);
+		//tranFSM(fsm, TIMECOUNTSTOPWATCH_BEGIN);
+		tranFSM(fsm, TIMECOUNTSTOPWATCH_INIT);
 		break;
 	default:
 		break;
@@ -470,12 +489,8 @@ void manageTimeCountStopwatch_COUNT(struct FSM *fsm, enum Signal signal, uint8_T
 	case SIG_TIMESETMODE:
 	case SIG_TIMEMODE:
 		DEBUG("manageTimeCountStopwatch_COUNT received a SIG_{Å,T,TS} (FSM %s)\r\n", fsm->name);
-		tranFSM(fsm, TIMECOUNTSTOPWATCH_BEGIN);
-		// shouldn't be necessary, but without them the SW stops...
-		*SWatch2018_Y_hours = hours;
-		*SWatch2018_Y_minutes = minutes;
-		*SWatch2018_Y_seconds = seconds;
-		//DEBUG("per sicur %d %d %d %u %u %u\r\n", hours, minutes, seconds, *SWatch2018_Y_hours, *SWatch2018_Y_minutes, *SWatch2018_Y_seconds);
+		//tranFSM(fsm, TIMECOUNTSTOPWATCH_BEGIN);
+		tranFSM(fsm, TIMECOUNTSTOPWATCH_INIT);
 		break;
 	default:
 		break;
@@ -538,7 +553,7 @@ void manageSTOPWATCH(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_
     uint8_T     statesMode = 3;               // the state mode
     *SWatch2018_Y_mode = statesMode;
     if(!fsm->isEntryDone) {
-    	//printf2UART("Init manSTOPWATCH\r\n");
+    	printf2UART("Init manageSTOPWATCH\r\n");
         *SWatch2018_Y_mode = statesMode;
         *SWatch2018_Y_hours = 0;
 		*SWatch2018_Y_minutes = 0;
@@ -752,42 +767,46 @@ void dispatchFSM(struct FSM *fsm,
         	// time always goes on, no matter if user clicks or not GUI buttons
         	updateTime();
 
-        	DEBUG("displatchFSM. ALARMSET\r\n");
+        	DEBUG("dispatchFSM. ALARMSET\r\n");
         	manageALARMSET(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
         	break;
 
 		// TimeCountStopwatch FSM
+        case TIMECOUNTSTOPWATCH_INIT:
+        	DEBUG("dispatchFSM. TIMECOUNTSTOPWATCH_INIT\r\n");
+        	manageTimeCountStopwatch_INIT(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
+        	break;
 		case TIMECOUNTSTOPWATCH_BEGIN:
-			DEBUG("displatchFSM. TIMECOUNTSTOPWATCH_BEGIN\r\n");
+			DEBUG("dispatchFSM. TIMECOUNTSTOPWATCH_BEGIN\r\n");
 			manageTimeCountStopwatch_BEGIN(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			break;
 		case TIMECOUNTSTOPWATCH_COUNT:
-			DEBUG("displatchFSM. TIMECOUNTSTOPWATCH_COUNT\r\n");
+			DEBUG("dispatchFSM. TIMECOUNTSTOPWATCH_COUNT\r\n");
 			manageTimeCountStopwatch_COUNT(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
-			DEBUG("HHO\r\n");
 			break;
 
 		// TimeSet FSM
 		case TIMESET_INIT:
-			printf2UART("displatchFSM. TIMESET_INIT\r\n");
+			printf2UART("dispatchFSM. TIMESET_INIT\r\n");
 			manageTimeSet_INIT(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
+			break;
 		case TIMESET_SETHOURS:
-			printf2UART("displatchFSM. TIMESET_SETHOURS\r\n");
+			printf2UART("dispatchFSM. TIMESET_SETHOURS\r\n");
 			manageTimeSet_SETHOURS(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			break;
 		case TIMESET_SETMINUTES:
-			printf2UART("displatchFSM. TIMESET_SETMINUTES\r\n");
+			printf2UART("dispatchFSM. TIMESET_SETMINUTES\r\n");
 			manageTimeSet_SETMINUTES(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			break;
 
 		// AlarmManagement FSM
 		case ALARMMANAGEMENT_SILENT:
-			printf2UART("displatchFSM. ALARMMANAGEMENT_SILENT\r\n");
+			printf2UART("dispatchFSM. ALARMMANAGEMENT_SILENT\r\n");
 			if(Ahours == hours && Aminutes == minutes && AalarmIsSet)
 				tranFSM(fsm, ALARMMANAGEMENT_BUZZING);
 			break;
 		case ALARMMANAGEMENT_BUZZING:
-			printf2UART("displatchFSM. ALARMMANAGEMENT_BUZZING\r\n");
+			printf2UART("dispatchFSM. ALARMMANAGEMENT_BUZZING\r\n");
 			if(minutes <= Aminutes - 2) {
 				printf2UART("ALARM BUZZING!!\r\n");
 			}
@@ -799,23 +818,23 @@ void dispatchFSM(struct FSM *fsm,
 
 		// AlarmSet FSM
 		case ALARMSET_INIT:
-			printf2UART("displatchFSM. ALARMSET_INIT\r\n");
+			printf2UART("dispatchFSM. ALARMSET_INIT\r\n");
 			Ahours = hours;
 			*SWatch2018_Y_minutes = minutes;
 			AalarmIsSet = 0;
 			tranFSM(fsm, ALARMSET_SETHOURS);
 			break;
 		case ALARMSET_SETHOURS:
-			printf2UART("displatchFSM. ALARMSET_SETHOURS\r\n");
+			printf2UART("dispatchFSM. ALARMSET_SETHOURS\r\n");
 			manageAlarmSet_SETHOURS(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			DEBUG("%u %u %u\r\n", *SWatch2018_Y_hours, *SWatch2018_Y_minutes, *SWatch2018_Y_seconds);
 			break;
 		case ALARMSET_SETMINUTES:
-			printf2UART("displatchFSM. ALARMSET_SETMINUTES\r\n");
+			printf2UART("dispatchFSM. ALARMSET_SETMINUTES\r\n");
 			manageAlarmSet_SETMINUTES(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			break;
 		case ALARMSET_ALARMFINALLYSET:
-			printf2UART("displatchFSM. ALARMSET_ALARMFINALLYSET\r\n");
+			printf2UART("dispatchFSM. ALARMSET_ALARMFINALLYSET\r\n");
 			manageAlarmSet_ALARMFINALLYSET(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);
 			break;
         default:
@@ -842,8 +861,10 @@ void initFSM(struct FSM *fsm, enum Subcomponent sc, char* name) {
     	strcpy(fsm->curStateName, "INIT");
     	break;
     case SC_TIMECOUNTSTOPWATCH:
-    	fsm->curState = TIMECOUNTSTOPWATCH_BEGIN;
-    	strcpy(fsm->curStateName, "TIMECOUNTSTOPWATCH_BEGIN");
+    	//fsm->curState = TIMECOUNTSTOPWATCH_BEGIN;
+    	//strcpy(fsm->curStateName, "TIMECOUNTSTOPWATCH_BEGIN");
+    	fsm->curState = TIMECOUNTSTOPWATCH_INIT;
+    	strcpy(fsm->curStateName, "TIMECOUNTSTOPWATCH_INIT");
     	break;
     case SC_TIMESET:
     	//fsm->curState = TIMESET_SETHOURS;
