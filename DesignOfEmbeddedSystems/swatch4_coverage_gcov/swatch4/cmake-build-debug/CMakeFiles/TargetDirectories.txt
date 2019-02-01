@@ -1,0 +1,3 @@
+/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/CMakeFiles/swatch4.dir
+/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/CMakeFiles/edit_cache.dir

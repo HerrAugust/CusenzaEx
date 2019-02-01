@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="swatch4"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="swatch4">
+				<Option output="/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/swatch4" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/agost/workspace/di_natale/code_c/swatch4/."/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 swatch4"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="swatch4/fast">
+				<Option output="/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/swatch4" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/agost/workspace/di_natale/code_c/swatch4/."/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 swatch4/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/agost/workspace/di_natale/code_c/swatch4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Event.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Event.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/STMPE811QTR.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/STMPE811QTR.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/SWatch2018.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/SWatch2018.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/SWatch2018_private.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/SWatch2018_types.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Swatch2018.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Swatch2018_private.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Swatch2018_types.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Touch.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Touch.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Watch.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Watch.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Widget.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/Widget.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/WidgetConfig.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/WidgetConfig.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/code.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/debug.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/debug.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/fonts.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/fonts.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/lcd_add.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/lcd_add.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/pictures.c">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/pictures.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/rtmodel.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/rtwtypes.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/zero_crossing_types.h">
+			<Option target="swatch4"/>
+		</Unit>
+		<Unit filename="/home/agost/workspace/di_natale/code_c/swatch4/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

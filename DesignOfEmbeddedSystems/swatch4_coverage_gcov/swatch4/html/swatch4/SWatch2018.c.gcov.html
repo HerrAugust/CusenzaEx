@@ -1,0 +1,805 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - swatch4/SWatch2018.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">swatch4</a> - SWatch2018.c<span style="font-size: 80%;"> (source / <a href="SWatch2018.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">121</td>
+            <td class="headerCovTableEntry">414</td>
+            <td class="headerCovTableEntryLo">29.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-12-21 22:51:07</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">44.4 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  * Academic License - for use in teaching, academic research, and meeting
+<span class="lineNum">       3 </span>            :  * course requirements at degree granting institutions only.  Not for
+<span class="lineNum">       4 </span>            :  * government, commercial, or other organizational use.
+<span class="lineNum">       5 </span>            :  *
+<span class="lineNum">       6 </span>            :  * File: SWatch2018.c
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  * Code generated for Simulink model 'SWatch2018'.
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  * Model version                  : 1.20
+<span class="lineNum">      11 </span>            :  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
+<span class="lineNum">      12 </span>            :  * C/C++ source code generated on : Tue Nov 27 10:23:14 2018
+<span class="lineNum">      13 </span>            :  *
+<span class="lineNum">      14 </span>            :  * Target selection: ert.tlc
+<span class="lineNum">      15 </span>            :  * Embedded hardware selection: Intel-&gt;x86-64 (Windows64)
+<span class="lineNum">      16 </span>            :  * Code generation objectives: Unspecified
+<span class="lineNum">      17 </span>            :  * Validation result: Not run
+<span class="lineNum">      18 </span>            :  */
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : #include &quot;SWatch2018.h&quot;
+<span class="lineNum">      21 </span>            : #include &quot;SWatch2018_private.h&quot;
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            : /* Named constants for Chart: '&lt;S1&gt;/SWatch2018' */
+<span class="lineNum">      24 </span>            : #define SWatch2018_IN_AlarmSet         ((uint8_T)1U)
+<span class="lineNum">      25 </span>            : #define SWatch2018_IN_Buzzing          ((uint8_T)1U)
+<span class="lineNum">      26 </span>            : #define SWatch2018_IN_CounterSwatch    ((uint8_T)1U)
+<span class="lineNum">      27 </span>            : #define SWatch2018_IN_DisplayLap       ((uint8_T)1U)
+<span class="lineNum">      28 </span>            : #define SWatch2018_IN_DisplaySwatch    ((uint8_T)2U)
+<span class="lineNum">      29 </span>            : #define SWatch2018_IN_NO_ACTIVE_CHILD  ((uint8_T)0U)
+<span class="lineNum">      30 </span>            : #define SWatch2018_IN_SetHours         ((uint8_T)1U)
+<span class="lineNum">      31 </span>            : #define SWatch2018_IN_SetMinutes       ((uint8_T)2U)
+<span class="lineNum">      32 </span>            : #define SWatch2018_IN_Silent           ((uint8_T)2U)
+<span class="lineNum">      33 </span>            : #define SWatch2018_IN_Stop             ((uint8_T)2U)
+<span class="lineNum">      34 </span>            : #define SWatch2018_IN_Stopwatch        ((uint8_T)2U)
+<span class="lineNum">      35 </span>            : #define SWatch2018_IN_TimeDisplay      ((uint8_T)3U)
+<span class="lineNum">      36 </span>            : #define SWatch2018_IN_TimeSet          ((uint8_T)4U)
+<span class="lineNum">      37 </span>            : #define SWatch2018_event_Alarmsetmode  (5)
+<span class="lineNum">      38 </span>            : #define SWatch2018_event_Swatchmode    (6)
+<span class="lineNum">      39 </span>            : #define SWatch2018_event_Tick          (0)
+<span class="lineNum">      40 </span>            : #define SWatch2018_event_Timemode      (3)
+<span class="lineNum">      41 </span>            : #define SWatch2018_event_Timesetmode   (4)
+<span class="lineNum">      42 </span>            : #define SWatch2018_event_minusbutton   (2)
+<span class="lineNum">      43 </span>            : #define SWatch2018_event_plusbutton    (1)
+<span class="lineNum">      44 </span>            : 
+<a name="45"><span class="lineNum">      45 </span>            : </a>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span><span class="lineCov">      36069 : enum Signal getSignal(SWatch2018_U_plusbutton, SWatch2018_U_minusbutton,</span>
+<span class="lineNum">      48 </span>            :         SWatch2018_U_Timemode, SWatch2018_U_Timesetmode, SWatch2018_U_Alarmsetmode, SWatch2018_U_Swatchmode) {
+<span class="lineNum">      49 </span><span class="lineCov">      36069 :     enum Signal signal = -1;</span>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineCov">      36069 :     if(SWatch2018_U_plusbutton) {</span>
+<span class="lineNum">      52 </span><span class="lineCov">         58 :         signal = SIG_PLUSBUTTON;</span>
+<span class="lineNum">      53 </span><span class="lineCov">      36011 :     } else if(SWatch2018_U_minusbutton) {</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :         signal = SIG_MINUSBUTTON;</span>
+<span class="lineNum">      55 </span><span class="lineCov">      36011 :     } else if(SWatch2018_U_Timemode) {</span>
+<span class="lineNum">      56 </span><span class="lineCov">      36002 :         signal = SIG_TIMEMODE;</span>
+<span class="lineNum">      57 </span><span class="lineCov">          9 :     } else if(SWatch2018_U_Timesetmode) {</span>
+<span class="lineNum">      58 </span><span class="lineCov">          3 :         signal = SIG_TIMESETMODE;</span>
+<span class="lineNum">      59 </span><span class="lineCov">          6 :     } else if(SWatch2018_U_Alarmsetmode) {</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :         signal = SIG_ALARMSETMODE;</span>
+<span class="lineNum">      61 </span><span class="lineCov">          6 :     } else if(SWatch2018_U_Swatchmode) {</span>
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :         signal = SIG_SWATCHMODE;</span>
+<span class="lineNum">      63 </span>            :     }
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span><span class="lineCov">      36069 :     return signal;</span>
+<span class="lineNum">      66 </span>            : }
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            : /**
+<a name="69"><span class="lineNum">      69 </span>            :  * Updates time (timedisplay)</a>
+<span class="lineNum">      70 </span>            :  */
+<span class="lineNum">      71 </span><span class="lineCov">      36003 : void updateTime(){</span>
+<span class="lineNum">      72 </span><span class="lineCov">      36003 :     tenths = (tenths+1) % 10;</span>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">      36003 :     if(tenths == 0){</span>
+<span class="lineNum">      75 </span><span class="lineCov">       3600 :         seconds = (seconds+1) % 60;</span>
+<span class="lineNum">      76 </span><span class="lineCov">       3600 :         if(seconds == 0){</span>
+<span class="lineNum">      77 </span><span class="lineCov">         60 :             minutes = (minutes+1) % 60;</span>
+<span class="lineNum">      78 </span><span class="lineCov">         60 :             if(minutes == 0)</span>
+<span class="lineNum">      79 </span><span class="lineCov">          1 :                 hours = (hours+1) % 24;</span>
+<span class="lineNum">      80 </span>            :         }
+<span class="lineNum">      81 </span>            :     }
+<span class="lineNum">      82 </span>            :     //printf(&quot;updateTime %d %d %d\n&quot;, seconds, minutes, hours);
+<span class="lineNum">      83 </span><span class="lineCov">      36003 : }</span>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            : /**
+<a name="86"><span class="lineNum">      86 </span>            :  * Updates the stopwatch counter</a>
+<span class="lineNum">      87 </span>            :  */
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 : void updateTimeStopwatch(){</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :     Stenths = (Stenths+1) % 10;</span>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :     if(Stenths == 0){</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :         Sseconds = (Sseconds+1) % 60;</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :         if(Sseconds == 0){</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :             Sminutes=(Sminutes+1) % 60;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :             if(Sminutes == 0)</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :                 Shours = (Shours+1) % 24;</span>
+<span class="lineNum">      97 </span>            :         }
+<span class="lineNum">      98 </span>            :     }
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     100 </span>            : 
+<a name="101"><span class="lineNum">     101 </span>            : //----------------------------------------------------------- TimeSet</a>
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span><span class="lineCov">          2 : void manageTimeSet_SETHOURS(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     104 </span>            :         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     105 </span>            :         uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     106 </span><span class="lineCov">          2 :         enum State  functionsState = TIMESET_SETHOURS;  // the state of this function</span>
+<span class="lineNum">     107 </span><span class="lineCov">          2 :         uint8_T     statesMode = 0;                     // the state mode</span>
+<span class="lineNum">     108 </span><span class="lineCov">          2 :         if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     109 </span>            :                 //printf2UART(&quot;Init manageTimeSet_SETHOURS\r\n&quot;);
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            :                 //en:
+<span class="lineNum">     112 </span><span class="lineCov">          1 :                 SWatch2018_Y_mode = statesMode;</span>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span><span class="lineCov">          1 :                 fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     115 </span><span class="lineCov">          1 :                 fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     116 </span><span class="lineCov">          1 :                 return;</span>
+<span class="lineNum">     117 </span>            :         }
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :         // handle signals:
+<span class="lineNum">     120 </span><span class="lineCov">          1 :         switch(signal) {</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :         case SIG_PLUSBUTTON:</span>
+<span class="lineNum">     122 </span>            :                 //printf2UART(&quot;manageTimeSet_SETHOURS received a SIG_+\r\n&quot;);
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :                 if(hours == 23)</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                         hours = 0;</span>
+<span class="lineNum">     125 </span>            :                 else
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :                         hours++;</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :         case SIG_MINUSBUTTON:</span>
+<span class="lineNum">     129 </span>            :                 //printf2UART(&quot;manageTimeSet_SETHOURS received a SIG_-\r\n&quot;);
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :                 if(hours == 0)</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :                         hours = 23;</span>
+<span class="lineNum">     132 </span>            :                 else
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :                         hours--;</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     135 </span><span class="lineCov">          1 :         case SIG_TIMESETMODE:</span>
+<span class="lineNum">     136 </span>            :                 //printf2UART(&quot;manageTimeSet_SETHOURS received a SIG_{Å,T,TS}\r\n&quot;);
+<span class="lineNum">     137 </span><span class="lineCov">          1 :                 tranFSM(fsm, TIMESET_SETMINUTES);</span>
+<span class="lineNum">     138 </span><span class="lineCov">          1 :                 break;</span>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     140 </span>            :                 //du:
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_hours     = hours;</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_minutes   = minutes;</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     144 </span>            :         }
+<a name="145"><span class="lineNum">     145 </span>            : }</a>
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span><span class="lineCov">         58 : void manageTimeSet_SETMINUTES(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     148 </span>            :         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     149 </span>            :         uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     150 </span><span class="lineCov">         58 :         enum State  functionsState = TIMESET_SETMINUTES;   // the state of this function</span>
+<span class="lineNum">     151 </span><span class="lineCov">         58 :         if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     152 </span>            :                 //printf2UART(&quot;Init manTimeSet_SETMINUTES\r\n&quot;);
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span><span class="lineCov">          1 :                 fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     155 </span><span class="lineCov">          1 :                 fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     156 </span><span class="lineCov">          1 :                 return;</span>
+<span class="lineNum">     157 </span>            :         }
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            :         // handle signals:
+<span class="lineNum">     160 </span><span class="lineCov">         57 :         switch(signal) {</span>
+<span class="lineNum">     161 </span><span class="lineCov">         56 :         case SIG_PLUSBUTTON:</span>
+<span class="lineNum">     162 </span>            :                 //printf2UART(&quot;manTimeSet_SETMIN received a SIG_+\r\n&quot;);
+<span class="lineNum">     163 </span><span class="lineCov">         56 :                 if(minutes == 59)</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :                         minutes = 0;</span>
+<span class="lineNum">     165 </span>            :                 else
+<span class="lineNum">     166 </span><span class="lineCov">         56 :                         minutes++;</span>
+<span class="lineNum">     167 </span><span class="lineCov">         56 :                 break;</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :         case SIG_MINUSBUTTON:</span>
+<span class="lineNum">     169 </span>            :                 //printf2UART(&quot;manTimeSet_SETMIN received a SIG_-\r\n&quot;);
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :                 if(minutes == 0)</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :                         minutes = 59;</span>
+<span class="lineNum">     172 </span>            :                 else
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :                         minutes--;</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :         case SIG_TIMESETMODE:</span>
+<span class="lineNum">     176 </span>            :                 //printf2UART(&quot;manTimeSet_SETMIN received a SIG_TIMESETMODE\r\n&quot;);
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :                 tranFSM(fsm, TIMESET_SETHOURS);</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     179 </span><span class="lineCov">          1 :         default:</span>
+<span class="lineNum">     180 </span>            :                 //du:
+<span class="lineNum">     181 </span><span class="lineCov">          1 :                 *SWatch2018_Y_hours     = hours;</span>
+<span class="lineNum">     182 </span><span class="lineCov">          1 :                 *SWatch2018_Y_minutes   = minutes;</span>
+<span class="lineNum">     183 </span><span class="lineCov">          1 :                 break;</span>
+<span class="lineNum">     184 </span>            :         }
+<span class="lineNum">     185 </span>            : }
+<span class="lineNum">     186 </span>            : 
+<a name="187"><span class="lineNum">     187 </span>            : //----------------------------------------------------------- AlarmSet FSM</a>
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 : void manageAlarmSet_ALARMFINALLYSET(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     190 </span>            :         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     191 </span>            :         uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :         enum State  functionsState = ALARMSET_ALARMFINALLYSET;   // the state of this function</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :         if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     194 </span>            :                 //printf2UART(&quot;Init manAlarmSet_ALARMFINALLYSET. Waiting before to buzz...\r\n&quot;);
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            :                 // en:
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :                 AalarmIsSet = 1;</span>
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :                 fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :                 fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     202 </span>            :         }
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span>            :         // handle signals:
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :         switch(signal) {</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     207 </span>            :                 //printf2UART(&quot;manageAlarmSet_ALARMFINALLYSET received a SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :                 tranFSM(fsm, ALARMSET_SETHOURS);</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     211 </span>            :                 //du:
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     213 </span>            :         }
+<a name="214"><span class="lineNum">     214 </span>            : }</a>
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 : void manageAlarmSet_SETHOURS(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     217 </span>            :         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     218 </span>            :         uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :         enum State  functionsState = ALARMSET_SETHOURS;   // the state of this function</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :         if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     221 </span>            :                 //printf2UART(&quot;Init manageAlarmSet_SETHOURS\r\n&quot;);
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :                 fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :                 fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     226 </span>            :         }
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span>            :         // handle signals:
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :         switch(signal) {</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :         case SIG_PLUSBUTTON:</span>
+<span class="lineNum">     231 </span>            :                 //printf2UART(&quot;manageAlarmSet_SETHOURS received a SIG_+\r\n&quot;);
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :                 if(Ahours == 23)</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :                         Ahours = 0;</span>
+<span class="lineNum">     234 </span>            :                 else
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :                         Ahours++;</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :         case SIG_MINUSBUTTON:</span>
+<span class="lineNum">     238 </span>            :                 //printf2UART(&quot;manageAlarmSet_SETHOURS received a SIG_-\r\n&quot;);
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :                 if(Ahours == 0)</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :                         Ahours = 23;</span>
+<span class="lineNum">     241 </span>            :                 else
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :                         Ahours--;</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     245 </span>            :                 //printf2UART(&quot;manageAlarmSet_SETHOURS received a SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :                 tranFSM(fsm, ALARMSET_SETMINUTES);</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :                 Aminutes = minutes;</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     250 </span>            :                 //du:
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_hours     = Ahours;</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_minutes   = minutes;</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_seconds   = 0;</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     255 </span>            :         }
+<a name="256"><span class="lineNum">     256 </span>            : }</a>
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 : void manageAlarmSet_SETMINUTES(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     259 </span>            :         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     260 </span>            :         uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :         enum State  functionsState = ALARMSET_SETMINUTES;   // the state of this function</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :         if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     263 </span>            :                 //printf2UART(&quot;Init manageAlarmSet_SETMINUTES\r\n&quot;);
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :                 fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :                 fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     268 </span>            :         }
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            :         // handle signals:
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :         switch(signal) {</span>
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :         case SIG_PLUSBUTTON:</span>
+<span class="lineNum">     273 </span>            :                 //printf2UART(&quot;manageAlarmSet_SETMINUTES received a SIG_+\r\n&quot;);
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :                 if(Aminutes == 59)</span>
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :                         Aminutes = 0;</span>
+<span class="lineNum">     276 </span>            :                 else
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :                         Aminutes++;</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :         case SIG_MINUSBUTTON:</span>
+<span class="lineNum">     280 </span>            :                 //printf2UART(&quot;manageAlarmSet_SETMINUTES received a SIG_-\r\n&quot;);
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :                 if(Aminutes == 0)</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :                         Aminutes = 59;</span>
+<span class="lineNum">     283 </span>            :                 else
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :                         Aminutes--;</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     287 </span>            :                 //printf2UART(&quot;manageAlarmSet_SETMINUTES received a SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :                 tranFSM(fsm, ALARMSET_ALARMFINALLYSET);</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     291 </span>            :                 //du:
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_hours     = hours;</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_minutes   = Aminutes;</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     295 </span>            :         }
+<span class="lineNum">     296 </span>            : }
+<span class="lineNum">     297 </span>            : 
+<a name="298"><span class="lineNum">     298 </span>            : //----------------------------------------------------------- TimeCountStopwatch FSM</a>
+<span class="lineNum">     299 </span>            : 
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 : void manageTimeCountStopwatch_BEGIN(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     301 </span>            :         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     302 </span>            :         uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     303 </span>            :         // en.
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :         enum State  functionsState = TIMECOUNTSTOPWATCH_BEGIN;   // the state of this function                 // the state mode</span>
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :         if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :                 Stenths         = 0;</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :                 Sseconds        = 0;</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :                 Sminutes        = 0;</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :                 Shours          = 0;</span>
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :                 //printf2UART(&quot;Init manageTimeCountStopwatch_BEGIN\r\n&quot;);
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :                 fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :                 fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     316 </span>            :         }
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            :         // handle signals:
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :         switch(signal) {</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :         case SIG_SWATCHMODE:</span>
+<span class="lineNum">     321 </span>            :                 // begin to count
+<span class="lineNum">     322 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch_BEGIN received a SIG_SWATCHMODE\r\n&quot;);
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :                 tranFSM(fsm, TIMECOUNTSTOPWATCH_COUNT);</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     326 </span>            :         case SIG_TIMESETMODE:
+<span class="lineNum">     327 </span>            :         case SIG_TIMEMODE:
+<span class="lineNum">     328 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch_BEGIN received a SIG_{Å,T,TS}\r\n&quot;);
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :                 tranFSM(fsm, TIMECOUNTSTOPWATCH_BEGIN);</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     333 </span>            :         }
+<a name="334"><span class="lineNum">     334 </span>            : }</a>
+<span class="lineNum">     335 </span>            : 
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 : void manageTimeCountStopwatch_COUNT(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     337 </span>            :         uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     338 </span>            :         uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     339 </span>            :         // en.
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :         enum State  functionsState = TIMECOUNTSTOPWATCH_COUNT;   // the state of this function                 // the state mode</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :         if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     342 </span>            :                 //printf2UART(&quot;Init manageTimeCountStopwatch_COUNT\r\n&quot;);
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :                 fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :                 fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :                 return;</span>
+<span class="lineNum">     346 </span>            :         }
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :         updateTimeStopwatch();</span>
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span>            :         // handle signals:
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :         switch(signal) {</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :         case SIG_SWATCHMODE:</span>
+<span class="lineNum">     353 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch_COUNT received a SIG_SWATCHMODE\r\n&quot;);
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     356 </span>            :         case SIG_TIMESETMODE:
+<span class="lineNum">     357 </span>            :         case SIG_TIMEMODE:
+<span class="lineNum">     358 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch_COUNT received a SIG_{Å,T,TS}\r\n&quot;);
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :                 tranFSM(fsm, TIMECOUNTSTOPWATCH_BEGIN);</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     363 </span>            :         }
+<span class="lineNum">     364 </span>            : }
+<span class="lineNum">     365 </span>            : 
+<a name="366"><span class="lineNum">     366 </span>            : //-----------------------------------------------------------Highest level FSM (Interface)</a>
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span><span class="lineCov">      36003 : void manageTIMEDISPLAY(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     369 </span>            :                        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     370 </span>            :                        uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     371 </span>            :     // en:
+<span class="lineNum">     372 </span><span class="lineCov">      36003 :     enum State  functionsState = TIMEDISPLAY;   // the state of this function</span>
+<span class="lineNum">     373 </span><span class="lineCov">      36003 :     uint8_T     statesMode = 0;                 // the state mode</span>
+<span class="lineNum">     374 </span><span class="lineCov">      36003 :     if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     375 </span>            :         //printf2UART(&quot;Initializing manageTIMEDISPLAY\r\n&quot;);
+<span class="lineNum">     376 </span><span class="lineCov">      18002 :         *SWatch2018_Y_mode = statesMode;</span>
+<span class="lineNum">     377 </span><span class="lineCov">      18002 :         fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     378 </span><span class="lineCov">      18002 :         fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     379 </span><span class="lineCov">      18002 :         return;</span>
+<span class="lineNum">     380 </span>            :     }
+<span class="lineNum">     381 </span>            : 
+<span class="lineNum">     382 </span>            :     // handle signals:
+<span class="lineNum">     383 </span><span class="lineCov">      18001 :     switch(signal) {</span>
+<span class="lineNum">     384 </span><span class="lineCov">      18000 :         case SIG_TIMEMODE:</span>
+<span class="lineNum">     385 </span>            :                 //printf2UART(&quot;manageTIMEDISPLAY(). Received SIG_TIMEMODE\r\n&quot;);
+<span class="lineNum">     386 </span><span class="lineCov">      18000 :             tranFSM(fsm, TIMEDISPLAY);</span>
+<span class="lineNum">     387 </span><span class="lineCov">      18000 :             curHighestLvState = TIMEDISPLAY;</span>
+<span class="lineNum">     388 </span><span class="lineCov">      18000 :             break;</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :         case SIG_TIMESETMODE:</span>
+<span class="lineNum">     390 </span>            :                 //printf2UART(&quot;manageTIMEDISPLAY(). Received SIG_TIMESETMODE\r\n&quot;);
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMESET);</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :             curHighestLvState = TIMESET;</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     395 </span>            :                 //printf2UART(&quot;manageTIMEDISPLAY(). Received SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :             tranFSM(fsm, ALARMSET);</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :             curHighestLvState = ALARMSET;</span>
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :         case SIG_SWATCHMODE:</span>
+<span class="lineNum">     400 </span>            :                 //printf2UART(&quot;manageTIMEDISPLAY(). Received SIG_SWATCHMODE\r\n&quot;);
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :             tranFSM(fsm, STOPWATCH);</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :             curHighestLvState = STOPWATCH;</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     404 </span><span class="lineCov">          1 :         default:</span>
+<span class="lineNum">     405 </span>            :             // du:
+<span class="lineNum">     406 </span><span class="lineCov">          1 :             *SWatch2018_Y_hours = hours;</span>
+<span class="lineNum">     407 </span><span class="lineCov">          1 :             *SWatch2018_Y_minutes = minutes;</span>
+<span class="lineNum">     408 </span><span class="lineCov">          1 :             *SWatch2018_Y_seconds = seconds;</span>
+<span class="lineNum">     409 </span><span class="lineCov">          1 :             *SWatch2018_Y_tenths = 0;</span>
+<span class="lineNum">     410 </span><span class="lineCov">          1 :             break;</span>
+<span class="lineNum">     411 </span>            :     }
+<a name="412"><span class="lineNum">     412 </span>            : }</a>
+<span class="lineNum">     413 </span>            : 
+<span class="lineNum">     414 </span><span class="lineNoCov">          0 : void manageSTOPWATCH(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     415 </span>            :                        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     416 </span>            :                        uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     417 </span>            :     // en:
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :     enum State  functionsState = STOPWATCH;   // the state of this function</span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :     uint8_T     statesMode = 3;               // the state mode</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :     if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     421 </span>            :         //printf2UART(&quot;Init manSTOPWATCH\r\n&quot;);
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :         *SWatch2018_Y_mode = statesMode;</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :         *SWatch2018_Y_hours = 0;</span>
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_minutes = 0;</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :                 *SWatch2018_Y_seconds = 0;</span>
+<span class="lineNum">     426 </span>            : 
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :         fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :         fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">     430 </span>            :     }
+<span class="lineNum">     431 </span>            : 
+<span class="lineNum">     432 </span>            :     // handle signals:
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :     switch(signal) {</span>
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :         case SIG_TIMEMODE:</span>
+<span class="lineNum">     435 </span>            :                 //printf2UART(&quot;manSTOPWATCH(). Received SIG_TIMEMODE\r\n&quot;);
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMEDISPLAY);</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :             curHighestLvState = TIMEDISPLAY;</span>
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :         case SIG_TIMESETMODE:</span>
+<span class="lineNum">     440 </span>            :                 //printf2UART(&quot;manSTOPWATCH(). Received SIG_TIMESETMODE\r\n&quot;);
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMESET);</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :             curHighestLvState = TIMESET;</span>
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     445 </span>            :                 //printf2UART(&quot;manSTOPWATCH(). Received SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :             tranFSM(fsm, ALARMSET);</span>
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :             curHighestLvState = ALARMSET;</span>
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 :         case SIG_SWATCHMODE:</span>
+<span class="lineNum">     450 </span>            :                 //printf2UART(&quot;manSTOPWATCH(). Received SIG_SWATCHMODE\r\n&quot;);
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :             tranFSM(fsm, STOPWATCH);</span>
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 :             curHighestLvState = STOPWATCH;</span>
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     455 </span>            :             // du:
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_hours = Shours;</span>
+<span class="lineNum">     457 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_minutes = Sminutes;</span>
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_seconds = Sseconds;</span>
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_tenths = Stenths;</span>
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     461 </span>            :     }
+<a name="462"><span class="lineNum">     462 </span>            : }</a>
+<span class="lineNum">     463 </span>            : 
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 : void manageTIMESET(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     465 </span>            :                        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     466 </span>            :                        uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     467 </span>            :     // en:
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :     enum State  functionsState  = TIMESET;   // the state of this function</span>
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :     uint8_T     statesMode              = 1;         // the state mode</span>
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :     if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     471 </span>            :         //printf2UART(&quot;Init manTIMESET\r\n&quot;);
+<span class="lineNum">     472 </span>            : 
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :         fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :         fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">     476 </span>            :     }
+<span class="lineNum">     477 </span>            : 
+<span class="lineNum">     478 </span>            :     // handle signals:
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :     switch(signal) {</span>
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :         case SIG_TIMEMODE:</span>
+<span class="lineNum">     481 </span>            :                 //printf2UART(&quot;manTIMESET(). Received SIG_TIMEMODE\r\n&quot;);
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMEDISPLAY);</span>
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :             curHighestLvState = TIMEDISPLAY;</span>
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :         case SIG_TIMESETMODE:</span>
+<span class="lineNum">     486 </span>            :                 //printf2UART(&quot;manTIMESET(). Received SIG_TIMESETMODE\r\n&quot;);
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMESET);</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 :             curHighestLvState = TIMESET;</span>
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     491 </span>            :                 //printf2UART(&quot;manTIMESET(). Received SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :             tranFSM(fsm, ALARMSET);</span>
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :             curHighestLvState = ALARMSET;</span>
+<span class="lineNum">     494 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     495 </span><span class="lineNoCov">          0 :         case SIG_SWATCHMODE:</span>
+<span class="lineNum">     496 </span>            :                 //printf2UART(&quot;manTIMESET(). Received SIG_SWATCHMODE\r\n&quot;);
+<span class="lineNum">     497 </span><span class="lineNoCov">          0 :             tranFSM(fsm, STOPWATCH);</span>
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 :             curHighestLvState = STOPWATCH;</span>
+<span class="lineNum">     499 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     501 </span>            :             // du:
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     503 </span>            :     }
+<a name="504"><span class="lineNum">     504 </span>            : }</a>
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 : void manageALARMSET(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     507 </span>            :                        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     508 </span>            :                        uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     509 </span>            :     // en:
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :     enum State  functionsState = ALARMSET;   // the state of this function</span>
+<span class="lineNum">     511 </span><span class="lineNoCov">          0 :     if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     512 </span>            :         //printf2UART(&quot;Init manageALARMSET (highest-lv state)\r\n&quot;);
+<span class="lineNum">     513 </span>            : 
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :         fsm-&gt;prevState = functionsState; // this completes transition</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :         fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">     517 </span>            :     }
+<span class="lineNum">     518 </span>            : 
+<span class="lineNum">     519 </span>            :     // handle signals:
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :     switch(signal) {</span>
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :         case SIG_TIMEMODE:</span>
+<span class="lineNum">     522 </span>            :                 //printf2UART(&quot;manALARMSET(). Received SIG_TIMEMODE\r\n&quot;);
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMEDISPLAY);</span>
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :         case SIG_TIMESETMODE:</span>
+<span class="lineNum">     526 </span>            :                 //printf2UART(&quot;manALARMSET(). Received SIG_TIMESETMODE\r\n&quot;);
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMESET);</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     530 </span>            :                 //printf2UART(&quot;manALARMSET(). Received SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :             tranFSM(fsm, ALARMSET);</span>
+<span class="lineNum">     532 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :         case SIG_SWATCHMODE:</span>
+<span class="lineNum">     534 </span>            :                 //printf2UART(&quot;manALARMSET(). Received SIG_SWATCHMODE\r\n&quot;);
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :             tranFSM(fsm, STOPWATCH);</span>
+<span class="lineNum">     536 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     538 </span>            :             // du:
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     540 </span>            :     }
+<a name="541"><span class="lineNum">     541 </span>            : }</a>
+<span class="lineNum">     542 </span>            : 
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 : void manageTimeCountStopwatch(struct FSM *fsm, enum Signal signal, uint8_T *SWatch2018_Y_hours,</span>
+<span class="lineNum">     544 </span>            :                        uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     545 </span>            :                        uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     546 </span>            :     // en:           // the state mode
+<span class="lineNum">     547 </span><span class="lineNoCov">          0 :     if(!fsm-&gt;isEntryDone) {</span>
+<span class="lineNum">     548 </span><span class="lineNoCov">          0 :         Stenths         = 0;</span>
+<span class="lineNum">     549 </span><span class="lineNoCov">          0 :         Sseconds        = 0;</span>
+<span class="lineNum">     550 </span><span class="lineNoCov">          0 :                 Sminutes        = 0;</span>
+<span class="lineNum">     551 </span><span class="lineNoCov">          0 :                 Shours          = 0;</span>
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :         fsm-&gt;isEntryDone = 1;</span>
+<span class="lineNum">     554 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">     555 </span>            :     }
+<span class="lineNum">     556 </span>            : 
+<span class="lineNum">     557 </span>            :     // handle signals:
+<span class="lineNum">     558 </span><span class="lineNoCov">          0 :     switch(signal) {</span>
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 :         case SIG_TIMEMODE:</span>
+<span class="lineNum">     560 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch(). Received SIG_TIMEMODE\r\n&quot;);
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMEDISPLAY);</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :         case SIG_TIMESETMODE:</span>
+<span class="lineNum">     564 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch(). Received SIG_TIMESETMODE\r\n&quot;);
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMESET);</span>
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :         case SIG_ALARMSETMODE:</span>
+<span class="lineNum">     568 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch(). Received SIG_ALARMSETMODE\r\n&quot;);
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :             tranFSM(fsm, ALARMSET);</span>
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :         case SIG_SWATCHMODE:</span>
+<span class="lineNum">     572 </span>            :                 //printf2UART(&quot;manageTimeCountStopwatch(). Received SIG_SWATCHMODE\r\n&quot;);
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :             tranFSM(fsm, TIMECOUNTSTOPWATCH_COUNT);</span>
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     576 </span>            :             // du:
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_hours = Shours;</span>
+<span class="lineNum">     578 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_minutes = Sminutes;</span>
+<span class="lineNum">     579 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_seconds = Sseconds;</span>
+<span class="lineNum">     580 </span><span class="lineNoCov">          0 :             *SWatch2018_Y_tenths = Stenths;</span>
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     582 </span>            :     }
+<span class="lineNum">     583 </span>            : }
+<span class="lineNum">     584 </span>            : 
+<span class="lineNum">     585 </span>            : /**
+<span class="lineNum">     586 </span>            :  * Given the current state, decide what must be done or the transition to do, in the Finite State Machine.
+<a name="587"><span class="lineNum">     587 </span>            :  * Here, booleans are passed to see what button has been clicked.</a>
+<span class="lineNum">     588 </span>            :  */
+<span class="lineNum">     589 </span><span class="lineCov">      36069 : void dispatchFSM(struct FSM *fsm,</span>
+<span class="lineNum">     590 </span>            :               boolean_T SWatch2018_U_plusbutton, boolean_T SWatch2018_U_minusbutton,
+<span class="lineNum">     591 </span>            :               boolean_T SWatch2018_U_Timemode, boolean_T SWatch2018_U_Timesetmode, boolean_T SWatch2018_U_Alarmsetmode, boolean_T SWatch2018_U_Swatchmode, uint8_T *SWatch2018_Y_hours,
+<span class="lineNum">     592 </span>            :               uint8_T *SWatch2018_Y_minutes, uint8_T *SWatch2018_Y_seconds, uint8_T *SWatch2018_Y_tenths,
+<span class="lineNum">     593 </span>            :               uint8_T *SWatch2018_Y_mode) {
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span><span class="lineCov">      36069 :         enum Signal signal = -1;</span>
+<span class="lineNum">     596 </span>            : 
+<span class="lineNum">     597 </span>            :     // aggregate signals to make it possible to use nested switches
+<span class="lineNum">     598 </span><span class="lineCov">      36069 :     signal = getSignal(SWatch2018_U_plusbutton, SWatch2018_U_minusbutton,</span>
+<span class="lineNum">     599 </span>            :                        SWatch2018_U_Timemode, SWatch2018_U_Timesetmode, SWatch2018_U_Alarmsetmode, SWatch2018_U_Swatchmode);
+<span class="lineNum">     600 </span>            : 
+<span class="lineNum">     601 </span>            :     // the current state must be reinitialized also when the user clicks something
+<span class="lineNum">     602 </span>            :     //fsm-&gt;isEntryDone = SWatch2018_U_plusbutton || SWatch2018_U_minusbutton ||
+<span class="lineNum">     603 </span>            :     //        SWatch2018_U_Timemode || SWatch2018_U_Timesetmode || SWatch2018_U_Alarmsetmode || SWatch2018_U_Swatchmode;
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span>            :     // find the current state and manage it
+<span class="lineNum">     606 </span><span class="lineCov">      36069 :     switch(fsm-&gt;curState) {</span>
+<span class="lineNum">     607 </span>            :         // Highest level FSM
+<span class="lineNum">     608 </span><span class="lineCov">          3 :         case INIT:</span>
+<span class="lineNum">     609 </span><span class="lineCov">          3 :             *SWatch2018_Y_hours = *SWatch2018_Y_minutes = *SWatch2018_Y_seconds = *SWatch2018_Y_tenths = 0;</span>
+<span class="lineNum">     610 </span><span class="lineCov">          3 :             tranFSM(fsm, TIMEDISPLAY);</span>
+<span class="lineNum">     611 </span><span class="lineCov">          3 :             break;</span>
+<span class="lineNum">     612 </span><span class="lineCov">      36003 :         case TIMEDISPLAY:</span>
+<span class="lineNum">     613 </span>            :                 // time always goes on, no matter if user clicks or not GUI buttons
+<span class="lineNum">     614 </span><span class="lineCov">      36003 :                 updateTime();</span>
+<span class="lineNum">     615 </span>            : 
+<span class="lineNum">     616 </span><span class="lineCov">      36003 :             manageTIMEDISPLAY(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     617 </span><span class="lineCov">      36003 :             break;</span>
+<span class="lineNum">     618 </span><span class="lineNoCov">          0 :         case STOPWATCH:</span>
+<span class="lineNum">     619 </span>            :                 // time always goes on, no matter if user clicks or not GUI buttons
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 :                 updateTime();</span>
+<span class="lineNum">     621 </span>            : 
+<span class="lineNum">     622 </span><span class="lineNoCov">          0 :                 manageSTOPWATCH(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     623 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :         case TIMESET:</span>
+<span class="lineNum">     625 </span>            :                 // time always goes on, no matter if user clicks or not GUI buttons
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :                 updateTime();</span>
+<span class="lineNum">     627 </span>            : 
+<span class="lineNum">     628 </span><span class="lineNoCov">          0 :                 manageTIMESET(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :         case ALARMSET:</span>
+<span class="lineNum">     631 </span>            :                 // time always goes on, no matter if user clicks or not GUI buttons
+<span class="lineNum">     632 </span><span class="lineNoCov">          0 :                 updateTime();</span>
+<span class="lineNum">     633 </span>            : 
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :                 manageALARMSET(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     636 </span>            : 
+<span class="lineNum">     637 </span>            :                 // TimeCountStopwatch FSM
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 :                 case TIMECOUNTSTOPWATCH_BEGIN:</span>
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 :                         manageTimeCountStopwatch_BEGIN(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     641 </span><span class="lineNoCov">          0 :                 case TIMECOUNTSTOPWATCH_COUNT:</span>
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 :                         manageTimeCountStopwatch_COUNT(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     644 </span>            : 
+<span class="lineNum">     645 </span>            :                 // TimeSet FSM
+<span class="lineNum">     646 </span><span class="lineCov">          2 :                 case TIMESET_SETHOURS:</span>
+<span class="lineNum">     647 </span><span class="lineCov">          2 :                         manageTimeSet_SETHOURS(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     648 </span><span class="lineCov">          2 :                         break;</span>
+<span class="lineNum">     649 </span><span class="lineCov">         58 :                 case TIMESET_SETMINUTES:</span>
+<span class="lineNum">     650 </span><span class="lineCov">         58 :                         manageTimeSet_SETMINUTES(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     651 </span><span class="lineCov">         58 :                         break;</span>
+<span class="lineNum">     652 </span>            : 
+<span class="lineNum">     653 </span>            :                 // AlarmManagement FSM
+<span class="lineNum">     654 </span><span class="lineNoCov">          0 :                 case ALARMMANAGEMENT_SILENT:</span>
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :                         if(Ahours == hours &amp;&amp; Aminutes == minutes &amp;&amp; AalarmIsSet)</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :                                 tranFSM(fsm, ALARMMANAGEMENT_BUZZING);</span>
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :                 case ALARMMANAGEMENT_BUZZING:</span>
+<span class="lineNum">     659 </span><span class="lineNoCov">          0 :                         if(minutes &lt;= Aminutes - 2) {</span>
+<span class="lineNum">     660 </span>            :                                 //printf2UART(&quot;ALARM BUZZING!!\r\n&quot;);
+<span class="lineNum">     661 </span>            :                         }
+<span class="lineNum">     662 </span><span class="lineNoCov">          0 :                         if(Ahours != hours || Aminutes != minutes) {</span>
+<span class="lineNum">     663 </span><span class="lineNoCov">          0 :                                 tranFSM(fsm, ALARMMANAGEMENT_SILENT);</span>
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 :                                 printf(&quot;ALARM going back silent\r\n&quot;);</span>
+<span class="lineNum">     665 </span>            :                         }
+<span class="lineNum">     666 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     667 </span>            : 
+<span class="lineNum">     668 </span>            :                 // AlarmSet FSM
+<span class="lineNum">     669 </span><span class="lineCov">          3 :                 case ALARMSET_INIT:</span>
+<span class="lineNum">     670 </span><span class="lineCov">          3 :                         Ahours = hours;</span>
+<span class="lineNum">     671 </span><span class="lineCov">          3 :                         *SWatch2018_Y_minutes = minutes;</span>
+<span class="lineNum">     672 </span><span class="lineCov">          3 :                         AalarmIsSet = 0;</span>
+<span class="lineNum">     673 </span><span class="lineCov">          3 :                         tranFSM(fsm, ALARMSET_SETHOURS);</span>
+<span class="lineNum">     674 </span><span class="lineCov">          3 :                         break;</span>
+<span class="lineNum">     675 </span><span class="lineNoCov">          0 :                 case ALARMSET_SETHOURS:</span>
+<span class="lineNum">     676 </span><span class="lineNoCov">          0 :                         manageAlarmSet_SETHOURS(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     678 </span><span class="lineNoCov">          0 :                 case ALARMSET_SETMINUTES:</span>
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :                         manageAlarmSet_SETMINUTES(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     680 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     681 </span><span class="lineNoCov">          0 :                 case ALARMSET_ALARMFINALLYSET:</span>
+<span class="lineNum">     682 </span><span class="lineNoCov">          0 :                         manageAlarmSet_ALARMFINALLYSET(fsm, signal, SWatch2018_Y_hours, SWatch2018_Y_minutes, SWatch2018_Y_seconds, SWatch2018_Y_tenths, SWatch2018_Y_mode);</span>
+<span class="lineNum">     683 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     684 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     685 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     686 </span>            :     }
+<span class="lineNum">     687 </span><span class="lineCov">      36069 : }</span>
+<span class="lineNum">     688 </span>            : 
+<span class="lineNum">     689 </span>            : /**
+<a name="690"><span class="lineNum">     690 </span>            :  * Executes transition to state &quot;dest&quot; in Finite State Machine fsm</a>
+<span class="lineNum">     691 </span>            :  */
+<span class="lineNum">     692 </span><span class="lineCov">      18007 : void tranFSM(struct FSM* fsm, enum State dest) {</span>
+<span class="lineNum">     693 </span><span class="lineCov">      18007 :     fsm-&gt;prevState = fsm-&gt;curState;</span>
+<span class="lineNum">     694 </span><span class="lineCov">      18007 :     fsm-&gt;curState = dest;</span>
+<span class="lineNum">     695 </span><span class="lineCov">      18007 :     fsm-&gt;isEntryDone = 0;</span>
+<span class="lineNum">     696 </span><span class="lineCov">      18007 : }</span>
+<span class="lineNum">     697 </span>            : 
+<span class="lineNum">     698 </span>            : /**
+<a name="699"><span class="lineNum">     699 </span>            :  * Initialize Finite State Machine</a>
+<span class="lineNum">     700 </span>            :  */
+<span class="lineNum">     701 </span><span class="lineCov">         15 : void initFSM(struct FSM *fsm, enum Subcomponent sc) {</span>
+<span class="lineNum">     702 </span><span class="lineCov">         15 :     switch(sc) {</span>
+<span class="lineNum">     703 </span><span class="lineCov">          3 :     case SC_NONE:</span>
+<span class="lineNum">     704 </span><span class="lineCov">          3 :         fsm-&gt;curState = INIT;</span>
+<span class="lineNum">     705 </span><span class="lineCov">          3 :                 fsm-&gt;prevState = INIT;</span>
+<span class="lineNum">     706 </span><span class="lineCov">          3 :         break;</span>
+<span class="lineNum">     707 </span><span class="lineCov">          3 :     case SC_TIMECOUNTSTOPWATCH:</span>
+<span class="lineNum">     708 </span><span class="lineCov">          3 :         fsm-&gt;curState = TIMECOUNTSTOPWATCH_BEGIN;</span>
+<span class="lineNum">     709 </span><span class="lineCov">          3 :                 fsm-&gt;prevState = TIMECOUNTSTOPWATCH_BEGIN;</span>
+<span class="lineNum">     710 </span><span class="lineCov">          3 :         break;</span>
+<span class="lineNum">     711 </span><span class="lineCov">          3 :     case SC_TIMESET:</span>
+<span class="lineNum">     712 </span><span class="lineCov">          3 :         fsm-&gt;curState = TIMESET_SETHOURS;</span>
+<span class="lineNum">     713 </span><span class="lineCov">          3 :         fsm-&gt;prevState = TIMESET_SETHOURS;</span>
+<span class="lineNum">     714 </span><span class="lineCov">          3 :         break;</span>
+<span class="lineNum">     715 </span><span class="lineCov">          3 :     case SC_ALARMSET:</span>
+<span class="lineNum">     716 </span><span class="lineCov">          3 :         fsm-&gt;curState = ALARMSET_INIT;</span>
+<span class="lineNum">     717 </span><span class="lineCov">          3 :         fsm-&gt;prevState = ALARMSET_INIT;</span>
+<span class="lineNum">     718 </span><span class="lineCov">          3 :         break;</span>
+<span class="lineNum">     719 </span><span class="lineCov">          3 :     case SC_ALARMMANAGEMENT:</span>
+<span class="lineNum">     720 </span><span class="lineCov">          3 :         fsm-&gt;curState = ALARMMANAGEMENT_SILENT;</span>
+<span class="lineNum">     721 </span><span class="lineCov">          3 :         fsm-&gt;prevState = ALARMMANAGEMENT_SILENT;</span>
+<span class="lineNum">     722 </span><span class="lineCov">          3 :         break;</span>
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     725 </span>            :     }
+<span class="lineNum">     726 </span>            : 
+<span class="lineNum">     727 </span><span class="lineCov">         15 :     fsm-&gt;isEntryDone = 0;</span>
+<span class="lineNum">     728 </span>            : 
+<span class="lineNum">     729 </span><span class="lineCov">         15 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
