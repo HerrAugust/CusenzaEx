@@ -4,7 +4,7 @@ This experiment shows how to turn an FSM, shown in folder "screenshots", into C 
 <img src="screenshots/stm32_run1.jpg" alt="Run 1, time diplay mode" height="400" />
 <img src="screenshots/stm32_run2.jpg" alt="Run 1, set an alarm (hours)" height="400" />
 
-<a href="../FSM/screenshots/video_FSM_Matlab2019.mp4">Video FSM Matlab 2019</a>
+<a href="../FSM/video_FSM_Matlab2019.mp4">Video FSM Matlab 2019</a>
 
 # How to use
 Open the project with Eclipse for ErikaOS 2.8, found at http://www.erika-enterprise.com/index.php/download/erika-v2.x.html . Import this project. Menu -> Project -> Clean... -> Build it after cleaning.
