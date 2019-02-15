@@ -1,6 +1,12 @@
 # Contents
 This experiment shows how to turn an FSM, shown in folder "screenshots", into C code using the Nested Switches pattern. Here are some results of a run:
 
+<video controls width="250">
+    <source src="/screenshots/video_FSM_Matlab2019.mp4" type="video/mp4">
+    Sorry, your browser doesn't support embedded videos.
+</video>
+
+
 <img src="screenshots/stm32_run1.jpg" alt="Run 1, time diplay mode" height="400" />
 <img src="screenshots/stm32_run2.jpg" alt="Run 1, set an alarm (hours)" height="400" />
 
